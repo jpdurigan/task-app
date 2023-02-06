@@ -13,7 +13,7 @@ export const NewNoteDialog: React.FC = () => {
     const [tags, setTags] = useState<string[]>([]);
 
     return (
-        <Dialog open={false}>
+        <Dialog open={true}>
             <DialogTitle>New note</DialogTitle>
             <DialogContent sx={{minWidth: 300}}>
                 <Stack spacing={2}>
@@ -46,7 +46,10 @@ export const NewNoteDialog: React.FC = () => {
                                 renderValue={(selected: string[]) => (
                                     <Box>
                                         {selected.map((tag: string) => (
-                                            <Chip label={tag}/>
+                                            <Chip
+                                                label={tag}
+                                                key={`new-note-selected-tag-${tag}`}
+                                            />
                                         ))}
                                     </Box>
                                 )}
