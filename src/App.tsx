@@ -2,6 +2,7 @@ import { Divider } from '@mui/material';
 import React, { useState } from 'react';
 import { HeaderApp } from './components/HeaderApp';
 import InputField from './components/InputField';
+import { NewNoteDialog } from './components/NewNoteDialog';
 import { Note, NoteCard } from './components/NoteCard';
 
 const noteExample: Note = {
@@ -54,6 +55,7 @@ const App: React.FC = () => {
           <NoteCard id={note.id} text={note.text} done={note.done} edit={editNote} delete={deleteNote}/>
         ) }
       </div>
+      <NewNoteDialog />
     </div>
   );
 }
