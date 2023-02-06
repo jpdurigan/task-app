@@ -1,10 +1,10 @@
-import { Divider, ThemeProvider } from "@mui/material";
+import { CssBaseline, Divider, ThemeProvider } from "@mui/material";
 import React, { useState } from "react";
 import { HeaderApp } from "./components/HeaderApp";
 import InputField from "./components/InputField";
 import { NewNoteDialog } from "./components/NewNoteDialog";
 import { Note, NoteCard } from "./components/NoteCard";
-import { AppTheme } from "./components/Theme";
+import { ThemeApp } from "./components/Theme";
 
 const noteExample: Note = {
 	id: 0,
@@ -44,17 +44,17 @@ const App: React.FC = () => {
 	};
 
 	return (
-		<div className="App">
-			<ThemeProvider theme={AppTheme}>
-				<HeaderApp />
-				<h1 className="center-align">Minhas notas</h1>
-				<InputField
+		<ThemeApp>
+			<div className="App">
+				{/* <HeaderApp /> */}
+				{/* <h1 className="center-align">Minhas notas</h1> */}
+				{/* <InputField
 					currentValue={newNote}
 					setCurrentValue={setNewNote}
 					add={addNote}
-				/>
-				<Divider />
-				<div className="container section row s-grid-gap">
+				/> */}
+				{/* <Divider /> */}
+				{/* <div className="container section row s-grid-gap">
 					{notes.map((note: Note) => (
 						<NoteCard
 							id={note.id}
@@ -64,10 +64,10 @@ const App: React.FC = () => {
 							delete={deleteNote}
 						/>
 					))}
-				</div>
+				</div> */}
 				<NewNoteDialog />
-			</ThemeProvider>
-		</div>
+			</div>
+		</ThemeApp>
 	);
 };
 

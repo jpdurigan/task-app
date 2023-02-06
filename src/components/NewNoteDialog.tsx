@@ -6,22 +6,20 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
-	Divider,
-	List,
-	ListItem,
 	MenuItem,
 	Select,
 	TextField,
-	Typography,
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useState } from "react";
+import { ColorsApp, ThemeApp } from "./Theme";
 
 const knownTags = ["tag1", "tag2", "tag3"];
 
 export const NewNoteDialog: React.FC = () => {
 	const [text, setText] = useState<string>("");
 	const [tags, setTags] = useState<string[]>([]);
+	// const classes = useStyles();
 
 	return (
 		<Dialog open={true}>
@@ -54,7 +52,9 @@ export const NewNoteDialog: React.FC = () => {
 							renderValue={(selected: string[]) => (
 								<Box>
 									{selected.map((tag: string) => (
-										<Chip label={tag} key={`new-note-selected-tag-${tag}`} />
+										<ThemeApp color={ColorsApp.Purple}>
+											<Chip label={tag} key={`new-note-selected-tag-${tag}`} color="primary" />
+										</ThemeApp>
 									))}
 								</Box>
 							)}
