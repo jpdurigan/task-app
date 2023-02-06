@@ -1,4 +1,6 @@
+import { Divider } from '@mui/material';
 import React, { useState } from 'react';
+import { HeaderApp } from './components/HeaderApp';
 import InputField from './components/InputField';
 import { Note, NoteCard } from './components/NoteCard';
 
@@ -43,9 +45,10 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <h2 className="center-align">Minhas notas</h2>
+      <HeaderApp />
+      <h1 className="center-align">Minhas notas</h1>
       <InputField currentValue={newNote} setCurrentValue={setNewNote} add={addNote} />
-      <div className="divider"></div>
+      <Divider />
       <div className="container section row s-grid-gap">
         { notes.map((note: Note) => 
           <NoteCard id={note.id} text={note.text} done={note.done} edit={editNote} delete={deleteNote}/>

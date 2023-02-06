@@ -40,7 +40,7 @@ const Tasks: React.FC = () => {
   return (
     <Container maxWidth="sm">
       <Box my={4}>
-        <Typography variant="h4" component="h1" align="center">
+        <Typography variant="h3" component="h1" align="center">
           Tasks App
         </Typography>
         <form onSubmit={handleSubmit}>
