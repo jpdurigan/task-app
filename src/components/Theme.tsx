@@ -41,7 +41,7 @@ export const ThemeApp: React.FC<ThemeAppProps> = ({ children, color }) => {
 
 	return (
 		<ThemeProvider theme={theme}>
-			{children};
+			{children}
 		</ThemeProvider>
 	)
 }

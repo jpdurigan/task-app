@@ -50,7 +50,7 @@ export const NewNoteDialog: React.FC = () => {
 								setTags(newTags);
 							}}
 							renderValue={(selected: string[]) => (
-								<Box>
+								<Box display="flex" gap={1}>
 									{selected.map((tag: string) => (
 										<ThemeApp color={ColorsApp.Purple}>
 											<Chip label={tag} key={`new-note-selected-tag-${tag}`} color="primary" />
