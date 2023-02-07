@@ -29,30 +29,70 @@ let selectedColor: validColor = ColorsApp.Blue;
 export const EditTagsDialog: React.FC = () => {
 	const [tags, setTags] = useState<Tag[]>(knownTags);
 
-	const getTag = (id: number): Tag => tags.find(tag => tag.id === id) as Tag;
+	const getTag = (id: number): Tag => tags.find((tag) => tag.id === id) as Tag;
+	const getNewTag = (id: number): Tag => ({ ...getTag(id) } as Tag);
 
 	const updateTagLabel = (id: number, label: string): void => {
-		let newTag = {...getTag(id)} as Tag;
+		let newTag = getNewTag(id);
 		newTag.label = label;
 
-		let newTags = tags.map(tag => tag.id === id ? newTag : tag);
+		let newTags = tags.map((tag) => (tag.id === id ? newTag : tag));
 		setTags(newTags);
 	};
 
 	const updateTagColor = (id: number, color: validColor): void => {
-		let newTag = {...getTag(id)} as Tag;
+		let newTag = getNewTag(id);
 		newTag.color = color;
-		
-		let newTags = tags.map(tag => tag.id === id ? newTag : tag);
+
+		let newTags = tags.map((tag) => (tag.id === id ? newTag : tag));
 		setTags(newTags);
+	};
+
+	const moveTag = (id: number, move: -1 | 1): void => {
+		let newTag1 = getNewTag(id);
+		newTag1.ordering += move;
+
+		let tag2 = tags.find((t) => t.ordering === newTag1.ordering) as Tag;
+		let newTag2 = { ...tag2 } as Tag;
+		newTag2.ordering -= move;
+
+		let newTags = tags.map((tag) => {
+			if (tag.id === newTag1.id) return newTag1;
+			else if (tag.id === newTag2.id) return newTag2;
+			return tag;
+		});
+		setTags(newTags);
+	};
+
+	const deleteTag = (id: number): void => {
+		let newTags = tags.filter((tag) => tag.id != id);
+		newTags = sortedTags(newTags);
+
+		newTags = newTags.map((tag, index) => {
+			let newTag = { ...tag } as Tag;
+			newTag.ordering = index;
+			return newTag;
+		})
+
+		setTags(newTags);
+	};
+
+	const sortedTags = (tagArray: Tag[] = tags): Tag[] => {
+		return tagArray.sort((a, b) => a.ordering - b.ordering);
 	};
 
 	return (
 		<Dialog open={true}>
 			<DialogTitle>Editar tags</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
-				{tags.map((tag: Tag) => (
-					<EditTagOptions tag={tag} updateTagLabel={updateTagLabel} updateTagColor={updateTagColor} />
+				{sortedTags().map((tag: Tag) => (
+					<EditTagOptions
+						tag={tag}
+						updateTagLabel={updateTagLabel}
+						updateTagColor={updateTagColor}
+						moveTag={moveTag}
+						deleteTag={deleteTag}
+					/>
 				))}
 			</DialogContent>
 		</Dialog>
@@ -66,40 +106,48 @@ interface EditTagOptionsProps {
 	// >;
 	updateTagLabel: (id: number, label: string) => void;
 	updateTagColor: (id: number, color: validColor) => void;
+	moveTag: (id: number, move: 1 | -1) => void;
+	deleteTag: (id: number) => void;
 }
 
 const EditTagOptions: React.FC<EditTagOptionsProps> = ({
 	tag,
 	updateTagLabel,
 	updateTagColor,
+	moveTag,
+	deleteTag,
 	// setColorSelectorAnchor,
 }) => {
 	const [isEditingLabel, setIsEditingLabel] = useState<boolean>(false);
 	const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(
 		null
 	);
-	const [newLabel, setNewLabel] = useState<string>(tag.label);
-	const [newColor, setNewColor] = useState<validColor>(tag.color);
+	// const [newLabel, setNewLabel] = useState<string>(tag.label);
+	// const [newColor, setNewColor] = useState<validColor>(tag.color);
 
 	const handleMoveUp = () => {
+		moveTag(tag.id, -1);
 		closeEditingLabel();
 	};
 
 	const handleMoveDown = () => {
+		moveTag(tag.id, +1);
 		closeEditingLabel();
 	};
 
 	const handleUpdateLabel = (label: string) => {
 		updateTagLabel(tag.id, label);
-		setNewLabel(label);
+		// setNewLabel(label);
 	};
 
 	const handleUpdateColor = (color: validColor) => {
 		updateTagColor(tag.id, color);
-		setNewColor(color);
+		// setNewColor(color);
 	};
 
-	const handleDelete = () => {};
+	const handleDelete = () => {
+		deleteTag(tag.id);
+	};
 
 	const closeEditingLabel = () => {
 		if (isEditingLabel) setIsEditingLabel(false);
@@ -131,7 +179,7 @@ const EditTagOptions: React.FC<EditTagOptionsProps> = ({
 				>
 					<TextField
 						variant="standard"
-						value={newLabel}
+						value={tag.label}
 						onChange={(e) => handleUpdateLabel(e.target.value)}
 						onBlur={(e) => closeEditingLabel()}
 					/>
