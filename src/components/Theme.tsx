@@ -23,8 +23,19 @@ export const ColorsApp = {
 	Green: lightGreen,
 	Yellow: yellow,
 	Orange: orange,
-}
+};
 export type validColor = typeof ColorsApp[keyof typeof ColorsApp];
+export const ColorGrid: validColor[] = [
+	ColorsApp.Red,
+	ColorsApp.Pink,
+	ColorsApp.Purple,
+	ColorsApp.Indigo,
+	ColorsApp.Blue,
+	ColorsApp.Teal,
+	ColorsApp.Green,
+	ColorsApp.Yellow,
+	ColorsApp.Orange,
+];
 
 interface ThemeAppProps {
 	children: JSX.Element,
