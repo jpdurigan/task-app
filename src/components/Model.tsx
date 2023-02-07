@@ -1,9 +1,16 @@
+import { indigo, lightGreen, orange } from "@mui/material/colors";
+
 export interface Note {
 	id: number;
 	text: string;
 	date: number;
 	done: boolean;
 	tags: string[];
+}
+
+export interface TagConfig {
+	id: string;
+	color: string;
 }
 
 export const exampleData: Note[] = [
@@ -71,3 +78,18 @@ export const exampleData: Note[] = [
 		tags: ["Casa"],
 	},
 ];
+
+export const exampleTags: TagConfig[] = [
+	{
+		id: "Universidade",
+		color: indigo[500],
+	},
+	{
+		id: "Estágio",
+		color: orange[500],
+	},
+	{
+		id: "Casa",
+		color: lightGreen[500],
+	},
+]
