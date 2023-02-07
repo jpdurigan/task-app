@@ -24,7 +24,7 @@ export const ColorsApp = {
 	Yellow: yellow,
 	Orange: orange,
 }
-type validColor = typeof ColorsApp[keyof typeof ColorsApp];
+export type validColor = typeof ColorsApp[keyof typeof ColorsApp];
 
 interface ThemeAppProps {
 	children: JSX.Element,

@@ -6,24 +6,28 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
+	ListItemText,
 	MenuItem,
 	Select,
 	TextField,
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useState } from "react";
+import { exampleTags, knownTags, Tag } from "./Model";
 import { ColorsApp, ThemeApp } from "./Theme";
 
-const knownTags = ["tag1", "tag2", "tag3"];
+const TagFromId = (id: string) => {
+	return knownTags.find((t: Tag) => t.id == id) as Tag;
+};
 
 export const NewNoteDialog: React.FC = () => {
 	const [text, setText] = useState<string>("");
-	const [tags, setTags] = useState<string[]>([]);
-	// const classes = useStyles();
+	const [tags, setTags] = useState<Tag[]>([]);
+	const tagsAsValue = () => tags.map((t: Tag) => t.id)
 
 	return (
 		<Dialog open={true}>
-			<DialogTitle>New note</DialogTitle>
+			<DialogTitle>Nova nota</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
 				<Stack spacing={2}>
 					<Box>
@@ -38,30 +42,37 @@ export const NewNoteDialog: React.FC = () => {
 						/>
 					</Box>
 					<Box>
-						<DialogContentText>Tags</DialogContentText>
+						<DialogContentText variant="body2">
+							Adicionar tags
+						</DialogContentText>
 						<Select
 							fullWidth
 							multiple
-							value={tags}
+							value={tagsAsValue()}
 							onChange={(e) => {
 								const value = e.target.value;
-								const newTags: string[] =
+								const newTagsId: string[] =
 									typeof value === "string" ? value.split(",") : value;
+								const newTags: Tag[] = newTagsId.map((id) => TagFromId(id));
 								setTags(newTags);
 							}}
 							renderValue={(selected: string[]) => (
 								<Box display="flex" gap={1}>
 									{selected.map((tag: string) => (
-										<ThemeApp color={ColorsApp.Purple}>
-											<Chip label={tag} key={`new-note-selected-tag-${tag}`} color="primary" />
+										<ThemeApp color={TagFromId(tag).color}>
+											<Chip
+												label={tag}
+												key={`new-note-selected-tag-${tag}`}
+												color="primary"
+											/>
 										</ThemeApp>
 									))}
 								</Box>
 							)}
 						>
-							{knownTags.map((tag: string) => (
-								<MenuItem value={tag} key={`new-note-tag-${tag}`}>
-									{tag}
+							{knownTags.map((tag: Tag) => (
+								<MenuItem value={tag.id} key={`new-note-tag-${tag.id}`}>
+									<ListItemText primary={tag.id} />
 								</MenuItem>
 							))}
 						</Select>
@@ -69,8 +80,8 @@ export const NewNoteDialog: React.FC = () => {
 				</Stack>
 			</DialogContent>
 			<DialogActions>
-				<Button>Cancel</Button>
-				<Button>Save</Button>
+				<Button>Cancelar</Button>
+				<Button>Salvar</Button>
 			</DialogActions>
 		</Dialog>
 	);
