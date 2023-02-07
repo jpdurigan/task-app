@@ -9,22 +9,30 @@ export interface Note {
 }
 
 export interface Tag {
-	id: string;
+	id: number;
+	label: string;
 	color: validColor;
+	ordering: number;
 }
 
 export const exampleTags: { [key: string]: Tag } = {
 	uni: {
-		id: "Universidade",
+		id: 0,
+		label: "Universidade",
 		color: ColorsApp.Indigo,
+		ordering: 0,
 	},
 	work: {
-		id: "Estágio",
+		id: 1,
+		label: "Estágio",
 		color: ColorsApp.Orange,
+		ordering: 1,
 	},
 	home: {
-		id: "Casa",
+		id: 2,
+		label: "Casa",
 		color: ColorsApp.Green,
+		ordering: 2,
 	},
 };
 

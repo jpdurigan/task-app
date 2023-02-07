@@ -17,13 +17,13 @@ import { exampleTags, knownTags, Tag } from "./Model";
 import { ColorsApp, ThemeApp } from "./Theme";
 
 const TagFromId = (id: string) => {
-	return knownTags.find((t: Tag) => t.id == id) as Tag;
+	return knownTags.find((t: Tag) => t.id == parseInt(id)) as Tag;
 };
 
 export const NewNoteDialog: React.FC = () => {
 	const [text, setText] = useState<string>("");
 	const [tags, setTags] = useState<Tag[]>([]);
-	const tagsAsValue = () => tags.map((t: Tag) => t.id)
+	const tagsAsValue = ():string[] => tags.map((t: Tag) => (t.id).toString())
 
 	return (
 		<Dialog open={true}>
@@ -58,11 +58,11 @@ export const NewNoteDialog: React.FC = () => {
 							}}
 							renderValue={(selected: string[]) => (
 								<Box display="flex" gap={1}>
-									{selected.map((tag: string) => (
-										<ThemeApp color={TagFromId(tag).color}>
+									{selected.map((id: string) => (
+										<ThemeApp color={TagFromId(id).color}>
 											<Chip
-												label={tag}
-												key={`new-note-selected-tag-${tag}`}
+												label={TagFromId(id).label}
+												key={`new-note-selected-tag-${id}`}
 												color="primary"
 											/>
 										</ThemeApp>
@@ -72,7 +72,7 @@ export const NewNoteDialog: React.FC = () => {
 						>
 							{knownTags.map((tag: Tag) => (
 								<MenuItem value={tag.id} key={`new-note-tag-${tag.id}`}>
-									<ListItemText primary={tag.id} />
+									<ListItemText primary={tag.label} />
 								</MenuItem>
 							))}
 						</Select>
