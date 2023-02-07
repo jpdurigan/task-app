@@ -1,10 +1,6 @@
-import { CssBaseline, Divider, ThemeProvider } from "@mui/material";
 import React, { useState } from "react";
-import { EditTagsDialog } from "./components/EditTagsDialog";
-import { HeaderApp } from "./components/HeaderApp";
-import InputField from "./components/InputField";
-import { NewNoteDialog } from "./components/NewNoteDialog";
-import { Note, NoteCard } from "./components/NoteCard";
+import { TagDialog } from "./components/TagDialog";
+import { Note } from "./components/NoteCard";
 import { ThemeApp } from "./components/Theme";
 
 const noteExample: Note = {
@@ -67,7 +63,7 @@ const App: React.FC = () => {
 					))}
 				</div> */}
 				{/* <NewNoteDialog /> */}
-				<EditTagsDialog />
+				<TagDialog />
 			</div>
 		</ThemeApp>
 	);
