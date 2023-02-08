@@ -13,11 +13,11 @@ import {
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useState } from "react";
-import { exampleTags, knownTags, Tag } from "../Model";
+import { exampleTags, Tag } from "../Model";
 import { ColorsApp, ThemeApp } from "../Theme";
 
 const TagFromId = (id: string) => {
-	return knownTags.find((t: Tag) => t.id == parseInt(id)) as Tag;
+	return exampleTags.find((t: Tag) => t.id == parseInt(id)) as Tag;
 };
 
 export const NoteDialog: React.FC = () => {
@@ -70,7 +70,7 @@ export const NoteDialog: React.FC = () => {
 								</Box>
 							)}
 						>
-							{knownTags.map((tag: Tag) => (
+							{exampleTags.map((tag: Tag) => (
 								<MenuItem value={tag.id} key={`new-note-tag-${tag.id}`}>
 									<ListItemText primary={tag.label} />
 								</MenuItem>

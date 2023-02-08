@@ -7,7 +7,7 @@ import {
 	Divider,
 } from "@mui/material";
 import { useState } from "react";
-import { knownTags, Tag } from "../Model";
+import { exampleTags, Tag } from "../Model";
 import { EditTag } from "./EditTag";
 import { NewTag } from "./NewTag";
 import { ColorGrid, ColorsApp, validColor } from "../Theme";
@@ -15,7 +15,7 @@ import { ColorGrid, ColorsApp, validColor } from "../Theme";
 let selectedColor: validColor = ColorsApp.Blue;
 
 export const TagDialog: React.FC = () => {
-	const [tags, setTags] = useState<Tag[]>(knownTags);
+	const [tags, setTags] = useState<Tag[]>(exampleTags);
 
 	const getTag = (id: number): Tag => tags.find((tag) => tag.id === id) as Tag;
 	const getNewTag = (id: number): Tag => ({ ...getTag(id) } as Tag);
