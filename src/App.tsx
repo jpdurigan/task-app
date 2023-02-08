@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TagDialog } from "./components/tag/TagDialog";
 import { ThemeApp } from "./components/Theme";
-import { exampleData, Tag, Task } from "./components/Model";
+import { exampleData, exampleTags, Tag, Task } from "./components/Model";
 import { HeaderApp } from "./components/HeaderApp";
 import { NoteDialog } from "./components/task/TaskDialog";
 import {
@@ -16,10 +16,12 @@ import {
 } from "@mui/material";
 import { border, Box } from "@mui/system";
 import { FormatListBulleted } from "@mui/icons-material";
+import { Database } from "./components/Database";
 
 const App: React.FC = () => {
-	const [tags, setTags] = useState<Tag[]>();
 	const [tasks, setTasks] = useState<Task[]>(exampleData);
+	const [tags, setTags] = useState<Tag[]>(exampleTags);
+	const appDatabase = new Database(tasks, setTasks, tags, setTags);
 
 	return (
 		<ThemeApp>
@@ -52,8 +54,8 @@ const App: React.FC = () => {
 						{/* <Divider variant="middle" /> */}
 					</Box>
 				</Container>
-				{/* <NoteDialog />
-				<TagDialog /> */}
+				{/* <NoteDialog /> */}
+				<TagDialog database={appDatabase} show={true} />
 			</div>
 		</ThemeApp>
 	);
