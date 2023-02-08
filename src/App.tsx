@@ -17,7 +17,12 @@ import {
 	Typography,
 } from "@mui/material";
 import { border, Box } from "@mui/system";
-import { CheckBoxOutlineBlank, Delete, Edit, FormatListBulleted } from "@mui/icons-material";
+import {
+	CheckBoxOutlineBlank,
+	Delete,
+	Edit,
+	FormatListBulleted,
+} from "@mui/icons-material";
 import { Database } from "./components/Database";
 import { TagStack } from "./components/tag/TagStack";
 import { TaskBox } from "./components/task/TaskBox";
@@ -50,9 +55,18 @@ const App: React.FC = () => {
 							<>
 								<FormatListBulleted fontSize="large" />
 								<Typography variant="button">A fazer</Typography>
-								{tasks.map((task) => (
-									<TaskBox task={task} database={appDatabase} />
-								))}
+								<Box
+									display="flex"
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									padding={2}
+									gap={2}
+								>
+									{appDatabase.sortTasks().map((task) => (
+										<TaskBox task={task} database={appDatabase} />
+									))}
+								</Box>
 							</>
 						</Box>
 						{/* <Divider variant="middle" /> */}

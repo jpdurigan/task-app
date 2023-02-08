@@ -19,11 +19,80 @@ export class Database {
 		this.setTags = setTags;
 	}
 
+
+
+    //////////////////////////////
+    //          TASKS           //
+    //////////////////////////////
+
+    getTask = (id: number): Task => {
+		return this.tasks.find((tag) => tag.id === id) as Task;
+	}
+
+	getCloneTask = (id: number): Task => {
+		return { ...this.getTask(id) } as Task;
+	}
+
+	addNewTask = (text: string, tags: number[]): void => {
+		if (text.trim().length === 0) return;
+		const id = Math.floor(Math.random() * 100000000);
+		const newTask: Task = {
+			id: id,
+			text: text.trim(),
+            date: Date.now(),
+        	done: false,
+	        tags: tags,
+		};
+		this.setTasks([...this.tasks, newTask]);
+	}
+
+	updateTaskText = (id: number, text: string): void => {
+		let newTask = this.getCloneTask(id);
+		newTask.text = text;
+
+		let newTasks = this.tasks.map((task) => (task.id === id ? newTask : task));
+		this.setTasks(newTasks);
+	}
+
+	updateTaskTags = (id: number, tags: number[]): void => {
+		let newTask = this.getCloneTask(id);
+        newTask.tags = tags;
+
+		let newTasks = this.tasks.map((task) => (task.id === id ? newTask : task));
+		this.setTasks(newTasks);
+	}
+
+    updateTaskDone = (id: number, done: boolean): void => {
+		let newTask = this.getCloneTask(id);
+		newTask.done = done;
+
+		let newTasks = this.tasks.map((task) => (task.id === id ? newTask : task));
+		this.setTasks(newTasks);
+	}
+
+	deleteTask = (id: number): void => {
+		let newTasks = this.tasks.filter((task) => task.id != id);
+		this.setTasks(newTasks);
+	}
+
+	sortTasks = (taskArray: Task[] = this.tasks): Task[] => {
+		return taskArray.sort((a, b) => {
+            if (a.done != b.done) return a.done ? 1 : -1;
+            else return a.date - b.date;
+        });
+	}
+
+
+
+    //////////////////////////////
+    //           TAGS           //
+    //////////////////////////////
+
 	getTag = (id: number): Tag => {
 		return this.tags.find((tag) => tag.id === id) as Tag;
 	}
 
-	getNewTag = (id: number): Tag => {
+	getCloneTag = (id: number): Tag => {
 		return { ...this.getTag(id) } as Tag;
 	}
 
@@ -41,7 +110,7 @@ export class Database {
 	}
 
 	updateTagLabel = (id: number, label: string): void => {
-		let newTag = this.getNewTag(id);
+		let newTag = this.getCloneTag(id);
 		newTag.label = label;
 
 		let newTags = this.tags.map((tag) => (tag.id === id ? newTag : tag));
@@ -49,7 +118,7 @@ export class Database {
 	}
 
 	updateTagColor = (id: number, color: validColor): void => {
-		let newTag = this.getNewTag(id);
+		let newTag = this.getCloneTag(id);
 		newTag.color = color;
 
 		let newTags = this.tags.map((tag) => (tag.id === id ? newTag : tag));
@@ -57,7 +126,7 @@ export class Database {
 	}
 
 	moveTag = (id: number, move: -1 | 1): void => {
-		let newTag1 = this.getNewTag(id);
+		let newTag1 = this.getCloneTag(id);
 		newTag1.ordering += move;
 
 		let tag2 = this.tags.find((t) => t.ordering === newTag1.ordering) as Tag;
