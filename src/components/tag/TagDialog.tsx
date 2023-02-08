@@ -20,12 +20,12 @@ interface TagDialogProps {
 }
 export const TagDialog: React.FC<TagDialogProps> = ({database}) => {
 	return (
-		<Dialog open={true}>
+		<Dialog open={true} onClose={() => database.setShowTagsDialog(false)}>
 			<DialogTitle>Editar tags</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
 				<NewTag addNewTag={database.addNewTag} tags={database.tags} />
 				<Divider sx={{ margin: "1em 0" }} />
-				{database.sortedTags().map((tag: Tag) => (
+				{database.sortTags().map((tag: Tag) => (
 					<EditTag
 						tag={tag}
 						updateTagLabel={database.updateTagLabel}
@@ -35,9 +35,9 @@ export const TagDialog: React.FC<TagDialogProps> = ({database}) => {
 					/>
 				))}
 			</DialogContent>
-			<DialogActions>
+			{/* <DialogActions>
 				<Button>Salvar</Button>
-			</DialogActions>
+			</DialogActions> */}
 		</Dialog>
 	);
 };

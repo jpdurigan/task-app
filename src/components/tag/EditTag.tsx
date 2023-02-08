@@ -31,14 +31,11 @@ export const EditTag: React.FC<EditTagProps> = ({
 	updateTagColor,
 	moveTag,
 	deleteTag,
-	// setColorSelectorAnchor,
 }) => {
 	const [isEditingLabel, setIsEditingLabel] = useState<boolean>(false);
 	const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(
 		null
 	);
-	// const [newLabel, setNewLabel] = useState<string>(tag.label);
-	// const [newColor, setNewColor] = useState<validColor>(tag.color);
 
 	const handleMoveUp = () => {
 		moveTag(tag.id, -1);
@@ -52,12 +49,10 @@ export const EditTag: React.FC<EditTagProps> = ({
 
 	const handleUpdateLabel = (label: string) => {
 		updateTagLabel(tag.id, label);
-		// setNewLabel(label);
 	};
 
 	const handleUpdateColor = (color: validColor) => {
 		updateTagColor(tag.id, color);
-		// setNewColor(color);
 	};
 
 	const handleDelete = () => {
@@ -74,7 +69,7 @@ export const EditTag: React.FC<EditTagProps> = ({
 			alignItems="center"
 			justifyContent="space-around"
 			spacing={1}
-			width="100%"
+			width="400px"
 		>
 			<Box component="span" display="flex">
 				<IconButton onClick={handleMoveUp}>
@@ -84,6 +79,17 @@ export const EditTag: React.FC<EditTagProps> = ({
 					<ArrowDownward fontSize="small" />
 				</IconButton>
 			</Box>
+			<ThemeApp color={tag.color}>
+				<IconButton
+					color="primary"
+					onClick={(e) => {
+						closeEditingLabel();
+						setPopoverAnchor(e.currentTarget);
+					}}
+				>
+					<Circle fontSize="large" />
+				</IconButton>
+			</ThemeApp>
 			{isEditingLabel ? (
 				<Box
 					component="form"
@@ -91,16 +97,15 @@ export const EditTag: React.FC<EditTagProps> = ({
 						e.preventDefault();
 						closeEditingLabel();
 					}}
+					sx={{ width: "100%" }}
 				>
 					<TextField
 						variant="standard"
 						value={tag.label}
 						onChange={(e) => handleUpdateLabel(e.target.value)}
 						onBlur={(e) => closeEditingLabel()}
+						fullWidth
 					/>
-					<IconButton onClick={handleDelete}>
-						<Delete fontSize="small" />
-					</IconButton>
 				</Box>
 			) : (
 				<ButtonBase
@@ -113,17 +118,9 @@ export const EditTag: React.FC<EditTagProps> = ({
 				</ButtonBase>
 			)}
 
-			<ThemeApp color={tag.color}>
-				<IconButton
-					color="primary"
-					onClick={(e) => {
-						closeEditingLabel();
-						setPopoverAnchor(e.currentTarget);
-					}}
-				>
-					<Circle fontSize="large" />
-				</IconButton>
-			</ThemeApp>
+			<IconButton onClick={handleDelete}>
+						<Delete />
+					</IconButton>
 
 			<ColorSelectionPopover
 				anchor={popoverAnchor}

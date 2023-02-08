@@ -146,7 +146,7 @@ export class Database {
 
 	deleteTag = (id: number): void => {
 		let newTags = this.tags.filter((tag) => tag.id != id);
-		newTags = this.sortedTags(newTags);
+		newTags = this.sortTags(newTags);
 
 		newTags = newTags.map((tag, index) => {
 			let newTag = { ...tag } as Tag;
@@ -154,10 +154,17 @@ export class Database {
 			return newTag;
 		});
 
+		let newTasks = this.tasks.map((task) => {
+			const newTask = this.getCloneTask(task.id);
+			newTask.tags = newTask.tags.filter((tag: number) => tag != id)
+			return newTask;
+		});
+		
+		this.setTasks(newTasks);
 		this.setTags(newTags);
 	};
 
-	sortedTags = (tagArray: Tag[] = this.tags): Tag[] => {
+	sortTags = (tagArray: Tag[] = this.tags): Tag[] => {
 		return tagArray.sort((a, b) => a.ordering - b.ordering);
 	};
 }

@@ -1,3 +1,4 @@
+import { Settings } from "@mui/icons-material";
 import {
 	Button,
 	Chip,
@@ -6,6 +7,7 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
+	IconButton,
 	ListItemText,
 	MenuItem,
 	Select,
@@ -60,7 +62,12 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
 						/>
 					</Box>
 					<Box>
-						<DialogContentText variant="body2">Tags</DialogContentText>
+						<DialogContentText variant="body2">
+							Tags
+							<IconButton onClick={() => database.setShowTagsDialog(true)}>
+								<Settings fontSize="small" />
+							</IconButton>
+						</DialogContentText>
 						<Select
 							fullWidth
 							multiple
