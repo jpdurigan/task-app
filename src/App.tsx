@@ -18,8 +18,8 @@ import { border, Box } from "@mui/system";
 import { FormatListBulleted } from "@mui/icons-material";
 
 const App: React.FC = () => {
-	const [tags, setTags] = useState<Tag[]>()
-	const [notes, setNotes] = useState<Task[]>(exampleData);
+	const [tags, setTags] = useState<Tag[]>();
+	const [tasks, setTasks] = useState<Task[]>(exampleData);
 
 	return (
 		<ThemeApp>
@@ -41,8 +41,13 @@ const App: React.FC = () => {
 							justifyContent="center"
 							sx={{ minHeight: 80 }}
 						>
-							<FormatListBulleted fontSize="large" />
-							<Typography variant="button">A fazer</Typography>
+							<>
+								<FormatListBulleted fontSize="large" />
+								<Typography variant="button">A fazer</Typography>
+								{tasks.map((task) => (
+									<TaskBox task={task} />
+								))}
+							</>
 						</Box>
 						{/* <Divider variant="middle" /> */}
 					</Box>
@@ -54,7 +59,10 @@ const App: React.FC = () => {
 	);
 };
 
-const TaskBox: React.FC = () => {
+interface TaskBoxProps {
+	task: Task;
+}
+const TaskBox: React.FC<TaskBoxProps> = ({ task }) => {
 	return (
 		<Box
 			display="flex"
@@ -64,15 +72,11 @@ const TaskBox: React.FC = () => {
 			padding={2}
 			gap={2}
 		>
-			<Paper elevation={3} sx={{ maxWidth: 300, padding: "1em" }}>
-				<Typography fontSize="1.5em">Entregar trabalho no escaninho</Typography>
-				<Stack direction="row" spacing={1}>
-					<Chip label="Universidade" />
-					<Chip label="Universidade" />
-				</Stack>
-			</Paper>
-			<Paper elevation={3} sx={{ maxWidth: 300, padding: "1em" }}>
-				<Typography fontSize="1.5em">Entregar trabalho no escaninho</Typography>
+			<Paper
+				elevation={3}
+				sx={{ width: 300, padding: "1em" }}
+			>
+				<Typography fontSize="1.5em">{task.text}</Typography>
 				<Stack direction="row" spacing={1}>
 					<Chip label="Universidade" />
 					<Chip label="Universidade" />
