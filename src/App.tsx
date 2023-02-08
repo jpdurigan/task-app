@@ -11,6 +11,9 @@ import {
 	IconButton,
 	Paper,
 	Select,
+	SpeedDial,
+	SpeedDialAction,
+	SpeedDialIcon,
 	Stack,
 	Tab,
 	Tabs,
@@ -18,10 +21,12 @@ import {
 } from "@mui/material";
 import { border, Box } from "@mui/system";
 import {
+	Add,
 	CheckBoxOutlineBlank,
 	Delete,
 	Edit,
 	FormatListBulleted,
+	Settings,
 } from "@mui/icons-material";
 import { Database } from "./components/Database";
 import { TagStack } from "./components/tag/TagStack";
@@ -46,7 +51,7 @@ const App: React.FC = () => {
 
 	return (
 		<ThemeApp>
-			<div className="App">
+			<Box className="App">
 				<HeaderApp />
 				{/* <Divider /> */}
 				<Container
@@ -94,7 +99,11 @@ const App: React.FC = () => {
 				) : (
 					<></>
 				)}
-			</div>
+				<SpeedDial ariaLabel="SpeedDial" icon={<SpeedDialIcon/>} sx={{position: "fixed", bottom: "2em", right: "2em"}}>
+					<SpeedDialAction icon={<Add />} tooltipTitle="Nova nota" onClick={() => appDatabase.setEditingTask(-1)} />
+					<SpeedDialAction icon={<Settings />} tooltipTitle="Editar tags"  onClick={() => appDatabase.setShowTagsDialog(true)}/>
+				</SpeedDial>
+			</Box>
 		</ThemeApp>
 	);
 };
