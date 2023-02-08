@@ -57,7 +57,7 @@ export const NoteDialog: React.FC = () => {
 								setTags(newTags);
 							}}
 							renderValue={(selected: string[]) => (
-								<Box display="flex" gap={1}>
+								<Stack direction="row" gap={1}>
 									{selected.map((id: string) => (
 										<ThemeApp color={TagFromId(id).color}>
 											<Chip
@@ -67,7 +67,7 @@ export const NoteDialog: React.FC = () => {
 											/>
 										</ThemeApp>
 									))}
-								</Box>
+								</Stack>
 							)}
 						>
 							{exampleTags.map((tag: Tag) => (

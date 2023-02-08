@@ -8,15 +8,19 @@ import {
 	Chip,
 	Container,
 	Divider,
+	IconButton,
 	Paper,
+	Select,
 	Stack,
 	Tab,
 	Tabs,
 	Typography,
 } from "@mui/material";
 import { border, Box } from "@mui/system";
-import { FormatListBulleted } from "@mui/icons-material";
+import { CheckBoxOutlineBlank, Delete, Edit, FormatListBulleted } from "@mui/icons-material";
 import { Database } from "./components/Database";
+import { TagStack } from "./components/tag/TagStack";
+import { TaskBox } from "./components/task/TaskBox";
 
 const App: React.FC = () => {
 	const [tasks, setTasks] = useState<Task[]>(exampleData);
@@ -47,7 +51,7 @@ const App: React.FC = () => {
 								<FormatListBulleted fontSize="large" />
 								<Typography variant="button">A fazer</Typography>
 								{tasks.map((task) => (
-									<TaskBox task={task} />
+									<TaskBox task={task} database={appDatabase} />
 								))}
 							</>
 						</Box>
@@ -55,36 +59,9 @@ const App: React.FC = () => {
 					</Box>
 				</Container>
 				{/* <NoteDialog /> */}
-				<TagDialog database={appDatabase} show={true} />
+				{/* <TagDialog database={appDatabase} show={true} /> */}
 			</div>
 		</ThemeApp>
-	);
-};
-
-interface TaskBoxProps {
-	task: Task;
-}
-const TaskBox: React.FC<TaskBoxProps> = ({ task }) => {
-	return (
-		<Box
-			display="flex"
-			flexDirection="column"
-			alignItems="center"
-			justifyContent="center"
-			padding={2}
-			gap={2}
-		>
-			<Paper
-				elevation={3}
-				sx={{ width: 300, padding: "1em" }}
-			>
-				<Typography fontSize="1.5em">{task.text}</Typography>
-				<Stack direction="row" spacing={1}>
-					<Chip label="Universidade" />
-					<Chip label="Universidade" />
-				</Stack>
-			</Paper>
-		</Box>
 	);
 };
 
