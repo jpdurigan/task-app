@@ -1,69 +1,74 @@
 import React, { useState } from "react";
-import { TagDialog } from "./components/TagDialog";
-import { Note } from "./components/NoteCard";
+import { TagDialog } from "./components/tag/TagDialog";
 import { ThemeApp } from "./components/Theme";
-
-const noteExample: Note = {
-	id: 0,
-	text: "Nota exemplo",
-	done: false,
-};
+import { exampleData, Note } from "./components/Model";
+import { HeaderApp } from "./components/HeaderApp";
+import { NoteDialog } from "./components/note/NoteDialog";
+import {
+	Chip,
+	Container,
+	Divider,
+	Paper,
+	Stack,
+	Tab,
+	Tabs,
+	Typography,
+} from "@mui/material";
+import { border, Box } from "@mui/system";
+import { FormatListBulleted } from "@mui/icons-material";
 
 const App: React.FC = () => {
-	const [newNote, setNewNote] = useState<string>("");
-	const [notes, setNotes] = useState<Note[]>([noteExample]);
-
-	const addNote = (text: string): void => {
-		if (text.trim().length === 0) return;
-		const id: number = Math.floor(Math.random() * 100000000);
-		const note: Note = {
-			id: id,
-			text: text.trim(),
-			done: false,
-		};
-		setNotes([...notes, note]);
-	};
-
-	const deleteNote = (id: number): void => {
-		setNotes(notes.filter((note) => note.id !== id));
-	};
-
-	const editNote = (id: number, text: string, done: boolean): void => {
-		setNotes(
-			notes.map((note) => {
-				if (note.id === id) {
-					note.text = text;
-					note.done = done;
-				}
-				return note;
-			})
-		);
-	};
+	const [notes, setNotes] = useState<Note[]>(exampleData);
 
 	return (
 		<ThemeApp>
 			<div className="App">
-				{/* <HeaderApp /> */}
-				{/* <h1 className="center-align">Minhas notas</h1> */}
-				{/* <InputField
-					currentValue={newNote}
-					setCurrentValue={setNewNote}
-					add={addNote}
-				/> */}
-				{/* <Divider /> */}
-				{/* <div className="container section row s-grid-gap">
-					{notes.map((note: Note) => (
-						<NoteCard
-							id={note.id}
-							text={note.text}
-							done={note.done}
-							edit={editNote}
-							delete={deleteNote}
-						/>
-					))}
-				</div> */}
-				{/* <NewNoteDialog /> */}
-				<TagDialog />
+				<HeaderApp />
+				<Divider />
+				<Container>
+					<Box sx={{ minWidth: 200 }}>
+						<Box
+							display="flex"
+							flexDirection="column"
+							alignItems="center"
+							justifyContent="center"
+							sx={{ minHeight: 80 }}
+						>
+							<FormatListBulleted fontSize="large" />
+							<Typography variant="button">A fazer</Typography>
+						</Box>
+						<Divider variant="middle" />
+						<Box
+							display="flex"
+							flexDirection="column"
+							alignItems="center"
+							justifyContent="center"
+							padding={2}
+							gap={2}
+						>
+							<Paper elevation={3} sx={{ maxWidth: 300, padding: "1em" }}>
+								<Typography fontSize="1.5em">
+									Entregar trabalho no escaninho
+								</Typography>
+								<Stack direction="row" spacing={1}>
+									<Chip label="Universidade" />
+									<Chip label="Universidade" />
+								</Stack>
+							</Paper>
+							<Paper elevation={3} sx={{ maxWidth: 300, padding: "1em" }}>
+								<Typography fontSize="1.5em">
+									Entregar trabalho no escaninho
+								</Typography>
+								<Stack direction="row" spacing={1}>
+									<Chip label="Universidade" />
+									<Chip label="Universidade" />
+								</Stack>
+							</Paper>
+						</Box>
+					</Box>
+				</Container>
+				{/* <NoteDialog />
+				<TagDialog /> */}
 			</div>
 		</ThemeApp>
 	);

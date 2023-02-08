@@ -7,10 +7,10 @@ import {
 	Divider,
 } from "@mui/material";
 import { useState } from "react";
-import { knownTags, Tag } from "./Model";
-import { EditTag } from "./tag/EditTag";
-import { NewTag } from "./tag/NewTag";
-import { ColorGrid, ColorsApp, validColor } from "./Theme";
+import { knownTags, Tag } from "../Model";
+import { EditTag } from "./EditTag";
+import { NewTag } from "./NewTag";
+import { ColorGrid, ColorsApp, validColor } from "../Theme";
 
 let selectedColor: validColor = ColorsApp.Blue;
 

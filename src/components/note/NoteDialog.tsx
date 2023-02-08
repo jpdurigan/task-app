@@ -13,14 +13,14 @@ import {
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useState } from "react";
-import { exampleTags, knownTags, Tag } from "./Model";
-import { ColorsApp, ThemeApp } from "./Theme";
+import { exampleTags, knownTags, Tag } from "../Model";
+import { ColorsApp, ThemeApp } from "../Theme";
 
 const TagFromId = (id: string) => {
 	return knownTags.find((t: Tag) => t.id == parseInt(id)) as Tag;
 };
 
-export const NewNoteDialog: React.FC = () => {
+export const NoteDialog: React.FC = () => {
 	const [text, setText] = useState<string>("");
 	const [tags, setTags] = useState<Tag[]>([]);
 	const tagsAsValue = ():string[] => tags.map((t: Tag) => (t.id).toString())
