@@ -3,7 +3,7 @@ import { TagDialog } from "./components/tag/TagDialog";
 import { ThemeApp } from "./components/Theme";
 import { exampleData, exampleTags, Tag, Task } from "./components/Model";
 import { HeaderApp } from "./components/HeaderApp";
-import { NoteDialog } from "./components/task/TaskDialog";
+import { TaskDialog } from "./components/task/TaskDialog";
 import {
 	Chip,
 	Container,
@@ -30,7 +30,19 @@ import { TaskBox } from "./components/task/TaskBox";
 const App: React.FC = () => {
 	const [tasks, setTasks] = useState<Task[]>(exampleData);
 	const [tags, setTags] = useState<Tag[]>(exampleTags);
-	const appDatabase = new Database(tasks, setTasks, tags, setTags);
+	const [editingTask, setEditingTask] = useState<number | undefined>();
+	const [showTagsDialog, setShowTagsDialog] = useState<boolean>(false);
+
+	const appDatabase = new Database(
+		tasks,
+		setTasks,
+		tags,
+		setTags,
+		editingTask,
+		setEditingTask,
+		showTagsDialog,
+		setShowTagsDialog
+	);
 
 	return (
 		<ThemeApp>
@@ -72,8 +84,16 @@ const App: React.FC = () => {
 						{/* <Divider variant="middle" /> */}
 					</Box>
 				</Container>
-				{/* <NoteDialog /> */}
-				{/* <TagDialog database={appDatabase} show={true} /> */}
+				{appDatabase.showTaskDialog() ? (
+					<TaskDialog database={appDatabase} />
+				) : (
+					<></>
+				)}
+				{appDatabase.showTagsDialog ? (
+					<TagDialog database={appDatabase} />
+				) : (
+					<></>
+				)}
 			</div>
 		</ThemeApp>
 	);

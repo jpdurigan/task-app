@@ -17,11 +17,10 @@ let selectedColor: validColor = ColorsApp.Blue;
 
 interface TagDialogProps {
 	database: Database,
-	show: boolean,
 }
-export const TagDialog: React.FC<TagDialogProps> = ({database, show}) => {
+export const TagDialog: React.FC<TagDialogProps> = ({database}) => {
 	return (
-		<Dialog open={show}>
+		<Dialog open={true}>
 			<DialogTitle>Editar tags</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
 				<NewTag addNewTag={database.addNewTag} tags={database.tags} />

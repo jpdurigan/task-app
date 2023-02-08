@@ -31,7 +31,7 @@ export const TaskBox: React.FC<TaskBoxProps> = ({ task, database }) => {
 			/>
 			<Stack direction="row">
 				<Box component="span" textAlign="left" width="100%">
-					<IconButton>
+					<IconButton onClick={() => database.setEditingTask(task.id)}>
 						<Edit />
 					</IconButton>
 				</Box>
