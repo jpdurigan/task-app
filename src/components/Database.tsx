@@ -101,6 +101,10 @@ export class Database {
 		return this.tags.find((tag) => tag.id === id) as Tag;
 	};
 
+	getAllTags = (): number[] => this.tags.map((tag) => tag.id);
+
+	getTagsForDisplay = ():(number | undefined)[] => [undefined, ...this.getAllTags()];
+
 	getCloneTag = (id: number): Tag => {
 		return { ...this.getTag(id) } as Tag;
 	};

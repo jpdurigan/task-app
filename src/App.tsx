@@ -4,7 +4,6 @@ import { ThemeApp } from "./components/Theme";
 import { exampleData, exampleTags, Tag, Task } from "./components/Model";
 import { HeaderApp } from "./components/HeaderApp";
 import { TaskDialogHandler } from "./components/task/TaskDialog";
-import { Container } from "@mui/material";
 import { Box } from "@mui/system";
 import { Database } from "./components/Database";
 import { SpeedDialApp } from "./components/SpeedDialApp";
@@ -31,27 +30,7 @@ const App: React.FC = () => {
 		<ThemeApp>
 			<Box className="App">
 				<HeaderApp />
-				<Container
-					sx={{
-						display: "flex",
-						overflow: "auto",
-						justifyContent: "center",
-						alignItems: "start",
-						gap: "4em",
-					}}
-				>
-					<TaskDisplay
-						database={appDatabase}
-						tagId={0}
-						sx={{ transform: "translate(-10%, 64px)", opacity: 0.5 }}
-					/>
-					<TaskDisplay database={appDatabase} />
-					<TaskDisplay
-						database={appDatabase}
-						tagId={2}
-						sx={{ transform: "translate(10%, 64px)", opacity: 0.5 }}
-					/>
-				</Container>
+				<TaskDisplay database={appDatabase} />
 				<TaskDialogHandler database={appDatabase} />
 				<TagDialogHandler database={appDatabase} />
 				<SpeedDialApp database={appDatabase} />
