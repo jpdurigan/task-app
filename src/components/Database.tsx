@@ -87,6 +87,12 @@ export class Database {
 		});
 	};
 
+	getTasksByTag = (tagId: number, taskArray: Task[] = this.tasks): Task[] => {
+		return this.sortTasks(
+			taskArray.filter((task) => task.tags.includes(tagId))
+		);
+	};
+
 	//////////////////////////////
 	//           TAGS           //
 	//////////////////////////////
@@ -156,10 +162,10 @@ export class Database {
 
 		let newTasks = this.tasks.map((task) => {
 			const newTask = this.getCloneTask(task.id);
-			newTask.tags = newTask.tags.filter((tag: number) => tag != id)
+			newTask.tags = newTask.tags.filter((tag: number) => tag != id);
 			return newTask;
 		});
-		
+
 		this.setTasks(newTasks);
 		this.setTags(newTags);
 	};

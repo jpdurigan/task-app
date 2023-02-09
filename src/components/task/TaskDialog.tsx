@@ -1,7 +1,6 @@
 import { Settings } from "@mui/icons-material";
 import {
 	Button,
-	Chip,
 	Dialog,
 	DialogActions,
 	DialogContent,
@@ -18,13 +17,12 @@ import { useState } from "react";
 import { Database } from "../Database";
 import { exampleTags, Tag } from "../Model";
 import { TagStack } from "../tag/TagStack";
-import { ColorsApp, ThemeApp } from "../Theme";
 
 interface TaskDialogProps {
 	database: Database;
 }
 
-export const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
+const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
 	const isNewTask = database.editingTask === -1;
 	const [text, setText] = useState<string>(
 		isNewTask ? "" : database.getTask(database.editingTask as number).text
@@ -108,3 +106,6 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
 		</Dialog>
 	);
 };
+
+export const TaskDialogHandler: React.FC<TaskDialogProps> = ({ database }) =>
+	database.showTaskDialog() ? <TaskDialog database={database} /> : <></>;

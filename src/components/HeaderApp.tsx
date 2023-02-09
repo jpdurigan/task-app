@@ -1,4 +1,4 @@
-import { Container, TextField, Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import "@mui/material/Icon";
 import { Assignment } from "@mui/icons-material";
@@ -19,7 +19,7 @@ export const HeaderApp: React.FC = () => {
 					display="contents"
 				>
 					<Assignment fontSize="inherit" color="primary" />
-					Minhas tarefas
+					Tarefas
 				</Typography>
 			</Box>
 		</Container>

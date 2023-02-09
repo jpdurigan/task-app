@@ -1,24 +1,14 @@
-import {
-	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	Divider,
-} from "@mui/material";
-import { useState } from "react";
-import { exampleTags, Tag } from "../Model";
+import { Dialog, DialogContent, DialogTitle, Divider } from "@mui/material";
+import { Tag } from "../Model";
 import { EditTag } from "./EditTag";
 import { NewTag } from "./NewTag";
-import { ColorGrid, ColorsApp, validColor } from "../Theme";
 import { Database } from "../Database";
 
-let selectedColor: validColor = ColorsApp.Blue;
-
 interface TagDialogProps {
-	database: Database,
+	database: Database;
 }
-export const TagDialog: React.FC<TagDialogProps> = ({database}) => {
+
+const TagDialog: React.FC<TagDialogProps> = ({ database }) => {
 	return (
 		<Dialog open={true} onClose={() => database.setShowTagsDialog(false)}>
 			<DialogTitle>Editar tags</DialogTitle>
@@ -35,9 +25,9 @@ export const TagDialog: React.FC<TagDialogProps> = ({database}) => {
 					/>
 				))}
 			</DialogContent>
-			{/* <DialogActions>
-				<Button>Salvar</Button>
-			</DialogActions> */}
 		</Dialog>
 	);
 };
+
+export const TagDialogHandler: React.FC<TagDialogProps> = ({ database }) =>
+	database.showTagsDialog ? <TagDialog database={database} /> : <></>;
