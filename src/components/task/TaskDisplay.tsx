@@ -31,7 +31,6 @@ export const TaskDisplay: React.FC<TaskDisplayProps> = ({ database }) => {
 		<Container
 			sx={{
 				display: "flex",
-				overflow: "clip",
 				justifyContent: "center",
 				alignItems: "start",
 				gap: "4em",

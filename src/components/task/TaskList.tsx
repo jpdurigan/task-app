@@ -1,5 +1,5 @@
 import { FormatListBulleted } from "@mui/icons-material";
-import { Box, SxProps, Typography } from "@mui/material";
+import { Badge, Box, SxProps, Typography } from "@mui/material";
 import { Database } from "../Database";
 import { Task } from "../Model";
 import { TaskBox } from "./TaskBox";
@@ -15,6 +15,7 @@ export const TaskList: React.FC<TaskLinkProps> = ({ database, tagId, sx }) => {
 		tagId === undefined ? database.sortTasks() : database.getTasksByTag(tagId);
 	const displayName: string =
 		tagId === undefined ? "Todas as notas" : database.getTag(tagId).label;
+	const toDoCount: number = tasks.filter((task) => !task.done).length;
 
 	return (
 		<Box sx={{ minWidth: 300, ...sx }}>
@@ -25,7 +26,9 @@ export const TaskList: React.FC<TaskLinkProps> = ({ database, tagId, sx }) => {
 				justifyContent="center"
 				minHeight="60px"
 			>
+				<Badge badgeContent={toDoCount} color="primary">
 				<FormatListBulleted fontSize="large" />
+				</Badge>
 				<Typography variant="button">{displayName}</Typography>
 			</Box>
 			<Box
