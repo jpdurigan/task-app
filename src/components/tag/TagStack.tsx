@@ -15,10 +15,9 @@ export const TagStack: React.FC<TagStackProps> = ({ tagList, database, sx, disab
 	return (
 		<Stack direction="row" gap={1} sx={sx !== undefined ? sx : {}} >
 			{sortedTags.map((tag: Tag) => (
-				<ThemeApp color={tag.color}>
+				<ThemeApp color={tag.color} key={tag.id}>
 					<Chip
 						label={tag.label}
-						key={`new-note-selected-tag-${tag.id}`}
 						color="primary"
 						disabled={disabled !== undefined ? disabled : false}
 					/>

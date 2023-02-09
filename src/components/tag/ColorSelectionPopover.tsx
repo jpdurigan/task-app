@@ -30,7 +30,7 @@ export const ColorSelectionPopover: React.FC<ColorSelectionPopoverProps> = ({
 	>
 		<Grid container maxWidth={150}>
 			{ColorGrid.map((color) => (
-				<Grid item xs={4} key={`color-selector-${color[200]}`}>
+				<Grid item xs={4} key={color[200]}>
 					<ThemeApp color={color}>
 						<IconButton
 							color={color == currentColor ? "info" : "primary"}

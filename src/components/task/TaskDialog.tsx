@@ -90,7 +90,7 @@ const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
 							{exampleTags.map((tag: Tag) => (
 								<MenuItem
 									value={tag.id.toString()}
-									key={`task-dialog-select-tag-${tag.id}`}
+									key={tag.id}
 								>
 									<ListItemText primary={tag.label} />
 								</MenuItem>

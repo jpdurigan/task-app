@@ -37,7 +37,7 @@ export const TaskList: React.FC<TaskLinkProps> = ({ database, tagId, sx }) => {
 				gap={2}
 			>
 				{tasks.map((task) => (
-					<TaskBox task={task} database={database} />
+					<TaskBox task={task} database={database} key={task.id} />
 				))}
 			</Box>
 		</Box>

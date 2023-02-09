@@ -20,7 +20,6 @@ export const TaskBox: React.FC<TaskBoxProps> = ({ task, database }) => {
 				backgroundColor: task.done ? ColorsApp.Primary[50] : "inherit",
                 color: task.done ? "GrayText" : "inherit",
 			}}
-			key={`task-box-${task.id}`}
 		>
 			<Typography fontSize="1.5em">{task.text}</Typography>
 			<TagStack

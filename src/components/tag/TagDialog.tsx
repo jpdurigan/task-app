@@ -22,6 +22,7 @@ const TagDialog: React.FC<TagDialogProps> = ({ database }) => {
 						updateTagColor={database.updateTagColor}
 						moveTag={database.moveTag}
 						deleteTag={database.deleteTag}
+						key={tag.id}
 					/>
 				))}
 			</DialogContent>
