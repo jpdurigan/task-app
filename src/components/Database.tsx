@@ -1,4 +1,4 @@
-import { Task, Tag } from "./Model";
+import { Task, Tag, exampleTags, exampleTasks } from "./Model";
 import { ColorGrid, validColor } from "./Theme";
 
 export class Database {
@@ -103,7 +103,10 @@ export class Database {
 
 	getAllTags = (): number[] => this.tags.map((tag) => tag.id);
 
-	getTagsForDisplay = ():(number | undefined)[] => [undefined, ...this.getAllTags()];
+	getTagsForDisplay = (): (number | undefined)[] => [
+		undefined,
+		...this.getAllTags(),
+	];
 
 	getCloneTag = (id: number): Tag => {
 		return { ...this.getTag(id) } as Tag;
@@ -177,4 +180,34 @@ export class Database {
 	sortTags = (tagArray: Tag[] = this.tags): Tag[] => {
 		return tagArray.sort((a, b) => a.ordering - b.ordering);
 	};
+
+	//////////////////////////////
+	//       PERSISTENCE        //
+	//////////////////////////////
+
+	STORAGE_KEY = "APP_DATA";
+
+	loadFromStorage = (): void => {
+		const rawData = window.localStorage.getItem(this.STORAGE_KEY);
+		console.log(`Got raw data: ${rawData}`)
+		if (rawData === null) {
+			this.initialize();
+			return;
+		};
+
+		const data = JSON.parse(rawData);
+		console.log("data", data)
+		if (data.tags != null) this.setTags(data.tags);
+		if (data.tasks != null) this.setTasks(data.tasks);
+	};
+
+	saveToStorage = (): void => {
+		const data = { tasks: this.tasks, tags: this.tags };
+		window.localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+	};
+
+	initialize = ():void => {
+		this.setTags(exampleTags);
+		this.setTasks(exampleTasks);
+	}
 }

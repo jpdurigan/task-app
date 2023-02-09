@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TagDialogHandler } from "./components/tag/TagDialog";
 import { ThemeApp } from "./components/Theme";
-import { exampleData, exampleTags, Tag, Task } from "./components/Model";
+import { Tag, Task } from "./components/Model";
 import { HeaderApp } from "./components/HeaderApp";
 import { TaskDialogHandler } from "./components/task/TaskDialog";
 import { Box } from "@mui/system";
@@ -10,8 +10,8 @@ import { SpeedDialApp } from "./components/SpeedDialApp";
 import { TaskDisplay } from "./components/task/TaskDisplay";
 
 const App: React.FC = () => {
-	const [tasks, setTasks] = useState<Task[]>(exampleData);
-	const [tags, setTags] = useState<Tag[]>(exampleTags);
+	const [tasks, setTasks] = useState<Task[]>([]);
+	const [tags, setTags] = useState<Tag[]>([]);
 	const [editingTask, setEditingTask] = useState<number | undefined>();
 	const [showTagsDialog, setShowTagsDialog] = useState<boolean>(false);
 
@@ -25,6 +25,15 @@ const App: React.FC = () => {
 		showTagsDialog,
 		setShowTagsDialog
 	);
+
+	useEffect(() => {
+		console.log("use effect []");
+		appDatabase.loadFromStorage();
+	}, []);
+	useEffect(() => {
+		console.log("use effect [tasks, tags]");
+		appDatabase.saveToStorage();
+	}, [tasks, tags]);
 
 	return (
 		<ThemeApp>

@@ -36,7 +36,7 @@ export const exampleTags: Tag[] = [
 	},
 ];
 
-export const exampleData: Task[] = [
+export const exampleTasks: Task[] = [
 	{
 		id: 1,
 		text: "Entregar trabalho no escaninho",
