@@ -10,7 +10,7 @@ import {
 	teal,
 	yellow,
 } from "@mui/material/colors";
-import { Color, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { Color, createTheme, ThemeProvider } from "@mui/material";
 
 export const ColorsApp = {
 	Primary: blueGrey,
@@ -43,7 +43,7 @@ interface ThemeAppProps {
 }
 
 export const ThemeApp: React.FC<ThemeAppProps> = ({ children, color }) => {
-	const trueColor: Color = color != undefined ? color : ColorsApp.Primary;
+	const trueColor: Color = color !== undefined ? color : ColorsApp.Primary;
 	const theme = createTheme({
 		palette: {
 			primary: trueColor,

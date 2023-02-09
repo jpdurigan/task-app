@@ -31,7 +31,7 @@ export class Database {
 		this.setShowTagsDialog = setShowTagsDialog;
 	}
 
-	showTaskDialog = () => this.editingTask != undefined;
+	showTaskDialog = () => this.editingTask !== undefined;
 
 	//////////////////////////////
 	//          TASKS           //
@@ -76,13 +76,13 @@ export class Database {
 	};
 
 	deleteTask = (id: number): void => {
-		let newTasks = this.tasks.filter((task) => task.id != id);
+		let newTasks = this.tasks.filter((task) => task.id !== id);
 		this.setTasks(newTasks);
 	};
 
 	sortTasks = (taskArray: Task[] = this.tasks): Task[] => {
 		return taskArray.sort((a, b) => {
-			if (a.done != b.done) return a.done ? 1 : -1;
+			if (a.done !== b.done) return a.done ? 1 : -1;
 			else return a.date - b.date;
 		});
 	};
@@ -158,7 +158,7 @@ export class Database {
 	};
 
 	deleteTag = (id: number): void => {
-		let newTags = this.tags.filter((tag) => tag.id != id);
+		let newTags = this.tags.filter((tag) => tag.id !== id);
 		newTags = this.sortTags(newTags);
 
 		newTags = newTags.map((tag, index) => {
@@ -169,7 +169,7 @@ export class Database {
 
 		let newTasks = this.tasks.map((task) => {
 			const newTask = this.getCloneTask(task.id);
-			newTask.tags = newTask.tags.filter((tag: number) => tag != id);
+			newTask.tags = newTask.tags.filter((tag: number) => tag !== id);
 			return newTask;
 		});
 
@@ -189,14 +189,12 @@ export class Database {
 
 	loadFromStorage = (): void => {
 		const rawData = window.localStorage.getItem(this.STORAGE_KEY);
-		console.log(`Got raw data: ${rawData}`)
 		if (rawData === null) {
 			this.initialize();
 			return;
 		};
 
 		const data = JSON.parse(rawData);
-		console.log("data", data)
 		if (data.tags != null) this.setTags(data.tags);
 		if (data.tasks != null) this.setTasks(data.tasks);
 	};

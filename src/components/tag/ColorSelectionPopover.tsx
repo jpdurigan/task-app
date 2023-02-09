@@ -33,7 +33,7 @@ export const ColorSelectionPopover: React.FC<ColorSelectionPopoverProps> = ({
 				<Grid item xs={4} key={color[200]}>
 					<ThemeApp color={color}>
 						<IconButton
-							color={color == currentColor ? "info" : "primary"}
+							color={color === currentColor ? "info" : "primary"}
 							onClick={(e) => {
 								setNewColor(color);
 								setAnchor(null);

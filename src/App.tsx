@@ -27,11 +27,9 @@ const App: React.FC = () => {
 	);
 
 	useEffect(() => {
-		console.log("use effect []");
 		appDatabase.loadFromStorage();
 	}, []);
 	useEffect(() => {
-		console.log("use effect [tasks, tags]");
 		appDatabase.saveToStorage();
 	}, [tasks, tags]);
 
