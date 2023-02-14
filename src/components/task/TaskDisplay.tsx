@@ -1,13 +1,70 @@
+import { Keyframes } from "@emotion/react";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { Container, IconButton } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, keyframes, SxProps } from "@mui/system";
 import { useState } from "react";
 import { Database } from "../Database";
 import { TaskList } from "./TaskList";
 
-const sxMain = { transform: "", opacity: 1 };
-const sxPrev = { transform: "translate(-10%, 64px)", opacity: 0.5 };
-const sxProx = { transform: "translate(+10%, 64px)", opacity: 0.5 };
+const framePrev = {
+	opacity: 0.0,
+	transform: "translate(-110%, 0)",
+	display: "none",
+};
+const frameMain = { opacity: 1.0, transform: "translate(   0, 0)" };
+const frameProx = {
+	opacity: 0.0,
+	transform: "translate(+110%, 0)",
+	display: "none",
+};
+
+const enterDefault = keyframes`
+0% {
+	${frameMain}
+}
+`;
+
+const enterLeft = keyframes`
+0% {
+	${framePrev}
+}
+100% {
+	${frameMain}
+}
+`;
+
+const enterRight = keyframes`
+0% {
+	${frameProx}
+}
+100% {
+	${frameMain}
+}
+`;
+
+const exitDefault = keyframes`
+0%, 100% {
+	${frameProx}
+}
+`;
+
+const exitLeft = keyframes`
+0% {
+	${frameMain}
+}
+100% {
+	${frameProx}
+}
+`;
+
+const exitRight = keyframes`
+0% {
+	${frameMain}
+}
+100% {
+	${framePrev}
+}
+`;
 
 interface TaskDisplayProps {
 	database: Database;
@@ -15,17 +72,51 @@ interface TaskDisplayProps {
 
 export const TaskDisplay: React.FC<TaskDisplayProps> = ({ database }) => {
 	const [index, setIndex] = useState<number>(0);
+	const [movement, setMovement] = useState<-1 | 0 | 1>(0);
 
-	const wrapIndex = (idx: number, arr: any[]): number =>
-		((idx % arr.length) + arr.length) % arr.length;
+	const enterAnimation = (): Keyframes => {
+		switch (movement) {
+			case -1:
+				return enterLeft;
+			case 1:
+				return enterRight;
+			default:
+				return enterDefault;
+		}
+	};
 
-	const getProx = (): number =>
-		wrapIndex(index + 1, database.getTagsForDisplay());
-	const getPrev = (): number =>
-		wrapIndex(index - 1, database.getTagsForDisplay());
+	const exitAnimation = (): Keyframes => {
+		switch (movement) {
+			case -1:
+				return exitLeft;
+			case 1:
+				return exitRight;
+			default:
+				return exitDefault;
+		}
+	};
 
-	const moveToProx = () => setIndex(getProx());
-	const moveToPrev = () => setIndex(getPrev());
+	const sxList = (animation: Keyframes): SxProps => {
+		return {
+			position: "absolute",
+			animation: `${animation} 600ms cubic-bezier(0.31, 0.95, 0.7, 1.07) forwards`,
+		};
+	};
+
+	const wrapIndex = (
+		idx: number,
+		arr: any[] = database.getTagsForDisplay()
+	): number => ((idx % arr.length) + arr.length) % arr.length;
+
+	const moveRight = () => {
+		setMovement(+1);
+		setIndex(wrapIndex(index + 1));
+	};
+	const moveLeft = () => {
+		setMovement(-1);
+		setIndex(wrapIndex(index - 1));
+	};
+	const getPrev = () => wrapIndex(index - movement);
 
 	return (
 		<Container
@@ -36,6 +127,20 @@ export const TaskDisplay: React.FC<TaskDisplayProps> = ({ database }) => {
 				gap: "4em",
 			}}
 		>
+			{movement !== 0 && (
+				<TaskList
+					database={database}
+					tagId={database.getTagsForDisplay()[getPrev()]}
+					sx={sxList(exitAnimation())}
+					key={getPrev()}
+				/>
+			)}
+			<TaskList
+				database={database}
+				tagId={database.getTagsForDisplay()[index]}
+				sx={sxList(enterAnimation())}
+				key={index}
+			/>
 			<Box
 				sx={{
 					minWidth: 300,
@@ -50,28 +155,13 @@ export const TaskDisplay: React.FC<TaskDisplayProps> = ({ database }) => {
 					justifyContent: "space-between",
 				}}
 			>
-				<IconButton onClick={moveToPrev}>
+				<IconButton onClick={moveLeft}>
 					<ChevronLeft />
 				</IconButton>
-				<IconButton onClick={moveToProx}>
+				<IconButton onClick={moveRight}>
 					<ChevronRight />
 				</IconButton>
 			</Box>
-			<TaskList
-				database={database}
-				tagId={database.getTagsForDisplay()[getPrev()]}
-				sx={sxPrev}
-			/>
-			<TaskList
-				database={database}
-				tagId={database.getTagsForDisplay()[index]}
-				sx={sxMain}
-			/>
-			<TaskList
-				database={database}
-				tagId={database.getTagsForDisplay()[getProx()]}
-				sx={sxProx}
-			/>
 		</Container>
 	);
 };
