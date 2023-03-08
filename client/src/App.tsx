@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TagDialogHandler } from "./components/tag/TagDialog";
 import { ThemeApp } from "./components/Theme";
 import { Tag, Task } from "./components/Model";
@@ -25,13 +25,14 @@ const App: React.FC = () => {
 		showTagsDialog,
 		setShowTagsDialog
 	);
+	const appDatabaseRef = useRef(appDatabase);
 
 	useEffect(() => {
-		appDatabase.loadFromStorage();
-	}, []);
+		appDatabaseRef.current.loadFromStorage();
+	}, [appDatabaseRef]);
 	useEffect(() => {
-		appDatabase.saveToStorage();
-	}, [tasks, tags]);
+		appDatabaseRef.current.saveToStorage();
+	}, [tasks, tags, appDatabaseRef]);
 
 	return (
 		<ThemeApp>
