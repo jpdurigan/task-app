@@ -8,6 +8,8 @@ import { Box } from "@mui/system";
 import { Database } from "./components/Database";
 import { SpeedDialApp } from "./components/SpeedDialApp";
 import { TaskDisplay } from "./components/task/TaskDisplay";
+import "./firebase-config.ts";
+import { Auth } from "./components/Auth";
 
 const App: React.FC = () => {
 	const [tasks, setTasks] = useState<Task[]>([]);
@@ -38,6 +40,7 @@ const App: React.FC = () => {
 		<ThemeApp>
 			<Box className="App">
 				<HeaderApp />
+				<Auth />
 				<TaskDisplay database={appDatabase} />
 				<TaskDialogHandler database={appDatabase} />
 				<TagDialogHandler database={appDatabase} />
