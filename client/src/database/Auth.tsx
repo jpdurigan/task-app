@@ -20,9 +20,10 @@ import {
 	signOut,
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { auth, googleProvider } from "../firebase-config";
+import { auth, googleProvider } from "./Firebase";
 import { FirebaseError } from "firebase/app";
 import { Google } from "@mui/icons-material";
+import { UserServer } from "./User";
 
 export const AuthDialog: React.FC = () => {
 	const [showDialog, setShowDialog] = useState<boolean>(true);
@@ -32,8 +33,9 @@ export const AuthDialog: React.FC = () => {
 	useEffect(() => {
 		auth.onAuthStateChanged((user) => {
 			setUser(user);
+			UserServer.setCurrentUser(user);
 		});
-		if (auth.currentUser) setShowDialog(false);
+		if (UserServer.isLoggedIn()) setShowDialog(false);
 	}, []);
 
 	const isLoggedIn = user !== null;
@@ -61,7 +63,7 @@ export const AuthDialog: React.FC = () => {
 	};
 
 	return (
-		<Dialog open={showDialog}>
+		<Dialog open={showDialog} onBlur={() => setShowDialog(false)}>
 			<DialogTitle>Autenticação</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
 				{!isLoggedIn && (

@@ -13,24 +13,16 @@ import {
 	Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { Tag } from "../../database/Model";
+import { Tag, TagServer } from "../../database/Tag";
 import { ValidColor, ThemeApp } from "../../database/Theme";
 import { ColorSelectionPopover } from "./ColorSelectionPopover";
 
 interface EditTagProps {
 	tag: Tag;
-	updateTagLabel: (id: string, label: string) => void;
-	updateTagColor: (id: string, color: ValidColor) => void;
-	moveTag: (id: string, move: 1 | -1) => void;
-	deleteTag: (id: string) => void;
 }
 
 export const EditTag: React.FC<EditTagProps> = ({
 	tag,
-	updateTagLabel,
-	updateTagColor,
-	moveTag,
-	deleteTag,
 }) => {
 	const [isEditingLabel, setIsEditingLabel] = useState<boolean>(false);
 	const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(
@@ -38,25 +30,25 @@ export const EditTag: React.FC<EditTagProps> = ({
 	);
 
 	const handleMoveUp = () => {
-		moveTag(tag.id, -1);
+		TagServer.moveTag(tag.id, -1);
 		closeEditingLabel();
 	};
 
 	const handleMoveDown = () => {
-		moveTag(tag.id, +1);
+		TagServer.moveTag(tag.id, +1);
 		closeEditingLabel();
 	};
 
 	const handleUpdateLabel = (label: string) => {
-		updateTagLabel(tag.id, label);
+		TagServer.updateTagLabel(tag.id, label);
 	};
 
 	const handleUpdateColor = (color: ValidColor) => {
-		updateTagColor(tag.id, color);
+		TagServer.updateTagColor(tag.id, color);
 	};
 
 	const handleDelete = () => {
-		deleteTag(tag.id);
+		TagServer.deleteTag(tag.id);
 	};
 
 	const closeEditingLabel = () => {

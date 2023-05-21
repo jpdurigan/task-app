@@ -1,7 +1,7 @@
 import { Edit, CheckBoxOutlineBlank, CheckBox } from "@mui/icons-material";
 import { Box, Paper, Typography, Stack, IconButton } from "@mui/material";
 import { Database } from "../../database/Database";
-import { Task } from "../../database/Model";
+import { Task } from "../../database/Task";
 import { TagStack } from "../tag/TagStack";
 import { Palette } from "../../database/Theme";
 

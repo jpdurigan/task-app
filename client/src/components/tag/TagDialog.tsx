@@ -1,34 +1,23 @@
 import { Dialog, DialogContent, DialogTitle, Divider } from "@mui/material";
-import { Tag } from "../../database/Model";
+import { Tag, TagServer } from "../../database/Tag";
 import { EditTag } from "./EditTag";
 import { NewTag } from "./NewTag";
-import { Database } from "../../database/Database";
 
 interface TagDialogProps {
-	database: Database;
+	show?: boolean;
 }
 
-const TagDialog: React.FC<TagDialogProps> = ({ database }) => {
+export const TagDialog: React.FC<TagDialogProps> = ({ show = false }) => {
 	return (
-		<Dialog open={true} onClose={() => database.setShowTagsDialog(false)}>
+		<Dialog open={show}>
 			<DialogTitle>Editar tags</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
-				<NewTag addNewTag={database.addNewTag} tags={database.tags} />
+				<NewTag />
 				<Divider sx={{ margin: "1em 0" }} />
-				{database.sortTags().map((tag: Tag) => (
-					<EditTag
-						tag={tag}
-						updateTagLabel={database.updateTagLabel}
-						updateTagColor={database.updateTagColor}
-						moveTag={database.moveTag}
-						deleteTag={database.deleteTag}
-						key={tag.id}
-					/>
+				{TagServer.getAllTags().map((tag: Tag) => (
+					<EditTag tag={tag} key={tag.id} />
 				))}
 			</DialogContent>
 		</Dialog>
 	);
 };
-
-export const TagDialogHandler: React.FC<TagDialogProps> = ({ database }) =>
-	database.showTagsDialog ? <TagDialog database={database} /> : <></>;

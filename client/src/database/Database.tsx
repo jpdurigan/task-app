@@ -1,4 +1,6 @@
-import { Task, Tag, exampleTags, exampleTasks } from "./Model";
+
+import { Tag, exampleTags } from "./Tag";
+import { Task, exampleTasks } from "./Task";
 import { PaletteGrid, ValidColor } from "./Theme";
 
 export class Database {

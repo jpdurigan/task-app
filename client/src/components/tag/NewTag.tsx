@@ -1,19 +1,14 @@
 import { Add } from "@mui/icons-material";
 import { Box, TextField, IconButton } from "@mui/material";
 import { useState } from "react";
-import { Tag } from "../../database/Model";
+import { Tag, TagServer } from "../../database/Tag";
 
-interface NewTagProps {
-	tags: Tag[];
-	addNewTag: (newLabel: string) => void;
-}
-
-export const NewTag: React.FC<NewTagProps> = ({ tags, addNewTag }) => {
+export const NewTag: React.FC = () => {
 	const [newLabel, setNewLabel] = useState<string>("");
 
 	const isValidTag = (): boolean => {
 		let isValid = true;
-		tags.forEach((tag) => {
+		TagServer.getAllTags().forEach((tag) => {
 			if (tag.label === newLabel) {
 				isValid = false;
 			}
@@ -22,7 +17,7 @@ export const NewTag: React.FC<NewTagProps> = ({ tags, addNewTag }) => {
 	};
 
 	const submitTag = (): void => {
-		addNewTag(newLabel);
+		TagServer.addNewTag(newLabel);
 		setNewLabel("");
 	};
 
