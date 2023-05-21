@@ -38,7 +38,8 @@ const App: React.FC = () => {
 	TagServer.init(tags, setTags);
 
 	useEffect(() => {
-		TagServer.saveToStorage();
+		TagServer.updateTags(tags);
+		console.log("tags: ", tags, "Instance tags", TagServer.getAllTags());
 	}, [tags]);
 
 	return (

@@ -7,18 +7,14 @@ import { Task, TaskFirestoreConverter } from "./Task";
 export class UserServer {
 	protected currentUser: User | null = null;
 
-	private static instance: UserServer = new UserServer();
+	public static readonly instance: UserServer = new UserServer();
 
 	public static setCurrentUser = async (user: User | null) => {
 		UserServer.instance.currentUser = user;
 
 		if (!user) return;
 
-		try {
-			await TagServer.loadFromServer()
-		} catch(err) {
-			TagServer.loadFromStorage();
-		}
+		await TagServer.loadFromServer();
 		// const tags = await UserServer.requestTags();
 		// console.log(tags);
 

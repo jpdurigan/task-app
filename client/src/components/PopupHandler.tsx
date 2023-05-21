@@ -7,6 +7,7 @@ import { TagDialog } from "./tag/TagDialog";
 import { TaskDialogHandler } from "./task/TaskDialog";
 import { TaskDisplay } from "./task/TaskDisplay";
 import { AuthDialog } from "../database/Auth";
+import { TagServer } from "../database/Tag";
 
 enum Popup {
 	TASK,
@@ -15,29 +16,41 @@ enum Popup {
 }
 
 export const PopupHandler: React.FC = () => {
-	const [popups, setPopups] = useState<Popup[]>([]);
+	const [popups, setPopups] = useState<Popup[]>([Popup.AUTH]);
 	const [editingTask, setEditingTask] = useState<Task>();
 
 	const showPopup = (popup: Popup) => {
 		const newPopups = [popup, ...popups];
 		setPopups(newPopups);
-	}
+	};
 
 	const hidePopup = (popup: Popup) => {
-		const newPopups = popups.filter(p_popup => p_popup !== popup);
+		console.log( TagServer.getAllTags())
+		const newPopups = popups.filter((p_popup) => p_popup !== popup);
 		setPopups(newPopups);
-	}
+	};
 
 	const isVisible = (popup: Popup): boolean => {
 		return popups && popups[0] === popup;
-	}
+	};
 
 	return (
 		<>
 			{/* <TaskDialogHandler database={appDatabase} /> */}
-			<TagDialog isVisible={isVisible(Popup.TAG)} hide={() => hidePopup(Popup.TAG)} />
-			<AuthDialog isVisible={isVisible(Popup.AUTH)} hide={() => hidePopup(Popup.AUTH)} />
-			<SpeedDialApp showTaskDialog={() => showPopup(Popup.TASK)} showTagDialog={()=>showPopup(Popup.TAG)} showAuthDialog={()=>showPopup(Popup.AUTH)} />
+			<TagDialog
+				isVisible={isVisible(Popup.TAG)}
+				hide={() => hidePopup(Popup.TAG)}
+				// tags={TagServer.getAllTags()}
+			/>
+			<AuthDialog
+				isVisible={isVisible(Popup.AUTH)}
+				hide={() => hidePopup(Popup.AUTH)}
+			/>
+			<SpeedDialApp
+				showTaskDialog={() => showPopup(Popup.TASK)}
+				showTagDialog={() => showPopup(Popup.TAG)}
+				showAuthDialog={() => showPopup(Popup.AUTH)}
+			/>
 		</>
 	);
 };
@@ -48,7 +61,11 @@ interface SpeedDialAppProps {
 	showAuthDialog: () => void;
 }
 
-export const SpeedDialApp: React.FC<SpeedDialAppProps> = ({ showTaskDialog, showTagDialog, showAuthDialog }) => (
+export const SpeedDialApp: React.FC<SpeedDialAppProps> = ({
+	showTaskDialog,
+	showTagDialog,
+	showAuthDialog,
+}) => (
 	<SpeedDial
 		ariaLabel="SpeedDial"
 		icon={<SpeedDialIcon />}

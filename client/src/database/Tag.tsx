@@ -51,10 +51,10 @@ export const exampleTags: Tag[] = [
 ];
 
 export class TagServer {
-	protected tags: Tag[];
-	protected setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
+	tags: Tag[];
+	setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
 
-	private static instance: TagServer;
+	public static instance: TagServer;
 
 	constructor(
 		tags: Tag[],
@@ -70,6 +70,7 @@ export class TagServer {
 	) => {
 		if (TagServer.instance) return;
 		TagServer.instance = new TagServer(tags, setTags);
+		console.log("cretead instance", this.instance);
 	};
 
 	//////////////////////////////
@@ -90,16 +91,18 @@ export class TagServer {
 		return TagServer.instance.tags.map((tag) => tag.id);
 	};
 
-	// public static getTagsForDisplay = (): (string | undefined)[] => [
-	// 	undefined,
-	// 	...TagServer.getAllTags(),
-	// ];
-
 	public static getCloneTag = (id: string): Tag => {
 		return { ...TagServer.getTag(id) } as Tag;
 	};
 
 	// UPDATE
+
+	public static updateTags = (tags: Tag[]): void => {
+		console.log("--- ENTER UPDATE TAGS")
+		TagServer.instance.tags = tags;
+		TagServer.saveToStorage(tags);
+		console.log("--- EXIT UPDATE TAGS")
+	}
 
 	public static addNewTag = (label: string): void => {
 		if (label.trim().length === 0) return;
@@ -142,6 +145,7 @@ export class TagServer {
 	};
 
 	public static moveTag = (id: string, move: -1 | 1): void => {
+		console.log("--- ENTER MOVE TAG")
 		let newTag1 = TagServer.getCloneTag(id);
 		newTag1.ordering += move;
 
@@ -157,21 +161,19 @@ export class TagServer {
 			return tag;
 		});
 
+		newTags = TagServer.normalizeOrdering(newTags);
 		TagServer.instance.setTags(newTags);
 		TagServer.saveAllOnServer();
+		console.log("--- EXIT MOVE TAG")
 	};
+
+	// DELETE
 
 	public static deleteTag = (id: string): void => {
 		const tagDeleted = TagServer.getTag(id);
 
 		let newTags = TagServer.instance.tags.filter((tag) => tag.id !== id);
-		newTags = TagServer.sortTags(newTags);
-
-		newTags = newTags.map((tag, index) => {
-			let newTag = { ...tag } as Tag;
-			newTag.ordering = index;
-			return newTag;
-		});
+		newTags = TagServer.normalizeOrdering(newTags);
 
 		// // handle tasks
 		// let newTasks = this.tasks.map((task) => {
@@ -191,6 +193,16 @@ export class TagServer {
 		return tagArray.sort((a, b) => a.ordering - b.ordering);
 	};
 
+	public static normalizeOrdering = (tags: Tag[] = TagServer.instance.tags): Tag[] => {
+		tags = TagServer.sortTags(tags);
+		tags = tags.map((tag, index) => {
+			let newTag = { ...tag } as Tag;
+			newTag.ordering = index;
+			return newTag;
+		});
+		return tags;
+	}
+
 	//////////////////////////////
 	//       PERSISTENCE        //
 	//////////////////////////////
@@ -208,6 +220,7 @@ export class TagServer {
 			TagServer.instance.setTags(tags);
 		} catch (err) {
 			console.error(err);
+			TagServer.loadFromStorage();
 		}
 	};
 
@@ -228,6 +241,7 @@ export class TagServer {
 	};
 
 	public static saveTagOnServer = async (tag: Tag) => {
+		console.log("--- ENTER saveTagOnServer")
 		if (!UserServer.isLoggedIn()) return;
 
 		const document = TagServer.getDocument(tag);
@@ -237,6 +251,7 @@ export class TagServer {
 		} catch (err) {
 			console.log(err);
 		}
+		console.log("--- EXIT saveTagOnServer")
 	};
 
 	public static deleteTagOnServer = async (tag: Tag) => {
@@ -276,6 +291,7 @@ export class TagServer {
 	public static saveToStorage = (tags: Tag[] = TagServer.instance.tags): void => {
 		const data = JSON.stringify(tags);
 		window.localStorage.setItem(TagServer.STORAGE_KEY, JSON.stringify(data));
+		console.log(TagServer.instance)
 	};
 
 	public static initialize = (): void => {
