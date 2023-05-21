@@ -4,12 +4,13 @@ import { EditTag } from "./EditTag";
 import { NewTag } from "./NewTag";
 
 interface TagDialogProps {
-	show?: boolean;
+	isVisible: boolean;
+	hide: () => void;
 }
 
-export const TagDialog: React.FC<TagDialogProps> = ({ show = false }) => {
+export const TagDialog: React.FC<TagDialogProps> = ({ isVisible, hide }) => {
 	return (
-		<Dialog open={show}>
+		<Dialog open={isVisible} onClose={hide}>
 			<DialogTitle>Editar tags</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
 				<NewTag />

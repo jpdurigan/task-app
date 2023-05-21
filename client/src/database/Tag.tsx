@@ -273,8 +273,7 @@ export class TagServer {
 		if (data) TagServer.instance.setTags(data);
 	};
 
-	public static saveToStorage = (tags?: Tag[]): void => {
-		tags = tags ? tags : TagServer.instance.tags;
+	public static saveToStorage = (tags: Tag[] = TagServer.instance.tags): void => {
 		const data = JSON.stringify(tags);
 		window.localStorage.setItem(TagServer.STORAGE_KEY, JSON.stringify(data));
 	};

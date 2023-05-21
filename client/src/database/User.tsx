@@ -17,7 +17,6 @@ export class UserServer {
 		try {
 			await TagServer.loadFromServer()
 		} catch(err) {
-			console.log(err);
 			TagServer.loadFromStorage();
 		}
 		// const tags = await UserServer.requestTags();

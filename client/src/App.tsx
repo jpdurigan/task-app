@@ -6,7 +6,7 @@ import { HeaderApp } from "./components/HeaderApp";
 import { TaskDialogHandler } from "./components/task/TaskDialog";
 import { Box } from "@mui/system";
 import { Database } from "./database/Database";
-import { SpeedDialApp } from "./components/SpeedDialApp";
+import { PopupHandler, SpeedDialApp } from "./components/PopupHandler";
 import { TaskDisplay } from "./components/task/TaskDisplay";
 // import "./firebase-config.ts";
 import { AuthDialog } from "./database/Auth";
@@ -36,7 +36,7 @@ const App: React.FC = () => {
 	const appDatabaseRef = useRef(appDatabase);
 
 	TagServer.init(tags, setTags);
-	
+
 	useEffect(() => {
 		TagServer.saveToStorage();
 	}, [tags]);
@@ -45,11 +45,11 @@ const App: React.FC = () => {
 		<ThemeApp>
 			<Box className="App">
 				<HeaderApp />
-				<AuthDialog />
 				<TaskDisplay database={appDatabase} />
+				{/* <AuthDialog />
 				<TaskDialogHandler database={appDatabase} />
-				<TagDialog show={showTagsDialog} />
-				<SpeedDialApp database={appDatabase} />
+				<TagDialog show={showTagsDialog} /> */}
+				<PopupHandler />
 			</Box>
 		</ThemeApp>
 	);

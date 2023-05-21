@@ -25,8 +25,12 @@ import { FirebaseError } from "firebase/app";
 import { Google } from "@mui/icons-material";
 import { UserServer } from "./User";
 
-export const AuthDialog: React.FC = () => {
-	const [showDialog, setShowDialog] = useState<boolean>(true);
+interface AuthDialogProps {
+	isVisible: boolean;
+	hide: () => void;
+}
+
+export const AuthDialog: React.FC<AuthDialogProps> = ({ isVisible, hide }) => {
 	const [tabValue, setTabValue] = useState<number>(0);
 	const [user, setUser] = useState<User | null>(auth.currentUser);
 
@@ -35,7 +39,6 @@ export const AuthDialog: React.FC = () => {
 			setUser(user);
 			UserServer.setCurrentUser(user);
 		});
-		if (UserServer.isLoggedIn()) setShowDialog(false);
 	}, []);
 
 	const isLoggedIn = user !== null;
@@ -59,11 +62,11 @@ export const AuthDialog: React.FC = () => {
 	};
 
 	const continueAsGuest = (): void => {
-		setShowDialog(false);
+		hide();
 	};
 
 	return (
-		<Dialog open={showDialog} onBlur={() => setShowDialog(false)}>
+		<Dialog open={isVisible} onClose={hide}>
 			<DialogTitle>Autenticação</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
 				{!isLoggedIn && (
