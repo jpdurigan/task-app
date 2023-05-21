@@ -36,34 +36,10 @@ const App: React.FC = () => {
 	const appDatabaseRef = useRef(appDatabase);
 
 	TagServer.init(tags, setTags);
-
+	
 	useEffect(() => {
-		appDatabaseRef.current.loadFromStorage();
-
-		// const getAllTasks = async () => {
-		// 	try {
-		// 		const data = await getDocs(tasksCollectionRef);
-		// 		const tasks: Task[] = data.docs.map(doc => {
-		// 			const task: Task = {
-		// 				id: doc.id,
-		// 				text: doc.data()!.text,
-		// 				date: doc.data()!.date,
-		// 				done: doc.data()!.done,
-		// 				tags: doc.data()!.tags,
-		// 			}
-		// 			return task;
-		// 		})
-		// 		appDatabaseRef.current.setTasks(tasks);
-		// 		console.log(tasks);
-		// 	} catch (err) {
-		// 		console.log(err);
-		// 	}
-		// };
-		// getAllTasks();
-	}, [appDatabaseRef]);
-	useEffect(() => {
-		appDatabaseRef.current.saveToStorage();
-	}, [tasks, tags, appDatabaseRef]);
+		TagServer.saveToStorage();
+	}, [tags]);
 
 	return (
 		<ThemeApp>

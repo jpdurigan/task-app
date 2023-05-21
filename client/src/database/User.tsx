@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { Tag, TagFirestoreConverter, exampleTags } from "./Tag";
+import { Tag, TagFirestoreConverter, TagServer, exampleTags } from "./Tag";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 import { Task, TaskFirestoreConverter } from "./Task";
@@ -13,6 +13,13 @@ export class UserServer {
 		UserServer.instance.currentUser = user;
 
 		if (!user) return;
+
+		try {
+			await TagServer.loadFromServer()
+		} catch(err) {
+			console.log(err);
+			TagServer.loadFromStorage();
+		}
 		// const tags = await UserServer.requestTags();
 		// console.log(tags);
 
