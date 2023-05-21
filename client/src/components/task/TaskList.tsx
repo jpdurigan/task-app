@@ -6,7 +6,7 @@ import { TaskBox } from "./TaskBox";
 
 interface TaskLinkProps {
 	database: Database;
-	tagId?: number;
+	tagId?: string;
 	sx?: SxProps;
 }
 

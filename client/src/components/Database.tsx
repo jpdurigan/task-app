@@ -6,8 +6,8 @@ export class Database {
 	setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 	tags: Tag[];
 	setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
-	editingTask: number | undefined;
-	setEditingTask: React.Dispatch<React.SetStateAction<number | undefined>>;
+	editingTask: string | undefined;
+	setEditingTask: React.Dispatch<React.SetStateAction<string | undefined>>;
 	showTagsDialog: boolean;
 	setShowTagsDialog: React.Dispatch<React.SetStateAction<boolean>>;
 
@@ -16,8 +16,8 @@ export class Database {
 		setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
 		tags: Tag[],
 		setTags: React.Dispatch<React.SetStateAction<Tag[]>>,
-		editingTask: number | undefined,
-		setEditingTask: React.Dispatch<React.SetStateAction<number | undefined>>,
+		editingTask: string | undefined,
+		setEditingTask: React.Dispatch<React.SetStateAction<string | undefined>>,
 		showTagsDialog: boolean,
 		setShowTagsDialog: React.Dispatch<React.SetStateAction<boolean>>
 	) {
@@ -37,17 +37,17 @@ export class Database {
 	//          TASKS           //
 	//////////////////////////////
 
-	getTask = (id: number): Task => {
+	getTask = (id: string): Task => {
 		return this.tasks.find((tag) => tag.id === id) as Task;
 	};
 
-	getCloneTask = (id: number): Task => {
+	getCloneTask = (id: string): Task => {
 		return { ...this.getTask(id) } as Task;
 	};
 
-	addNewTask = (text: string, tags: number[]): void => {
+	addNewTask = (text: string, tags: string[]): void => {
 		if (text.trim().length === 0) return;
-		const id = Math.floor(Math.random() * 100000000);
+		const id = `PSEUDO-ID:${Math.floor(Math.random() * 100000000)}`;
 		const newTask: Task = {
 			id: id,
 			text: text.trim(),
@@ -58,7 +58,7 @@ export class Database {
 		this.setTasks([...this.tasks, newTask]);
 	};
 
-	updateTask = (id: number, text: string, tags: number[]): void => {
+	updateTask = (id: string, text: string, tags: string[]): void => {
 		let newTask = this.getCloneTask(id);
 		newTask.text = text;
 		newTask.tags = tags;
@@ -67,7 +67,7 @@ export class Database {
 		this.setTasks(newTasks);
 	};
 
-	updateTaskDone = (id: number, done: boolean): void => {
+	updateTaskDone = (id: string, done: boolean): void => {
 		let newTask = this.getCloneTask(id);
 		newTask.done = done;
 
@@ -75,7 +75,7 @@ export class Database {
 		this.setTasks(newTasks);
 	};
 
-	deleteTask = (id: number): void => {
+	deleteTask = (id: string): void => {
 		let newTasks = this.tasks.filter((task) => task.id !== id);
 		this.setTasks(newTasks);
 	};
@@ -87,7 +87,7 @@ export class Database {
 		});
 	};
 
-	getTasksByTag = (tagId: number, taskArray: Task[] = this.tasks): Task[] => {
+	getTasksByTag = (tagId: string, taskArray: Task[] = this.tasks): Task[] => {
 		return this.sortTasks(
 			taskArray.filter((task) => task.tags.includes(tagId))
 		);
@@ -97,24 +97,24 @@ export class Database {
 	//           TAGS           //
 	//////////////////////////////
 
-	getTag = (id: number): Tag => {
+	getTag = (id: string): Tag => {
 		return this.tags.find((tag) => tag.id === id) as Tag;
 	};
 
-	getAllTags = (): number[] => this.tags.map((tag) => tag.id);
+	getAllTags = (): string[] => this.tags.map((tag) => tag.id);
 
-	getTagsForDisplay = (): (number | undefined)[] => [
+	getTagsForDisplay = (): (string | undefined)[] => [
 		undefined,
 		...this.getAllTags(),
 	];
 
-	getCloneTag = (id: number): Tag => {
+	getCloneTag = (id: string): Tag => {
 		return { ...this.getTag(id) } as Tag;
 	};
 
 	addNewTag = (label: string): void => {
 		if (label.trim().length === 0) return;
-		const id = Math.floor(Math.random() * 100000000);
+		const id = `PSEUDO-ID:${Math.floor(Math.random() * 100000000)}`;
 		const color = ColorGrid[Math.floor(Math.random() * ColorGrid.length)];
 		const newTag: Tag = {
 			id: id,
@@ -125,7 +125,7 @@ export class Database {
 		this.setTags([...this.tags, newTag]);
 	};
 
-	updateTagLabel = (id: number, label: string): void => {
+	updateTagLabel = (id: string, label: string): void => {
 		let newTag = this.getCloneTag(id);
 		newTag.label = label;
 
@@ -133,7 +133,7 @@ export class Database {
 		this.setTags(newTags);
 	};
 
-	updateTagColor = (id: number, color: validColor): void => {
+	updateTagColor = (id: string, color: validColor): void => {
 		let newTag = this.getCloneTag(id);
 		newTag.color = color;
 
@@ -141,7 +141,7 @@ export class Database {
 		this.setTags(newTags);
 	};
 
-	moveTag = (id: number, move: -1 | 1): void => {
+	moveTag = (id: string, move: -1 | 1): void => {
 		let newTag1 = this.getCloneTag(id);
 		newTag1.ordering += move;
 
@@ -157,7 +157,7 @@ export class Database {
 		this.setTags(newTags);
 	};
 
-	deleteTag = (id: number): void => {
+	deleteTag = (id: string): void => {
 		let newTags = this.tags.filter((tag) => tag.id !== id);
 		newTags = this.sortTags(newTags);
 
@@ -169,7 +169,7 @@ export class Database {
 
 		let newTasks = this.tasks.map((task) => {
 			const newTask = this.getCloneTask(task.id);
-			newTask.tags = newTask.tags.filter((tag: number) => tag !== id);
+			newTask.tags = newTask.tags.filter((tag: string) => tag !== id);
 			return newTask;
 		});
 

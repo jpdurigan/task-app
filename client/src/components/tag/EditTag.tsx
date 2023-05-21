@@ -19,10 +19,10 @@ import { ColorSelectionPopover } from "./ColorSelectionPopover";
 
 interface EditTagProps {
 	tag: Tag;
-	updateTagLabel: (id: number, label: string) => void;
-	updateTagColor: (id: number, color: validColor) => void;
-	moveTag: (id: number, move: 1 | -1) => void;
-	deleteTag: (id: number) => void;
+	updateTagLabel: (id: string, label: string) => void;
+	updateTagColor: (id: string, color: validColor) => void;
+	moveTag: (id: string, move: 1 | -1) => void;
+	deleteTag: (id: string) => void;
 }
 
 export const EditTag: React.FC<EditTagProps> = ({

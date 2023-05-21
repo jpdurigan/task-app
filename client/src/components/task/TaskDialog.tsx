@@ -23,23 +23,22 @@ interface TaskDialogProps {
 }
 
 const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
-	const isNewTask = database.editingTask === -1;
+	const isNewTask = database.editingTask != undefined;
 	const [text, setText] = useState<string>(
-		isNewTask ? "" : database.getTask(database.editingTask as number).text
+		isNewTask ? "" : database.getTask(database.editingTask as string).text
 	);
-	const [tags, setTags] = useState<number[]>(
-		isNewTask ? [] : database.getTask(database.editingTask as number).tags
+	const [tags, setTags] = useState<string[]>(
+		isNewTask ? [] : database.getTask(database.editingTask as string).tags
 	);
-	const tagsAsValue = (): string[] => tags.map((id: number) => id.toString());
 
 	const handleDelete = () => {
-		database.deleteTask(database.editingTask as number);
+		database.deleteTask(database.editingTask as string);
 		database.setEditingTask(undefined);
 	};
 
 	const handleSaving = () => {
 		if (isNewTask) database.addNewTask(text, tags);
-		else database.updateTask(database.editingTask as number, text, tags);
+		else database.updateTask(database.editingTask as string, text, tags);
 		database.setEditingTask(undefined);
 	};
 
@@ -69,22 +68,22 @@ const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
 						<Select
 							fullWidth
 							multiple
-							value={tagsAsValue()}
+							value={tags}
 							onChange={(e) => {
 								const value = e.target.value;
 								console.log(`select changed got value: ${value}`);
 								const newTagsId: string[] =
 									typeof value === "string" ? value.split(",") : value;
-								const newTags: number[] = newTagsId.map((id: string) =>
-									parseInt(id)
-								);
-								setTags(newTags);
+								// const newTags: number[] = newTagsId.map((id: string) =>
+								// 	parseInt(id)
+								// );
+								setTags(newTagsId);
 							}}
 							renderValue={(selected: string[]) => {
-								const tagList: number[] = selected.map((id: string) =>
-									parseInt(id)
-								);
-								return <TagStack tagList={tagList} database={database} />;
+								// const tagList: number[] = selected.map((id: string) =>
+								// 	parseInt(id)
+								// );
+								return <TagStack tagList={selected} database={database} />;
 							}}
 						>
 							{exampleTags.map((tag: Tag) => (

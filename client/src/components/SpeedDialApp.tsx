@@ -15,7 +15,7 @@ export const SpeedDialApp: React.FC<SpeedDialAppProps> = ({ database }) => (
 		<SpeedDialAction
 			icon={<Add />}
 			tooltipTitle="Nova nota"
-			onClick={() => database.setEditingTask(-1)}
+			onClick={() => database.setEditingTask(undefined)}
 		/>
 		<SpeedDialAction
 			icon={<Settings />}
