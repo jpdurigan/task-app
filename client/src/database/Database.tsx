@@ -1,5 +1,5 @@
 import { Task, Tag, exampleTags, exampleTasks } from "./Model";
-import { ColorGrid, validColor } from "./Theme";
+import { PaletteGrid, ValidColor } from "./Theme";
 
 export class Database {
 	tasks: Task[];
@@ -115,7 +115,7 @@ export class Database {
 	addNewTag = (label: string): void => {
 		if (label.trim().length === 0) return;
 		const id = `PSEUDO-ID:${Math.floor(Math.random() * 100000000)}`;
-		const color = ColorGrid[Math.floor(Math.random() * ColorGrid.length)];
+		const color = PaletteGrid[Math.floor(Math.random() * PaletteGrid.length)];
 		const newTag: Tag = {
 			id: id,
 			label: label.trim(),
@@ -133,7 +133,7 @@ export class Database {
 		this.setTags(newTags);
 	};
 
-	updateTagColor = (id: string, color: validColor): void => {
+	updateTagColor = (id: string, color: ValidColor): void => {
 		let newTag = this.getCloneTag(id);
 		newTag.color = color;
 
@@ -192,7 +192,7 @@ export class Database {
 		if (rawData === null) {
 			this.initialize();
 			return;
-		};
+		}
 
 		const data = JSON.parse(rawData);
 		if (data.tags != null) this.setTags(data.tags);
@@ -204,8 +204,8 @@ export class Database {
 		window.localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
 	};
 
-	initialize = ():void => {
+	initialize = (): void => {
 		this.setTags(exampleTags);
 		this.setTasks(exampleTasks);
-	}
+	};
 }

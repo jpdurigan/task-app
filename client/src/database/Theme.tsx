@@ -12,38 +12,43 @@ import {
 } from "@mui/material/colors";
 import { Color, createTheme, ThemeProvider } from "@mui/material";
 
-export const ColorsApp = {
-	Primary: blueGrey,
-	Red: red,
-	Pink: pink,
-	Purple: purple,
-	Indigo: indigo,
-	Blue: blue,
-	Teal: teal,
-	Green: lightGreen,
-	Yellow: yellow,
-	Orange: orange,
+export const Palette = {
+	primary: blueGrey,
+	red: red,
+	pink: pink,
+	purple: purple,
+	indigo: indigo,
+	blue: blue,
+	teal: teal,
+	green: lightGreen,
+	yellow: yellow,
+	orange: orange,
 };
-export type validColor = typeof ColorsApp[keyof typeof ColorsApp];
-export const ColorGrid: validColor[] = [
-	ColorsApp.Red,
-	ColorsApp.Pink,
-	ColorsApp.Purple,
-	ColorsApp.Indigo,
-	ColorsApp.Blue,
-	ColorsApp.Teal,
-	ColorsApp.Green,
-	ColorsApp.Yellow,
-	ColorsApp.Orange,
+
+export type ValidColor = keyof typeof Palette;
+
+export const PaletteGrid: ValidColor[] = [
+	"red",
+	"pink",
+	"purple",
+	"indigo",
+	"blue",
+	"teal",
+	"green",
+	"yellow",
+	"orange",
 ];
 
 interface ThemeAppProps {
-	children: JSX.Element,
-	color?: validColor
+	children: JSX.Element;
+	color_name?: ValidColor;
 }
 
-export const ThemeApp: React.FC<ThemeAppProps> = ({ children, color }) => {
-	const trueColor: Color = color !== undefined ? color : ColorsApp.Primary;
+export const ThemeApp: React.FC<ThemeAppProps> = ({
+	children,
+	color_name = "primary",
+}) => {
+	const trueColor: Color = Palette[color_name];
 	const theme = createTheme({
 		palette: {
 			primary: trueColor,
@@ -52,9 +57,5 @@ export const ThemeApp: React.FC<ThemeAppProps> = ({ children, color }) => {
 		},
 	});
 
-	return (
-		<ThemeProvider theme={theme}>
-			{children}
-		</ThemeProvider>
-	)
-}
+	return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+};

@@ -27,7 +27,7 @@ export const TaskList: React.FC<TaskLinkProps> = ({ database, tagId, sx }) => {
 				minHeight="60px"
 			>
 				<Badge badgeContent={toDoCount} color="primary">
-				<FormatListBulleted fontSize="large" />
+					<FormatListBulleted fontSize="large" />
 				</Badge>
 				<Typography variant="button">{displayName}</Typography>
 			</Box>

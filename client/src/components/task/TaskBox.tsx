@@ -3,7 +3,7 @@ import { Box, Paper, Typography, Stack, IconButton } from "@mui/material";
 import { Database } from "../../database/Database";
 import { Task } from "../../database/Model";
 import { TagStack } from "../tag/TagStack";
-import { ColorsApp } from "../../database/Theme";
+import { Palette } from "../../database/Theme";
 
 interface TaskBoxProps {
 	task: Task;
@@ -17,8 +17,8 @@ export const TaskBox: React.FC<TaskBoxProps> = ({ task, database }) => {
 			sx={{
 				width: 300,
 				padding: "1em",
-				backgroundColor: task.done ? ColorsApp.Primary[50] : "inherit",
-                color: task.done ? "GrayText" : "inherit",
+				backgroundColor: task.done ? Palette["primary"][50] : "inherit",
+				color: task.done ? "GrayText" : "inherit",
 			}}
 		>
 			<Typography fontSize="1.5em">{task.text}</Typography>
@@ -35,7 +35,9 @@ export const TaskBox: React.FC<TaskBoxProps> = ({ task, database }) => {
 					</IconButton>
 				</Box>
 				<Box component="span" textAlign="right">
-					<IconButton onClick={() => database.updateTaskDone(task.id, !task.done)}>
+					<IconButton
+						onClick={() => database.updateTaskDone(task.id, !task.done)}
+					>
 						{task.done ? <CheckBox /> : <CheckBoxOutlineBlank />}
 					</IconButton>
 				</Box>

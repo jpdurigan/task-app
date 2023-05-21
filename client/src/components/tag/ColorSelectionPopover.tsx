@@ -1,12 +1,17 @@
 import { Circle } from "@mui/icons-material";
 import { Popover, Grid, IconButton } from "@mui/material";
-import { validColor, ColorGrid, ThemeApp } from "../../database/Theme";
+import {
+	ValidColor,
+	PaletteGrid,
+	ThemeApp,
+	Palette,
+} from "../../database/Theme";
 
 interface ColorSelectionPopoverProps {
 	anchor: HTMLButtonElement | null;
 	setAnchor: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>;
-	currentColor: validColor;
-	setNewColor: (newColor: validColor) => void;
+	currentColor: ValidColor;
+	setNewColor: (newColor: ValidColor) => void;
 }
 
 export const ColorSelectionPopover: React.FC<ColorSelectionPopoverProps> = ({
@@ -29,9 +34,9 @@ export const ColorSelectionPopover: React.FC<ColorSelectionPopoverProps> = ({
 		onClose={() => setAnchor(null)}
 	>
 		<Grid container maxWidth={150}>
-			{ColorGrid.map((color) => (
-				<Grid item xs={4} key={color[200]}>
-					<ThemeApp color={color}>
+			{PaletteGrid.map((color) => (
+				<Grid item xs={4} key={color}>
+					<ThemeApp color_name={color}>
 						<IconButton
 							color={color === currentColor ? "info" : "primary"}
 							onClick={(e) => {

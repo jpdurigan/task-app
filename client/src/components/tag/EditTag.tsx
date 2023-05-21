@@ -14,13 +14,13 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Tag } from "../../database/Model";
-import { validColor, ThemeApp } from "../../database/Theme";
+import { ValidColor, ThemeApp } from "../../database/Theme";
 import { ColorSelectionPopover } from "./ColorSelectionPopover";
 
 interface EditTagProps {
 	tag: Tag;
 	updateTagLabel: (id: string, label: string) => void;
-	updateTagColor: (id: string, color: validColor) => void;
+	updateTagColor: (id: string, color: ValidColor) => void;
 	moveTag: (id: string, move: 1 | -1) => void;
 	deleteTag: (id: string) => void;
 }
@@ -51,7 +51,7 @@ export const EditTag: React.FC<EditTagProps> = ({
 		updateTagLabel(tag.id, label);
 	};
 
-	const handleUpdateColor = (color: validColor) => {
+	const handleUpdateColor = (color: ValidColor) => {
 		updateTagColor(tag.id, color);
 	};
 
@@ -79,7 +79,7 @@ export const EditTag: React.FC<EditTagProps> = ({
 					<ArrowDownward fontSize="small" />
 				</IconButton>
 			</Box>
-			<ThemeApp color={tag.color}>
+			<ThemeApp color_name={tag.color}>
 				<IconButton
 					color="primary"
 					onClick={(e) => {
@@ -119,8 +119,8 @@ export const EditTag: React.FC<EditTagProps> = ({
 			)}
 
 			<IconButton onClick={handleDelete}>
-						<Delete />
-					</IconButton>
+				<Delete />
+			</IconButton>
 
 			<ColorSelectionPopover
 				anchor={popoverAnchor}

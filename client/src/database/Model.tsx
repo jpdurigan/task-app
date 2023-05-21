@@ -1,4 +1,4 @@
-import { ColorsApp, validColor } from "./Theme";
+import { ValidColor } from "./Theme";
 
 export interface Task {
 	id: string;
@@ -11,7 +11,7 @@ export interface Task {
 export interface Tag {
 	id: string;
 	label: string;
-	color: validColor;
+	color: ValidColor;
 	ordering: number;
 }
 
@@ -19,19 +19,19 @@ export const exampleTags: Tag[] = [
 	{
 		id: "0",
 		label: "Universidade",
-		color: ColorsApp.Indigo,
+		color: "indigo",
 		ordering: 0,
 	},
 	{
 		id: "1",
 		label: "Estágio",
-		color: ColorsApp.Orange,
+		color: "orange",
 		ordering: 1,
 	},
 	{
 		id: "2",
 		label: "Casa",
-		color: ColorsApp.Green,
+		color: "green",
 		ordering: 2,
 	},
 ];
@@ -64,5 +64,5 @@ export const exampleTasks: Task[] = [
 		date: Date.now() + 4,
 		done: true,
 		tags: ["1"],
-	}
+	},
 ];

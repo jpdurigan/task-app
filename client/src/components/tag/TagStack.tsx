@@ -6,16 +6,23 @@ import { ThemeApp } from "../../database/Theme";
 interface TagStackProps {
 	tagList: string[];
 	database: Database;
-    sx?: SxProps<Theme>;
+	sx?: SxProps<Theme>;
 	disabled?: boolean;
 }
 
-export const TagStack: React.FC<TagStackProps> = ({ tagList, database, sx, disabled }) => {
-	const sortedTags : Tag[] = database.sortTags(tagList.map((id: string) => database.getTag(id)));
+export const TagStack: React.FC<TagStackProps> = ({
+	tagList,
+	database,
+	sx,
+	disabled,
+}) => {
+	const sortedTags: Tag[] = database.sortTags(
+		tagList.map((id: string) => database.getTag(id))
+	);
 	return (
-		<Stack direction="row" gap={1} sx={sx !== undefined ? sx : {}} >
+		<Stack direction="row" gap={1} sx={sx !== undefined ? sx : {}}>
 			{sortedTags.map((tag: Tag) => (
-				<ThemeApp color={tag.color} key={tag.id}>
+				<ThemeApp color_name={tag.color} key={tag.id}>
 					<Chip
 						label={tag.label}
 						color="primary"
