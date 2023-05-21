@@ -13,8 +13,8 @@ import {
 	Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { Tag } from "../Model";
-import { validColor, ThemeApp } from "../Theme";
+import { Tag } from "../../database/Model";
+import { validColor, ThemeApp } from "../../database/Theme";
 import { ColorSelectionPopover } from "./ColorSelectionPopover";
 
 interface EditTagProps {

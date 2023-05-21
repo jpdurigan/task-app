@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { TagDialogHandler } from "./components/tag/TagDialog";
-import { ThemeApp } from "./components/Theme";
-import { Tag, Task } from "./components/Model";
+import { ThemeApp } from "./database/Theme";
+import { Tag, Task } from "./database/Model";
 import { HeaderApp } from "./components/HeaderApp";
 import { TaskDialogHandler } from "./components/task/TaskDialog";
 import { Box } from "@mui/system";
-import { Database } from "./components/Database";
+import { Database } from "./database/Database";
 import { SpeedDialApp } from "./components/SpeedDialApp";
 import { TaskDisplay } from "./components/task/TaskDisplay";
 // import "./firebase-config.ts";
-import { Auth } from "./components/Auth";
+import { AuthDialog } from "./database/Auth";
 import { getDocs, collection } from "firebase/firestore";
 import { db } from "./firebase-config";
 
@@ -49,6 +49,7 @@ const App: React.FC = () => {
 					}
 					return task;
 				})
+				appDatabaseRef.current.setTasks(tasks);
 				console.log(tasks);
 			} catch (err) {
 				console.log(err);
@@ -64,7 +65,7 @@ const App: React.FC = () => {
 		<ThemeApp>
 			<Box className="App">
 				<HeaderApp />
-				<Auth />
+				<AuthDialog />
 				<TaskDisplay database={appDatabase} />
 				<TaskDialogHandler database={appDatabase} />
 				<TagDialogHandler database={appDatabase} />

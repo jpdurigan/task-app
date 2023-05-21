@@ -14,8 +14,8 @@ import {
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useState } from "react";
-import { Database } from "../Database";
-import { exampleTags, Tag } from "../Model";
+import { Database } from "../../database/Database";
+import { exampleTags, Tag } from "../../database/Model";
 import { TagStack } from "../tag/TagStack";
 
 interface TaskDialogProps {

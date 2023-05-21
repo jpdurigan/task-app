@@ -1,9 +1,9 @@
 import { Edit, CheckBoxOutlineBlank, CheckBox } from "@mui/icons-material";
 import { Box, Paper, Typography, Stack, IconButton } from "@mui/material";
-import { Database } from "../Database";
-import { Task } from "../Model";
+import { Database } from "../../database/Database";
+import { Task } from "../../database/Model";
 import { TagStack } from "../tag/TagStack";
-import { ColorsApp } from "../Theme";
+import { ColorsApp } from "../../database/Theme";
 
 interface TaskBoxProps {
 	task: Task;

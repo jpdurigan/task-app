@@ -1,6 +1,6 @@
 import { Circle } from "@mui/icons-material";
 import { Popover, Grid, IconButton } from "@mui/material";
-import { validColor, ColorGrid, ThemeApp } from "../Theme";
+import { validColor, ColorGrid, ThemeApp } from "../../database/Theme";
 
 interface ColorSelectionPopoverProps {
 	anchor: HTMLButtonElement | null;

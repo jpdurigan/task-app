@@ -1,6 +1,6 @@
 import { Add, Settings } from "@mui/icons-material";
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
-import { Database } from "./Database";
+import { Database } from "./../database/Database";
 
 interface SpeedDialAppProps {
 	database: Database;

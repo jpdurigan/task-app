@@ -1,8 +1,8 @@
 import { Dialog, DialogContent, DialogTitle, Divider } from "@mui/material";
-import { Tag } from "../Model";
+import { Tag } from "../../database/Model";
 import { EditTag } from "./EditTag";
 import { NewTag } from "./NewTag";
-import { Database } from "../Database";
+import { Database } from "../../database/Database";
 
 interface TagDialogProps {
 	database: Database;

@@ -1,7 +1,7 @@
 import { Stack, Chip, SxProps, Theme } from "@mui/material";
-import { Database } from "../Database";
-import { Tag } from "../Model";
-import { ThemeApp } from "../Theme";
+import { Database } from "../../database/Database";
+import { Tag } from "../../database/Model";
+import { ThemeApp } from "../../database/Theme";
 
 interface TagStackProps {
 	tagList: string[];

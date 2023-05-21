@@ -1,7 +1,7 @@
 import { Add } from "@mui/icons-material";
 import { Box, TextField, IconButton } from "@mui/material";
 import { useState } from "react";
-import { Tag } from "../Model";
+import { Tag } from "../../database/Model";
 
 interface NewTagProps {
 	tags: Tag[];

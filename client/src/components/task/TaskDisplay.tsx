@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { Container, IconButton } from "@mui/material";
 import { Box, keyframes, SxProps } from "@mui/system";
 import { useState } from "react";
-import { Database } from "../Database";
+import { Database } from "../../database/Database";
 import { TaskList } from "./TaskList";
 
 const framePrev = {

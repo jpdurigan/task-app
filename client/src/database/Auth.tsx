@@ -24,7 +24,7 @@ import { auth, googleProvider } from "../firebase-config";
 import { FirebaseError } from "firebase/app";
 import { Google } from "@mui/icons-material";
 
-export const Auth: React.FC = () => {
+export const AuthDialog: React.FC = () => {
 	const [showDialog, setShowDialog] = useState<boolean>(true);
 	const [tabValue, setTabValue] = useState<number>(0);
 	const [user, setUser] = useState<User | null>(auth.currentUser);
