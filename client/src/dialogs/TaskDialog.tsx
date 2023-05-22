@@ -14,11 +14,10 @@ import {
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useState } from "react";
-import { Database } from "../../database/Database";
-import { exampleTags, Tag, TagServer } from "../../database/Tag";
-import { TagStack } from "../tag/TagStack";
-import { Task, TaskServer } from "../../database/Task";
-import { DialogRemote, Popup } from "../PopupHandler";
+import { Tag, TagServer } from "../database/Tag";
+import { TagStack } from "../components/tag/TagStack";
+import { Task, TaskServer } from "../database/Task";
+import { DialogRemote, DialogApp } from "./DialogHandler";
 
 interface TaskDialogProps {
 	isVisible: boolean;
@@ -44,7 +43,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({ isVisible, hide, task })
 		task.text = text;
 		task.tags = tags;
 		TaskServer.updateTask(task);
-		DialogRemote.hidePopup(Popup.TASK);
+		DialogRemote.hideDialog(DialogApp.TASK);
 	};
 
 	return (
@@ -66,7 +65,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({ isVisible, hide, task })
 					<Box>
 						<DialogContentText variant="body2">
 							Tags
-							<IconButton onClick={() => DialogRemote.showPopup(Popup.TAG)}>
+							<IconButton onClick={() => DialogRemote.showDialog(DialogApp.TAG)}>
 								<Settings fontSize="small" />
 							</IconButton>
 						</DialogContentText>

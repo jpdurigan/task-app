@@ -1,9 +1,7 @@
 import { FormatListBulleted } from "@mui/icons-material";
 import { Badge, Box, SxProps, Typography } from "@mui/material";
-import { Database } from "../../database/Database";
-import { Task, TaskServer } from "../../database/Task";
+import { Task } from "../../database/Task";
 import { TaskBox } from "./TaskBox";
-import { Tag, TagServer } from "../../database/Tag";
 
 interface TaskLinkProps {
 	tasks: Task[];

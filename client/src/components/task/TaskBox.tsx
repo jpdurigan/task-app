@@ -1,10 +1,9 @@
 import { Edit, CheckBoxOutlineBlank, CheckBox } from "@mui/icons-material";
 import { Box, Paper, Typography, Stack, IconButton } from "@mui/material";
-import { Database } from "../../database/Database";
 import { Task, TaskServer } from "../../database/Task";
 import { TagStack } from "../tag/TagStack";
 import { Palette } from "../../database/Theme";
-import { DialogRemote } from "../PopupHandler";
+import { DialogRemote } from "../../dialogs/DialogHandler";
 
 interface TaskBoxProps {
 	task: Task;

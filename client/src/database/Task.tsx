@@ -1,6 +1,3 @@
-// import { Task, Task, exampleTasks, exampleTasks } from "./Model";
-// import { PaletteGrid, ValidColor } from "./Theme";
-
 import {
 	DocumentData,
 	FirestoreDataConverter,

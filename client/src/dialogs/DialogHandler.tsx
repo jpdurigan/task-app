@@ -1,75 +1,72 @@
 import { Add, ManageAccounts, Settings } from "@mui/icons-material";
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
-import { Database } from "../database/Database";
 import { useEffect, useState } from "react";
 import { Task, TaskServer } from "../database/Task";
-import { TagDialog } from "./tag/TagDialog";
-import { TaskDialog } from "./task/TaskDialog";
-import { TaskDisplay } from "./task/TaskDisplay";
-import { AuthDialog } from "../database/Auth";
-import { TagServer } from "../database/Tag";
+import { TagDialog } from "./TagDialog";
+import { TaskDialog } from "./TaskDialog";
+import { AuthDialog } from "./AuthDialog";
 
-export enum Popup {
+export enum DialogApp {
 	TASK,
 	TAG,
 	AUTH,
 }
 
-export const PopupHandler: React.FC = () => {
-	const [popups, setPopups] = useState<Popup[]>([Popup.AUTH]);
+export const DialogHandler: React.FC = () => {
+	const [dialogs, setDialogs] = useState<DialogApp[]>([DialogApp.AUTH]);
 	const [editingTask, setEditingTask] = useState<Task | undefined>();
 
 	useEffect(() => {
-		DialogRemote.init(setEditingTask, showPopup, hidePopup);
+		DialogRemote.init(setEditingTask, showDialog, hideDialog);
 	}, []);
 	useEffect(() => {
-		if (editingTask) showPopup(Popup.TASK);
+		if (editingTask) showDialog(DialogApp.TASK);
 	}, [editingTask]);
 
-	const showPopup = (popup: Popup) => {
-		if (isVisible(popup)) return;
-		const newPopups = [popup, ...popups];
-		setPopups(newPopups);
+	const showDialog = (dialog: DialogApp) => {
+		if (isVisible(dialog)) return;
+		const newDialogs = [dialog, ...dialogs];
+		setDialogs(newDialogs);
 	};
 
-	const hidePopup = (popup: Popup) => {
+	const hideDialog = (dialog: DialogApp) => {
 		// console.log( TagServer.getAllTags())
-		const newPopups = popups.filter((p_popup) => p_popup !== popup);
-		setPopups(newPopups);
+		const newDialogs = dialogs.filter((p_dialog) => p_dialog !== dialog);
+		setDialogs(newDialogs);
 	};
 
-	const isVisible = (popup: Popup): boolean => {
-		return popups && popups[0] === popup;
+	const isVisible = (dialog: DialogApp): boolean => {
+		return dialogs && dialogs[0] === dialog;
 	};
 
 	const showNewTaskDialog = (): void => {
 		const newTask = TaskServer.getNewTask();
 		console.log("Created new task", newTask);
 		setEditingTask(newTask);
-		// showPopup(Popup.TASK);
+		// showDialog(DialogApp.TASK);
 	};
 
 	return (
 		<>
 			{/* <TaskDialogHandler database={appDatabase} /> */}
 			<TaskDialog
-				isVisible={isVisible(Popup.TASK)}
-				hide={() => hidePopup(Popup.TASK)}
+				isVisible={isVisible(DialogApp.TASK)}
+				hide={() => hideDialog(DialogApp.TASK)}
 				task={editingTask}
 				key={editingTask ? editingTask.id : ""}
 			/>
 			<TagDialog
-				isVisible={isVisible(Popup.TAG)}
-				hide={() => hidePopup(Popup.TAG)}
+				isVisible={isVisible(DialogApp.TAG)}
+				hide={() => hideDialog(DialogApp.TAG)}
 			/>
 			<AuthDialog
-				isVisible={isVisible(Popup.AUTH)}
-				hide={() => hidePopup(Popup.AUTH)}
+				isVisible={isVisible(DialogApp.AUTH)}
+				hide={() => hideDialog(DialogApp.AUTH)}
 			/>
 			<SpeedDialApp
 				showTaskDialog={showNewTaskDialog}
-				showTagDialog={() => showPopup(Popup.TAG)}
-				showAuthDialog={() => showPopup(Popup.AUTH)}
+				showTagDialog={() => showDialog(DialogApp.TAG)}
+				showAuthDialog={() => showDialog(DialogApp.AUTH)}
 			/>
 		</>
 	);
@@ -113,39 +110,39 @@ export class DialogRemote {
 	protected setEditingTask: React.Dispatch<
 		React.SetStateAction<Task | undefined>
 	>;
-	protected _showPopup: (popup: Popup) => void;
-	protected _hidePopup: (popup: Popup) => void;
+	protected _showDialog: (dialog: DialogApp) => void;
+	protected _hideDialog: (dialog: DialogApp) => void;
 
 	private static instance: DialogRemote;
 
 	constructor(
 		setEditingTask: React.Dispatch<React.SetStateAction<Task | undefined>>,
-		showPopup: (popup: Popup) => void,
-		hidePopup: (popup: Popup) => void,
+		showDialog: (dialog: DialogApp) => void,
+		hideDialog: (dialog: DialogApp) => void,
 	) {
 		this.setEditingTask = setEditingTask;
-		this._showPopup = showPopup;
-		this._hidePopup = hidePopup;
+		this._showDialog = showDialog;
+		this._hideDialog = hideDialog;
 	}
 
 	public static init = (
 		setEditingTask: React.Dispatch<React.SetStateAction<Task | undefined>>,
-		showPopup: (popup: Popup) => void,
-		hidePopup: (popup: Popup) => void
+		showDialog: (dialog: DialogApp) => void,
+		hideDialog: (dialog: DialogApp) => void
 	): void => {
 		if (DialogRemote.instance) return;
-		DialogRemote.instance = new DialogRemote(setEditingTask, showPopup, hidePopup);
+		DialogRemote.instance = new DialogRemote(setEditingTask, showDialog, hideDialog);
 	};
 
 	public static editTask = (task: Task): void => {
 		DialogRemote.instance.setEditingTask(task);
 	};
 
-	public static showPopup = (popup: Popup): void => {
-		DialogRemote.instance._showPopup(popup);
+	public static showDialog = (dialog: DialogApp): void => {
+		DialogRemote.instance._showDialog(dialog);
 	}
 
-	public static hidePopup = (popup: Popup): void => {
-		DialogRemote.instance._hidePopup(popup);
+	public static hideDialog = (dialog: DialogApp): void => {
+		DialogRemote.instance._hideDialog(dialog);
 	}
 }

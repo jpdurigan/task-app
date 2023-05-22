@@ -1,9 +1,9 @@
 import { Add } from "@mui/icons-material";
 import { Box, TextField, IconButton } from "@mui/material";
 import { useState } from "react";
-import { Tag, TagServer } from "../../database/Tag";
+import { TagServer } from "../../database/Tag";
 
-export const NewTag: React.FC = () => {
+export const TagNew: React.FC = () => {
 	const [newLabel, setNewLabel] = useState<string>("");
 
 	const isValidTag = (): boolean => {

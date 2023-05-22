@@ -1,8 +1,8 @@
 import { Dialog, DialogContent, DialogTitle, Divider } from "@mui/material";
-import { Tag, TagServer } from "../../database/Tag";
-import { EditTag } from "./EditTag";
-import { NewTag } from "./NewTag";
 import { useEffect, useState } from "react";
+import { TagEdit } from "../components/tag/TagEdit";
+import { TagNew } from "../components/tag/TagNew";
+import { Tag, TagServer } from "../database/Tag";
 
 interface TagDialogProps {
 	isVisible: boolean;
@@ -25,10 +25,10 @@ export const TagDialog: React.FC<TagDialogProps> = ({ isVisible, hide }) => {
 		<Dialog open={isVisible} onClose={hide}>
 			<DialogTitle>Editar tags</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
-				<NewTag />
+				<TagNew />
 				<Divider sx={{ margin: "1em 0" }} />
 				{tags.map((tag: Tag) => (
-					<EditTag tag={tag} key={`${tag.id}-${tag.ordering}-${tag.color}`} />
+					<TagEdit tag={tag} key={`${tag.id}-${tag.ordering}-${tag.color}`} />
 				))}
 			</DialogContent>
 		</Dialog>

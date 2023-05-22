@@ -7,14 +7,14 @@ import {
 	Palette,
 } from "../../database/Theme";
 
-interface ColorSelectionPopoverProps {
+interface TagColorSelectionProps {
 	anchor: HTMLButtonElement | null;
 	setAnchor: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>;
 	currentColor: ValidColor;
 	setNewColor: (newColor: ValidColor) => void;
 }
 
-export const ColorSelectionPopover: React.FC<ColorSelectionPopoverProps> = ({
+export const TagColorSelection: React.FC<TagColorSelectionProps> = ({
 	anchor,
 	setAnchor,
 	currentColor,

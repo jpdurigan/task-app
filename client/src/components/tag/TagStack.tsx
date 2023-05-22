@@ -1,5 +1,4 @@
 import { Stack, Chip, SxProps, Theme } from "@mui/material";
-import { Database } from "../../database/Database";
 import { Tag, TagServer } from "../../database/Tag";
 import { ThemeApp } from "../../database/Theme";
 

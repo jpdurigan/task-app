@@ -4,7 +4,6 @@ import {
 	Dialog,
 	DialogContent,
 	DialogTitle,
-	Divider,
 	Stack,
 	Tab,
 	Tabs,
@@ -20,10 +19,10 @@ import {
 	signOut,
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { auth, googleProvider } from "./Firebase";
+import { auth, googleProvider } from "../database/Firebase";
 import { FirebaseError } from "firebase/app";
 import { Google } from "@mui/icons-material";
-import { UserServer } from "./User";
+import { UserServer } from "../database/User";
 
 interface AuthDialogProps {
 	isVisible: boolean;
@@ -117,7 +116,7 @@ const AuthLogin: React.FC = () => {
 
 	const submitLogin = async () => {
 		try {
-			const credentials = await signInWithEmailAndPassword(
+			await signInWithEmailAndPassword(
 				auth,
 				email,
 				password
@@ -130,7 +129,7 @@ const AuthLogin: React.FC = () => {
 
 	const submitLoginWithGoogle = async () => {
 		try {
-			const credentials = await signInWithPopup(auth, googleProvider);
+			await signInWithPopup(auth, googleProvider);
 		} catch (err) {
 			const ferr = err as FirebaseError;
 			console.log(ferr.message, ferr.cause, ferr.customData, ferr.code);
@@ -181,7 +180,7 @@ const AuthSignup: React.FC = () => {
 
 	const submitSignup = async () => {
 		try {
-			const credentials = await createUserWithEmailAndPassword(
+			await createUserWithEmailAndPassword(
 				auth,
 				email,
 				password

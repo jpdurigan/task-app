@@ -3,10 +3,9 @@ import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { Container, IconButton } from "@mui/material";
 import { Box, keyframes, SxProps } from "@mui/system";
 import { useEffect, useState } from "react";
-import { Database } from "../../database/Database";
-import { TaskList } from "./TaskList";
-import { Tag, TagServer } from "../../database/Tag";
-import { Task, TaskServer } from "../../database/Task";
+import { TaskList } from "./task/TaskList";
+import { Tag, TagServer } from "../database/Tag";
+import { Task, TaskServer } from "../database/Task";
 
 const framePrev = {
 	opacity: 0.0,
@@ -68,11 +67,7 @@ const exitRight = keyframes`
 }
 `;
 
-interface TaskDisplayProps {
-	database: Database;
-}
-
-export const TaskDisplay: React.FC = () => {
+export const UserTasks: React.FC = () => {
 	const [tasks, setTasks] = useState<Task[]>([]);
 
 	useEffect(() => {

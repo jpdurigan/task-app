@@ -15,14 +15,14 @@ import {
 import { useState } from "react";
 import { Tag, TagServer } from "../../database/Tag";
 import { ValidColor, ThemeApp } from "../../database/Theme";
-import { ColorSelectionPopover } from "./ColorSelectionPopover";
+import { TagColorSelection } from "./TagColorSelection";
 
-interface EditTagProps {
+interface TagEditProps {
 	tag: Tag;
 	// onChange: () => void;
 }
 
-export const EditTag: React.FC<EditTagProps> = ({ tag }) => {
+export const TagEdit: React.FC<TagEditProps> = ({ tag }) => {
 	const [isEditingLabel, setIsEditingLabel] = useState<boolean>(false);
 	const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(
 		null
@@ -117,7 +117,7 @@ export const EditTag: React.FC<EditTagProps> = ({ tag }) => {
 				<Delete />
 			</IconButton>
 
-			<ColorSelectionPopover
+			<TagColorSelection
 				anchor={popoverAnchor}
 				setAnchor={setPopoverAnchor}
 				currentColor={tag.color}
