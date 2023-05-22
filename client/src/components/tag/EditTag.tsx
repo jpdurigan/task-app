@@ -19,10 +19,10 @@ import { ColorSelectionPopover } from "./ColorSelectionPopover";
 
 interface EditTagProps {
 	tag: Tag;
-	onChange: () => void;
+	// onChange: () => void;
 }
 
-export const EditTag: React.FC<EditTagProps> = ({ tag, onChange }) => {
+export const EditTag: React.FC<EditTagProps> = ({ tag }) => {
 	const [isEditingLabel, setIsEditingLabel] = useState<boolean>(false);
 	const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(
 		null
@@ -31,13 +31,13 @@ export const EditTag: React.FC<EditTagProps> = ({ tag, onChange }) => {
 	const handleMoveUp = () => {
 		TagServer.moveTag(tag.id, -1);
 		closeEditingLabel();
-		onChange();
+		// onChange();
 	};
 
 	const handleMoveDown = () => {
 		TagServer.moveTag(tag.id, +1);
 		closeEditingLabel();
-		onChange();
+		// onChange();
 	};
 
 	const handleUpdateLabel = (label: string) => {
@@ -46,12 +46,12 @@ export const EditTag: React.FC<EditTagProps> = ({ tag, onChange }) => {
 
 	const handleUpdateColor = (color: ValidColor) => {
 		TagServer.updateTagColor(tag.id, color);
-		onChange();
+		// onChange();
 	};
 
 	const handleDelete = () => {
 		TagServer.deleteTag(tag.id);
-		onChange();
+		// onChange();
 	};
 
 	const closeEditingLabel = () => {

@@ -35,13 +35,6 @@ const App: React.FC = () => {
 	);
 	const appDatabaseRef = useRef(appDatabase);
 
-	TagServer.init(tags, setTags);
-
-	useEffect(() => {
-		TagServer.updateTags(tags);
-		console.log("tags: ", tags, "Instance tags", TagServer.getAllTags());
-	}, [tags]);
-
 	return (
 		<ThemeApp>
 			<Box className="App">

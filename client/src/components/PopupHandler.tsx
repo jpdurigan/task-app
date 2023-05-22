@@ -25,7 +25,7 @@ export const PopupHandler: React.FC = () => {
 	};
 
 	const hidePopup = (popup: Popup) => {
-		console.log( TagServer.getAllTags())
+		// console.log( TagServer.getAllTags())
 		const newPopups = popups.filter((p_popup) => p_popup !== popup);
 		setPopups(newPopups);
 	};
@@ -40,7 +40,6 @@ export const PopupHandler: React.FC = () => {
 			<TagDialog
 				isVisible={isVisible(Popup.TAG)}
 				hide={() => hidePopup(Popup.TAG)}
-				// tags={TagServer.getAllTags()}
 			/>
 			<AuthDialog
 				isVisible={isVisible(Popup.AUTH)}

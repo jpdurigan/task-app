@@ -51,8 +51,8 @@ export const exampleTags: Tag[] = [
 ];
 
 export class TagServer {
-	tags: Tag[];
-	setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
+	private tags: Tag[];
+	private setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
 
 	public static instance: TagServer;
 
@@ -68,9 +68,10 @@ export class TagServer {
 		tags: Tag[],
 		setTags: React.Dispatch<React.SetStateAction<Tag[]>>
 	) => {
+		console.log("--- INIT TAG SERVER");
 		if (TagServer.instance) return;
 		TagServer.instance = new TagServer(tags, setTags);
-		console.log("cretead instance", this.instance);
+		console.log("--- EXIT TAG SERVER");
 	};
 
 	//////////////////////////////
@@ -79,12 +80,12 @@ export class TagServer {
 
 	// GET
 
-	public static getTag = (id: string): Tag => {
-		return TagServer.instance.tags.find((tag) => tag.id === id) as Tag;
+	public static getTag = (id: string): Tag | undefined => {
+		return TagServer.instance.tags.find((tag) => tag.id === id);
 	};
 
 	public static getAllTags = (): Tag[] => {
-		return TagServer.instance.tags;
+		return TagServer.instance ? TagServer.instance.tags : [];
 	};
 
 	public static getAllTagIds = (): string[] => {
@@ -98,11 +99,11 @@ export class TagServer {
 	// UPDATE
 
 	public static updateTags = (tags: Tag[]): void => {
-		console.log("--- ENTER UPDATE TAGS")
+		console.log("--- ENTER UPDATE TAGS");
 		TagServer.instance.tags = tags;
 		TagServer.saveToStorage(tags);
-		console.log("--- EXIT UPDATE TAGS")
-	}
+		console.log("--- EXIT UPDATE TAGS");
+	};
 
 	public static addNewTag = (label: string): void => {
 		if (label.trim().length === 0) return;
@@ -145,7 +146,7 @@ export class TagServer {
 	};
 
 	public static moveTag = (id: string, move: -1 | 1): void => {
-		console.log("--- ENTER MOVE TAG")
+		console.log("--- ENTER MOVE TAG");
 		let newTag1 = TagServer.getCloneTag(id);
 		newTag1.ordering += move;
 
@@ -164,13 +165,13 @@ export class TagServer {
 		newTags = TagServer.normalizeOrdering(newTags);
 		TagServer.instance.setTags(newTags);
 		TagServer.saveAllOnServer();
-		console.log("--- EXIT MOVE TAG")
+		console.log("--- EXIT MOVE TAG");
 	};
 
 	// DELETE
 
 	public static deleteTag = (id: string): void => {
-		const tagDeleted = TagServer.getTag(id);
+		const tagDeleted = TagServer.getTag(id) as Tag;
 
 		let newTags = TagServer.instance.tags.filter((tag) => tag.id !== id);
 		newTags = TagServer.normalizeOrdering(newTags);
@@ -193,7 +194,9 @@ export class TagServer {
 		return tagArray.sort((a, b) => a.ordering - b.ordering);
 	};
 
-	public static normalizeOrdering = (tags: Tag[] = TagServer.instance.tags): Tag[] => {
+	public static normalizeOrdering = (
+		tags: Tag[] = TagServer.instance.tags
+	): Tag[] => {
 		tags = TagServer.sortTags(tags);
 		tags = tags.map((tag, index) => {
 			let newTag = { ...tag } as Tag;
@@ -201,30 +204,45 @@ export class TagServer {
 			return newTag;
 		});
 		return tags;
-	}
+	};
 
 	//////////////////////////////
 	//       PERSISTENCE        //
 	//////////////////////////////
 
+	private static MAX_TRIES = 3;
+	private static WAIT_FOR_NEXT_TRY = 100;
+	private static tries = 0;
+
 	public static loadFromServer = async () => {
+		console.log("--- ENTER loadFromServer");
 		if (!UserServer.isLoggedIn()) {
 			console.warn("User not logged in!");
 			return;
 		}
 
+		TagServer.tries += 1;
 		try {
 			const collection = TagServer.getCollection();
 			const data = await getDocs<Tag>(collection);
-			const tags: Tag[] = data.docs.map((tag) => tag.data());
+			let tags: Tag[] = data.docs.map((tag) => tag.data());
+			tags = TagServer.normalizeOrdering(tags);
 			TagServer.instance.setTags(tags);
+			console.log("Loaded tags from server!");
+			TagServer.tries = 0;
 		} catch (err) {
-			console.error(err);
-			TagServer.loadFromStorage();
+			if (TagServer.tries < TagServer.MAX_TRIES) {
+				console.log("--- TagServer.tries < TagServer.MAX_TRIES");
+				setTimeout(TagServer.loadFromServer, TagServer.WAIT_FOR_NEXT_TRY);
+			} else {
+				console.error(err);
+				TagServer.loadFromStorage();
+			}
 		}
 	};
 
 	public static saveAllOnServer = async () => {
+		console.log("--- ENTER saveAllOnServer");
 		if (!UserServer.isLoggedIn()) return;
 
 		const batch = writeBatch(db);
@@ -238,10 +256,11 @@ export class TagServer {
 		} catch (err) {
 			console.log(err);
 		}
+		console.log("--- EXIT saveAllOnServer");
 	};
 
 	public static saveTagOnServer = async (tag: Tag) => {
-		console.log("--- ENTER saveTagOnServer")
+		console.log("--- ENTER saveTagOnServer");
 		if (!UserServer.isLoggedIn()) return;
 
 		const document = TagServer.getDocument(tag);
@@ -251,7 +270,7 @@ export class TagServer {
 		} catch (err) {
 			console.log(err);
 		}
-		console.log("--- EXIT saveTagOnServer")
+		console.log("--- EXIT saveTagOnServer");
 	};
 
 	public static deleteTagOnServer = async (tag: Tag) => {
@@ -288,10 +307,12 @@ export class TagServer {
 		if (data) TagServer.instance.setTags(data);
 	};
 
-	public static saveToStorage = (tags: Tag[] = TagServer.instance.tags): void => {
+	public static saveToStorage = (
+		tags: Tag[] = TagServer.instance.tags
+	): void => {
 		const data = JSON.stringify(tags);
 		window.localStorage.setItem(TagServer.STORAGE_KEY, JSON.stringify(data));
-		console.log(TagServer.instance)
+		console.log(TagServer.instance);
 	};
 
 	public static initialize = (): void => {

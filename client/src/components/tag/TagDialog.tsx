@@ -7,13 +7,19 @@ import { useEffect, useState } from "react";
 interface TagDialogProps {
 	isVisible: boolean;
 	hide: () => void;
-	// tags: Tag[];
 }
 
 export const TagDialog: React.FC<TagDialogProps> = ({ isVisible, hide }) => {
-	const [rerenders, setRerenders] = useState<number>(0);
+	const [tags, setTags] = useState<Tag[]>([]);
 
-	const forceRender = ():void => setRerenders(rerenders + 1);
+	useEffect(() => {
+		TagServer.init(tags, setTags);
+	}, []);
+
+	useEffect(() => {
+		TagServer.updateTags(tags);
+		console.log("useEffect TAGS ", tags);
+	}, [tags]);
 
 	return (
 		<Dialog open={isVisible} onClose={hide}>
@@ -21,8 +27,8 @@ export const TagDialog: React.FC<TagDialogProps> = ({ isVisible, hide }) => {
 			<DialogContent sx={{ minWidth: 300 }}>
 				<NewTag />
 				<Divider sx={{ margin: "1em 0" }} />
-				{TagServer.getAllTags().map((tag: Tag) => (
-					<EditTag tag={tag} key={`${tag.ordering}-${tag.id}`} onChange={forceRender} />
+				{tags.map((tag: Tag) => (
+					<EditTag tag={tag} key={`${tag.id}-${tag.ordering}-${tag.color}`} />
 				))}
 			</DialogContent>
 		</Dialog>
