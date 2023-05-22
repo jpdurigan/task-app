@@ -141,6 +141,7 @@ export class TaskServer {
 			newTasks = [...TaskServer.getAllTasks(), task]
 		}
 		TaskServer.instance.setTasks(newTasks);
+		TaskServer.saveTaskOnServer(task)
 	};
 
 	public static updateTaskDone = (id: string, done: boolean): void => {
@@ -229,14 +230,14 @@ export class TaskServer {
 		console.log("--- EXIT saveAllOnServer");
 	};
 
-	public static saveTaskOnServer = async (tag: Task) => {
+	public static saveTaskOnServer = async (task: Task) => {
 		console.log("--- ENTER saveTaskOnServer");
 		if (!UserServer.isLoggedIn()) return;
 
-		const document = TaskServer.getDocument(tag);
+		const document = TaskServer.getDocument(task);
 		try {
-			await setDoc(document, tag);
-			console.log(`${tag.toString()} adicionada`);
+			await setDoc(document, task);
+			console.log(`${task.toString()} adicionada`);
 		} catch (err) {
 			console.log(err);
 		}
@@ -285,8 +286,9 @@ export class TaskServer {
 		console.log(TaskServer.instance);
 	};
 
-	public static initialize = (): void => {
+	public static populateWithExamples = (): void => {
 		TaskServer.instance.setTasks(exampleTasks);
+		TaskServer.saveAllOnServer();
 	};
 }
 

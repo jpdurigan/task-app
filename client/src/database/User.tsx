@@ -16,8 +16,8 @@ export class UserServer {
 
 		await TagServer.loadFromServer();
 		await TaskServer.loadFromServer();
-		TagServer.addExampleTags();
-		TaskServer.initialize();
+		// TagServer.populateWithExamples();
+		// TaskServer.populateWithExamples();
 		// const tags = await UserServer.requestTags();
 		// console.log(tags);
 

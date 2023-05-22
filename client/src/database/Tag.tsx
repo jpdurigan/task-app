@@ -318,8 +318,9 @@ export class TagServer {
 		console.log(TagServer.instance);
 	};
 
-	public static addExampleTags = (): void => {
+	public static populateWithExamples = (): void => {
 		TagServer.instance.setTags(exampleTags);
+		TagServer.saveAllOnServer();
 	};
 }
 
