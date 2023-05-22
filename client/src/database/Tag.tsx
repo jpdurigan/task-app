@@ -31,19 +31,19 @@ export class Tag {
 
 export const exampleTags: Tag[] = [
 	{
-		id: uuid(),
+		id: "0",
 		label: "Universidade",
 		color: "indigo",
 		ordering: 0,
 	},
 	{
-		id: uuid(),
+		id: "1",
 		label: "Estágio",
 		color: "orange",
 		ordering: 1,
 	},
 	{
-		id: uuid(),
+		id: "2",
 		label: "Casa",
 		color: "green",
 		ordering: 2,

@@ -19,7 +19,7 @@ export const TagStack: React.FC<TagStackProps> = ({
 	);
 	return (
 		<Stack direction="row" gap={1} sx={sx !== undefined ? sx : {}}>
-			{sortedTags.map((tag: Tag) => (
+			{sortedTags.map((tag: Tag) => tag && (
 				<ThemeApp color_name={tag.color} key={tag.id}>
 					<Chip
 						label={tag.label}

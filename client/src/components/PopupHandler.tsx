@@ -20,7 +20,7 @@ export const PopupHandler: React.FC = () => {
 	const [editingTask, setEditingTask] = useState<Task | undefined>();
 
 	useEffect(() => {
-		DialogRemote.init(setEditingTask, showPopup);
+		DialogRemote.init(setEditingTask, showPopup, hidePopup);
 	}, []);
 	useEffect(() => {
 		if (editingTask) showPopup(Popup.TASK);
@@ -55,6 +55,7 @@ export const PopupHandler: React.FC = () => {
 			<TaskDialog
 				isVisible={isVisible(Popup.TASK)}
 				hide={() => hidePopup(Popup.TASK)}
+				task={editingTask}
 				key={editingTask ? editingTask.id : ""}
 			/>
 			<TagDialog
@@ -113,23 +114,27 @@ export class DialogRemote {
 		React.SetStateAction<Task | undefined>
 	>;
 	protected _showPopup: (popup: Popup) => void;
+	protected _hidePopup: (popup: Popup) => void;
 
 	private static instance: DialogRemote;
 
 	constructor(
 		setEditingTask: React.Dispatch<React.SetStateAction<Task | undefined>>,
-		showPopup: (popup: Popup) => void
+		showPopup: (popup: Popup) => void,
+		hidePopup: (popup: Popup) => void,
 	) {
 		this.setEditingTask = setEditingTask;
 		this._showPopup = showPopup;
+		this._hidePopup = hidePopup;
 	}
 
 	public static init = (
 		setEditingTask: React.Dispatch<React.SetStateAction<Task | undefined>>,
-		showPopup: (popup: Popup) => void
+		showPopup: (popup: Popup) => void,
+		hidePopup: (popup: Popup) => void
 	): void => {
 		if (DialogRemote.instance) return;
-		DialogRemote.instance = new DialogRemote(setEditingTask, showPopup);
+		DialogRemote.instance = new DialogRemote(setEditingTask, showPopup, hidePopup);
 	};
 
 	public static editTask = (task: Task): void => {
@@ -138,5 +143,9 @@ export class DialogRemote {
 
 	public static showPopup = (popup: Popup): void => {
 		DialogRemote.instance._showPopup(popup);
+	}
+
+	public static hidePopup = (popup: Popup): void => {
+		DialogRemote.instance._hidePopup(popup);
 	}
 }

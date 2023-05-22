@@ -41,12 +41,15 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({ isVisible, hide, task })
 	const handleSaving = () => {
 		console.log("Got to save", task);
 		if (!task) return;
+		task.text = text;
+		task.tags = tags;
 		TaskServer.updateTask(task);
+		DialogRemote.hidePopup(Popup.TASK);
 	};
 
 	return (
 		<Dialog open={isVisible} onClose={hide}>
-			<DialogTitle>"Editar nota"</DialogTitle>
+			<DialogTitle>Editar nota</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
 				<Stack spacing={2}>
 					<Box>

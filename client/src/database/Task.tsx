@@ -45,28 +45,28 @@ export class Task {
 
 export const exampleTasks: Task[] = [
 	{
-		id: "2",
+		id: uuid(),
 		text: "Comprar leite e ovos",
 		date: Date.now() - 50,
 		done: true,
 		tags: ["2"],
 	},
 	{
-		id: "3",
+		id: uuid(),
 		text: "Pesquisar preços de segundo monitor",
 		date: Date.now() - 30,
 		done: false,
 		tags: ["2", "1"],
 	},
 	{
-		id: "4",
+		id: uuid(),
 		text: "Devolver livros da biblioteca",
 		date: Date.now() - 10,
 		done: false,
 		tags: ["0"],
 	},
 	{
-		id: "5",
+		id: uuid(),
 		text: "Terminar componente até quinta",
 		date: Date.now(),
 		done: true,

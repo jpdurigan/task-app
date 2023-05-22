@@ -152,11 +152,11 @@ export const TaskDisplay: React.FC = () => {
 
 	const getCurrentTagList = (): Task[] => {
 		const currentTag = getCurrentTag();
-		return currentTag ? TaskServer.getTasksByTag(currentTag.id, tasks) : tasks;
+		return currentTag ? TaskServer.getTasksByTag(currentTag.id, tasks) : TaskServer.sortTasks(tasks);
 	};
 	const getPreviousTagList = (): Task[] => {
 		const prevTag = getPreviousTag();
-		return prevTag ? TaskServer.getTasksByTag(prevTag.id, tasks) : tasks;
+		return prevTag ? TaskServer.getTasksByTag(prevTag.id, tasks) : TaskServer.sortTasks(tasks);
 	};
 
 	return (
