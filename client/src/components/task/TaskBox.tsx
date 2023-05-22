@@ -4,6 +4,7 @@ import { Database } from "../../database/Database";
 import { Task, TaskServer } from "../../database/Task";
 import { TagStack } from "../tag/TagStack";
 import { Palette } from "../../database/Theme";
+import { DialogRemote } from "../PopupHandler";
 
 interface TaskBoxProps {
 	task: Task;
@@ -28,7 +29,11 @@ export const TaskBox: React.FC<TaskBoxProps> = ({ task }) => {
 			/>
 			<Stack direction="row">
 				<Box component="span" textAlign="left" width="100%">
-					<IconButton onClick={() => console.log("oops")}>
+					<IconButton
+						onClick={() =>
+							DialogRemote.editTask(TaskServer.getCloneTask(task.id))
+						}
+					>
 						<Edit />
 					</IconButton>
 				</Box>
