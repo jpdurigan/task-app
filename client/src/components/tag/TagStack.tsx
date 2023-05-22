@@ -1,23 +1,21 @@
 import { Stack, Chip, SxProps, Theme } from "@mui/material";
 import { Database } from "../../database/Database";
-import { Tag } from "../../database/Tag";
+import { Tag, TagServer } from "../../database/Tag";
 import { ThemeApp } from "../../database/Theme";
 
 interface TagStackProps {
 	tagList: string[];
-	database: Database;
 	sx?: SxProps<Theme>;
 	disabled?: boolean;
 }
 
 export const TagStack: React.FC<TagStackProps> = ({
 	tagList,
-	database,
 	sx,
 	disabled,
 }) => {
-	const sortedTags: Tag[] = database.sortTags(
-		tagList.map((id: string) => database.getTag(id))
+	const sortedTags: Tag[] = TagServer.sortTags(
+		tagList.map((id: string) => TagServer.getTag(id) as Tag)
 	);
 	return (
 		<Stack direction="row" gap={1} sx={sx !== undefined ? sx : {}}>

@@ -2,9 +2,11 @@ import { Keyframes } from "@emotion/react";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { Container, IconButton } from "@mui/material";
 import { Box, keyframes, SxProps } from "@mui/system";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Database } from "../../database/Database";
 import { TaskList } from "./TaskList";
+import { Tag, TagServer } from "../../database/Tag";
+import { Task, TaskServer } from "../../database/Task";
 
 const framePrev = {
 	opacity: 0.0,
@@ -70,7 +72,18 @@ interface TaskDisplayProps {
 	database: Database;
 }
 
-export const TaskDisplay: React.FC<TaskDisplayProps> = ({ database }) => {
+export const TaskDisplay: React.FC = () => {
+	const [tasks, setTasks] = useState<Task[]>([]);
+
+	useEffect(() => {
+		TaskServer.init(tasks, setTasks);
+	}, []);
+
+	useEffect(() => {
+		TaskServer.updateTasks(tasks);
+		console.log("useEffect TASKS ", tasks);
+	}, [tasks]);
+
 	const [index, setIndex] = useState<number>(0);
 	const [movement, setMovement] = useState<-1 | 0 | 1>(0);
 
@@ -103,10 +116,8 @@ export const TaskDisplay: React.FC<TaskDisplayProps> = ({ database }) => {
 		};
 	};
 
-	const wrapIndex = (
-		idx: number,
-		arr: any[] = database.getTagsForDisplay()
-	): number => ((idx % arr.length) + arr.length) % arr.length;
+	const wrapIndex = (idx: number, arr: any[] = tagsToDisplay()): number =>
+		((idx % arr.length) + arr.length) % arr.length;
 
 	const moveRight = () => {
 		setMovement(+1);
@@ -116,7 +127,37 @@ export const TaskDisplay: React.FC<TaskDisplayProps> = ({ database }) => {
 		setMovement(-1);
 		setIndex(wrapIndex(index - 1));
 	};
-	const getPrev = () => wrapIndex(index - movement);
+	const getPrevIndex = () => wrapIndex(index - movement);
+
+	const tagsToDisplay = (): (Tag | undefined)[] => [
+		undefined,
+		...TagServer.getAllTags(),
+	];
+
+	const getCurrentTag = (): Tag | undefined => {
+		return tagsToDisplay()[index];
+	};
+	const getPreviousTag = (): Tag | undefined => {
+		return tagsToDisplay()[getPrevIndex()];
+	};
+
+	const getCurrentTagName = (): string => {
+		const currentTag = getCurrentTag();
+		return currentTag ? currentTag.label : "Todas";
+	};
+	const getPreviousTagName = (): string => {
+		const prevTag = getPreviousTag();
+		return prevTag ? prevTag.label : "Todas";
+	};
+
+	const getCurrentTagList = (): Task[] => {
+		const currentTag = getCurrentTag();
+		return currentTag ? TaskServer.getTasksByTag(currentTag.id, tasks) : tasks;
+	};
+	const getPreviousTagList = (): Task[] => {
+		const prevTag = getPreviousTag();
+		return prevTag ? TaskServer.getTasksByTag(prevTag.id, tasks) : tasks;
+	};
 
 	return (
 		<Container
@@ -129,17 +170,17 @@ export const TaskDisplay: React.FC<TaskDisplayProps> = ({ database }) => {
 		>
 			{movement !== 0 && (
 				<TaskList
-					database={database}
-					tagId={database.getTagsForDisplay()[getPrev()]}
+					tasks={getPreviousTagList()}
+					name={getPreviousTagName()}
 					sx={sxList(exitAnimation())}
-					key={getPrev()}
+					key={getPreviousTagName()}
 				/>
 			)}
 			<TaskList
-				database={database}
-				tagId={database.getTagsForDisplay()[index]}
+				tasks={getCurrentTagList()}
+				name={getCurrentTagName()}
 				sx={sxList(enterAnimation())}
-				key={index}
+				key={getCurrentTagName()}
 			/>
 			<Box
 				sx={{

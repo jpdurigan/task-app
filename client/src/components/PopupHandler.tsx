@@ -1,15 +1,15 @@
 import { Add, ManageAccounts, Settings } from "@mui/icons-material";
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 import { Database } from "../database/Database";
-import { useState } from "react";
-import { Task } from "../database/Task";
+import { useEffect, useState } from "react";
+import { Task, TaskServer } from "../database/Task";
 import { TagDialog } from "./tag/TagDialog";
-import { TaskDialogHandler } from "./task/TaskDialog";
+import { TaskDialog } from "./task/TaskDialog";
 import { TaskDisplay } from "./task/TaskDisplay";
 import { AuthDialog } from "../database/Auth";
 import { TagServer } from "../database/Tag";
 
-enum Popup {
+export enum Popup {
 	TASK,
 	TAG,
 	AUTH,
@@ -17,9 +17,17 @@ enum Popup {
 
 export const PopupHandler: React.FC = () => {
 	const [popups, setPopups] = useState<Popup[]>([Popup.AUTH]);
-	const [editingTask, setEditingTask] = useState<Task>();
+	const [editingTask, setEditingTask] = useState<Task | undefined>();
+
+	useEffect(() => {
+		DialogRemote.init(setEditingTask, showPopup);
+	}, []);
+	useEffect(() => {
+		if (editingTask) showPopup(Popup.TASK);
+	}, [editingTask]);
 
 	const showPopup = (popup: Popup) => {
+		if (isVisible(popup)) return;
 		const newPopups = [popup, ...popups];
 		setPopups(newPopups);
 	};
@@ -34,9 +42,21 @@ export const PopupHandler: React.FC = () => {
 		return popups && popups[0] === popup;
 	};
 
+	const showNewTaskDialog = (): void => {
+		const newTask = TaskServer.getNewTask();
+		console.log("Created new task", newTask);
+		setEditingTask(newTask);
+		// showPopup(Popup.TASK);
+	};
+
 	return (
 		<>
 			{/* <TaskDialogHandler database={appDatabase} /> */}
+			<TaskDialog
+				isVisible={isVisible(Popup.TASK)}
+				hide={() => hidePopup(Popup.TASK)}
+				key={editingTask ? editingTask.id : ""}
+			/>
 			<TagDialog
 				isVisible={isVisible(Popup.TAG)}
 				hide={() => hidePopup(Popup.TAG)}
@@ -46,7 +66,7 @@ export const PopupHandler: React.FC = () => {
 				hide={() => hidePopup(Popup.AUTH)}
 			/>
 			<SpeedDialApp
-				showTaskDialog={() => showPopup(Popup.TASK)}
+				showTaskDialog={showNewTaskDialog}
 				showTagDialog={() => showPopup(Popup.TAG)}
 				showAuthDialog={() => showPopup(Popup.AUTH)}
 			/>
@@ -87,3 +107,36 @@ export const SpeedDialApp: React.FC<SpeedDialAppProps> = ({
 		/>
 	</SpeedDial>
 );
+
+export class DialogRemote {
+	protected setEditingTask: React.Dispatch<
+		React.SetStateAction<Task | undefined>
+	>;
+	protected _showPopup: (popup: Popup) => void;
+
+	private static instance: DialogRemote;
+
+	constructor(
+		setEditingTask: React.Dispatch<React.SetStateAction<Task | undefined>>,
+		showPopup: (popup: Popup) => void
+	) {
+		this.setEditingTask = setEditingTask;
+		this._showPopup = showPopup;
+	}
+
+	public static init = (
+		setEditingTask: React.Dispatch<React.SetStateAction<Task | undefined>>,
+		showPopup: (popup: Popup) => void
+	): void => {
+		if (DialogRemote.instance) return;
+		DialogRemote.instance = new DialogRemote(setEditingTask, showPopup);
+	};
+
+	public static editTask = (task: Task): void => {
+		DialogRemote.instance.setEditingTask(task);
+	};
+
+	public static showPopup = (popup: Popup): void => {
+		DialogRemote.instance._showPopup(popup);
+	}
+}

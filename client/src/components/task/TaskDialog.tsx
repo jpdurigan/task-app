@@ -15,36 +15,38 @@ import {
 import { Box, Stack } from "@mui/system";
 import { useState } from "react";
 import { Database } from "../../database/Database";
-import { exampleTags, Tag } from "../../database/Tag";
+import { exampleTags, Tag, TagServer } from "../../database/Tag";
 import { TagStack } from "../tag/TagStack";
+import { Task, TaskServer } from "../../database/Task";
+import { DialogRemote, Popup } from "../PopupHandler";
 
 interface TaskDialogProps {
-	database: Database;
+	isVisible: boolean;
+	hide: () => void;
+	task?: Task;
 }
 
-const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
-	const isNewTask = database.editingTask != undefined;
-	const [text, setText] = useState<string>(
-		isNewTask ? "" : database.getTask(database.editingTask as string).text
-	);
+export const TaskDialog: React.FC<TaskDialogProps> = ({ isVisible, hide, task }) => {
+	// const isNewTask = database.editingTask != undefined;
+	const [text, setText] = useState<string>(task ? task.text : "");
 	const [tags, setTags] = useState<string[]>(
-		isNewTask ? [] : database.getTask(database.editingTask as string).tags
+		task ? task.tags : []
 	);
 
 	const handleDelete = () => {
-		database.deleteTask(database.editingTask as string);
-		database.setEditingTask(undefined);
+		if (!task) return;
+		TaskServer.deleteTask(task.id);
 	};
 
 	const handleSaving = () => {
-		if (isNewTask) database.addNewTask(text, tags);
-		else database.updateTask(database.editingTask as string, text, tags);
-		database.setEditingTask(undefined);
+		console.log("Got to save", task);
+		if (!task) return;
+		TaskServer.updateTask(task);
 	};
 
 	return (
-		<Dialog open={true} onClose={() => database.setEditingTask(undefined)}>
-			<DialogTitle>{isNewTask ? "Criar nova nota" : "Editar nota"}</DialogTitle>
+		<Dialog open={isVisible} onClose={hide}>
+			<DialogTitle>"Editar nota"</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
 				<Stack spacing={2}>
 					<Box>
@@ -61,7 +63,7 @@ const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
 					<Box>
 						<DialogContentText variant="body2">
 							Tags
-							<IconButton onClick={() => database.setShowTagsDialog(true)}>
+							<IconButton onClick={() => DialogRemote.showPopup(Popup.TAG)}>
 								<Settings fontSize="small" />
 							</IconButton>
 						</DialogContentText>
@@ -83,10 +85,10 @@ const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
 								// const tagList: number[] = selected.map((id: string) =>
 								// 	parseInt(id)
 								// );
-								return <TagStack tagList={selected} database={database} />;
+								return <TagStack tagList={selected} />;
 							}}
 						>
-							{exampleTags.map((tag: Tag) => (
+							{TagServer.getAllTags().map((tag: Tag) => (
 								<MenuItem value={tag.id.toString()} key={tag.id}>
 									<ListItemText primary={tag.label} />
 								</MenuItem>
@@ -96,12 +98,9 @@ const TaskDialog: React.FC<TaskDialogProps> = ({ database }) => {
 				</Stack>
 			</DialogContent>
 			<DialogActions>
-				{isNewTask ? <></> : <Button onClick={handleDelete}>Apagar</Button>}
+				<Button onClick={handleDelete}>Apagar</Button>
 				<Button onClick={handleSaving}>Salvar</Button>
 			</DialogActions>
 		</Dialog>
 	);
 };
-
-export const TaskDialogHandler: React.FC<TaskDialogProps> = ({ database }) =>
-	database.showTaskDialog() ? <TaskDialog database={database} /> : <></>;

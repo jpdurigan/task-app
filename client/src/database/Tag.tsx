@@ -81,15 +81,18 @@ export class TagServer {
 	// GET
 
 	public static getTag = (id: string): Tag | undefined => {
-		return TagServer.instance.tags.find((tag) => tag.id === id);
+		if (!TagServer.instance) return undefined;
+		return TagServer.getAllTags().find((tag) => tag.id === id);
 	};
 
 	public static getAllTags = (): Tag[] => {
+		if (!TagServer.instance) return [];
 		return TagServer.instance ? TagServer.instance.tags : [];
 	};
 
 	public static getAllTagIds = (): string[] => {
-		return TagServer.instance.tags.map((tag) => tag.id);
+		if (!TagServer.instance) return [];
+		return TagServer.getAllTags().map((tag) => tag.id);
 	};
 
 	public static getCloneTag = (id: string): Tag => {
@@ -114,10 +117,10 @@ export class TagServer {
 			id: id,
 			label: label.trim(),
 			color: color,
-			ordering: TagServer.instance.tags.length,
+			ordering: TagServer.getAllTags().length,
 		};
 
-		TagServer.instance.setTags([...TagServer.instance.tags, newTag]);
+		TagServer.instance.setTags([...TagServer.getAllTags(), newTag]);
 		TagServer.saveTagOnServer(newTag);
 	};
 
@@ -125,7 +128,7 @@ export class TagServer {
 		let newTag = TagServer.getCloneTag(id);
 		newTag.label = label;
 
-		let newTags = TagServer.instance.tags.map((tag) =>
+		let newTags = TagServer.getAllTags().map((tag) =>
 			tag.id === id ? newTag : tag
 		);
 
@@ -137,7 +140,7 @@ export class TagServer {
 		let newTag = TagServer.getCloneTag(id);
 		newTag.color = color;
 
-		let newTags = TagServer.instance.tags.map((tag) =>
+		let newTags = TagServer.getAllTags().map((tag) =>
 			tag.id === id ? newTag : tag
 		);
 
@@ -150,13 +153,13 @@ export class TagServer {
 		let newTag1 = TagServer.getCloneTag(id);
 		newTag1.ordering += move;
 
-		let tag2 = TagServer.instance.tags.find(
+		let tag2 = TagServer.getAllTags().find(
 			(t) => t.ordering === newTag1.ordering
 		) as Tag;
 		let newTag2 = { ...tag2 } as Tag;
 		newTag2.ordering -= move;
 
-		let newTags = TagServer.instance.tags.map((tag) => {
+		let newTags = TagServer.getAllTags().map((tag) => {
 			if (tag.id === newTag1.id) return newTag1;
 			else if (tag.id === newTag2.id) return newTag2;
 			return tag;
@@ -173,7 +176,7 @@ export class TagServer {
 	public static deleteTag = (id: string): void => {
 		const tagDeleted = TagServer.getTag(id) as Tag;
 
-		let newTags = TagServer.instance.tags.filter((tag) => tag.id !== id);
+		let newTags = TagServer.getAllTags().filter((tag) => tag.id !== id);
 		newTags = TagServer.normalizeOrdering(newTags);
 
 		// // handle tasks
@@ -189,13 +192,13 @@ export class TagServer {
 	};
 
 	public static sortTags = (
-		tagArray: Tag[] = TagServer.instance.tags
+		tagArray: Tag[] = TagServer.getAllTags()
 	): Tag[] => {
 		return tagArray.sort((a, b) => a.ordering - b.ordering);
 	};
 
 	public static normalizeOrdering = (
-		tags: Tag[] = TagServer.instance.tags
+		tags: Tag[] = TagServer.getAllTags()
 	): Tag[] => {
 		tags = TagServer.sortTags(tags);
 		tags = tags.map((tag, index) => {
@@ -246,7 +249,7 @@ export class TagServer {
 		if (!UserServer.isLoggedIn()) return;
 
 		const batch = writeBatch(db);
-		TagServer.instance.tags.forEach((tag) => {
+		TagServer.getAllTags().forEach((tag) => {
 			const document = TagServer.getDocument(tag);
 			batch.set(document, tag);
 		});
@@ -308,14 +311,14 @@ export class TagServer {
 	};
 
 	public static saveToStorage = (
-		tags: Tag[] = TagServer.instance.tags
+		tags: Tag[] = TagServer.getAllTags()
 	): void => {
 		const data = JSON.stringify(tags);
 		window.localStorage.setItem(TagServer.STORAGE_KEY, JSON.stringify(data));
 		console.log(TagServer.instance);
 	};
 
-	public static initialize = (): void => {
+	public static addExampleTags = (): void => {
 		TagServer.instance.setTags(exampleTags);
 	};
 }

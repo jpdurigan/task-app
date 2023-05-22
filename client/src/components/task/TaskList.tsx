@@ -1,20 +1,17 @@
 import { FormatListBulleted } from "@mui/icons-material";
 import { Badge, Box, SxProps, Typography } from "@mui/material";
 import { Database } from "../../database/Database";
-import { Task } from "../../database/Task";
+import { Task, TaskServer } from "../../database/Task";
 import { TaskBox } from "./TaskBox";
+import { Tag, TagServer } from "../../database/Tag";
 
 interface TaskLinkProps {
-	database: Database;
-	tagId?: string;
+	tasks: Task[];
+	name: string;
 	sx?: SxProps;
 }
 
-export const TaskList: React.FC<TaskLinkProps> = ({ database, tagId, sx }) => {
-	const tasks: Task[] =
-		tagId === undefined ? database.sortTasks() : database.getTasksByTag(tagId);
-	const displayName: string =
-		tagId === undefined ? "Todas as notas" : database.getTag(tagId).label;
+export const TaskList: React.FC<TaskLinkProps> = ({ tasks, name, sx }) => {
 	const toDoCount: number = tasks.filter((task) => !task.done).length;
 
 	return (
@@ -29,7 +26,7 @@ export const TaskList: React.FC<TaskLinkProps> = ({ database, tagId, sx }) => {
 				<Badge badgeContent={toDoCount} color="primary">
 					<FormatListBulleted fontSize="large" />
 				</Badge>
-				<Typography variant="button">{displayName}</Typography>
+				<Typography variant="button">{name}</Typography>
 			</Box>
 			<Box
 				display="flex"
@@ -40,7 +37,7 @@ export const TaskList: React.FC<TaskLinkProps> = ({ database, tagId, sx }) => {
 				gap={2}
 			>
 				{tasks.map((task) => (
-					<TaskBox task={task} database={database} key={task.id} />
+					<TaskBox task={task} key={task.id} />
 				))}
 			</Box>
 		</Box>
