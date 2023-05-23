@@ -13,11 +13,12 @@ import {
 	TextField,
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Tag, TagServer } from "../database/Tag";
 import { TagStack } from "../components/tag/TagStack";
 import { Task, TaskServer } from "../database/Task";
 import { DialogRemote, DialogApp } from "./DialogHandler";
+import { DataContext, Data } from "../database/DataProvider";
 
 interface TaskDialogProps {
 	isVisible: boolean;
@@ -26,11 +27,13 @@ interface TaskDialogProps {
 }
 
 export const TaskDialog: React.FC<TaskDialogProps> = ({ isVisible, hide, task }) => {
-	// const isNewTask = database.editingTask != undefined;
+	const { tags } = useContext(DataContext) as Data;
 	const [text, setText] = useState<string>(task ? task.text : "");
-	const [tags, setTags] = useState<string[]>(
+	const [taskTags, setTaskTags] = useState<string[]>(
 		task ? task.tags : []
 	);
+
+	useEffect(() => console.log(tags), [tags]);
 
 	const handleDelete = () => {
 		if (!task) return;
@@ -38,10 +41,9 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({ isVisible, hide, task })
 	};
 
 	const handleSaving = () => {
-		console.log("Got to save", task);
 		if (!task) return;
 		task.text = text;
-		task.tags = tags;
+		task.tags = taskTags;
 		TaskServer.updateTask(task);
 		DialogRemote.hideDialog(DialogApp.TASK);
 	};
@@ -72,25 +74,18 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({ isVisible, hide, task })
 						<Select
 							fullWidth
 							multiple
-							value={tags}
+							value={taskTags}
 							onChange={(e) => {
 								const value = e.target.value;
-								console.log(`select changed got value: ${value}`);
 								const newTagsId: string[] =
 									typeof value === "string" ? value.split(",") : value;
-								// const newTags: number[] = newTagsId.map((id: string) =>
-								// 	parseInt(id)
-								// );
-								setTags(newTagsId);
+								setTaskTags(newTagsId);
 							}}
 							renderValue={(selected: string[]) => {
-								// const tagList: number[] = selected.map((id: string) =>
-								// 	parseInt(id)
-								// );
 								return <TagStack tagList={selected} />;
 							}}
 						>
-							{TagServer.getAllTags().map((tag: Tag) => (
+							{tags.value.map((tag: Tag) => (
 								<MenuItem value={tag.id.toString()} key={tag.id}>
 									<ListItemText primary={tag.label} />
 								</MenuItem>

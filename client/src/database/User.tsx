@@ -10,9 +10,9 @@ export class UserServer {
 	public static setCurrentUser = async (user: User | null) => {
 		UserServer.instance.currentUser = user;
 
-		if (!user) return;
-		await TagServer.loadFromServer();
-		await TaskServer.loadFromServer();
+		// if (!user) return;
+		// await TagServer.loadFromServer();
+		// await TaskServer.loadFromServer();
 	};
 
 	public static getId = (): string => {

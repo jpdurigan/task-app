@@ -12,10 +12,11 @@ import {
 	ButtonBase,
 	Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Tag, TagServer } from "../../database/Tag";
 import { ValidColor, ThemeApp } from "../../database/Theme";
 import { TagColorSelection } from "./TagColorSelection";
+import { DataContext, Data } from "../../database/DataProvider";
 
 interface TagEditProps {
 	tag: Tag;
@@ -23,35 +24,36 @@ interface TagEditProps {
 }
 
 export const TagEdit: React.FC<TagEditProps> = ({ tag }) => {
+	const { tags } = useContext(DataContext) as Data;
 	const [isEditingLabel, setIsEditingLabel] = useState<boolean>(false);
 	const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(
 		null
 	);
 
 	const handleMoveUp = () => {
-		TagServer.moveTag(tag.id, -1);
+		tag.ordering += -1;
+		tags.update(tag);
 		closeEditingLabel();
-		// onChange();
 	};
 
 	const handleMoveDown = () => {
-		TagServer.moveTag(tag.id, +1);
+		tag.ordering += +1;
+		tags.update(tag);
 		closeEditingLabel();
-		// onChange();
 	};
 
 	const handleUpdateLabel = (label: string) => {
-		TagServer.updateTagLabel(tag.id, label);
+		tag.label = label;
+		tags.update(tag);
 	};
 
 	const handleUpdateColor = (color: ValidColor) => {
-		TagServer.updateTagColor(tag.id, color);
-		// onChange();
+		tag.color = color;
+		tags.update(tag);
 	};
 
 	const handleDelete = () => {
-		TagServer.deleteTag(tag.id);
-		// onChange();
+		tags.destroy(tag);
 	};
 
 	const closeEditingLabel = () => {

@@ -2,10 +2,11 @@ import { Keyframes } from "@emotion/react";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { Container, IconButton } from "@mui/material";
 import { Box, keyframes, SxProps } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TaskList } from "./task/TaskList";
 import { Tag, TagServer } from "../database/Tag";
 import { Task, TaskServer } from "../database/Task";
+import { DataContext, Data } from "../database/DataProvider";
 
 const framePrev = {
 	opacity: 0.0,
@@ -68,6 +69,7 @@ const exitRight = keyframes`
 `;
 
 export const UserTasks: React.FC = () => {
+	const { tags } = useContext(DataContext) as Data;
 	const [tasks, setTasks] = useState<Task[]>([]);
 
 	useEffect(() => {
@@ -126,7 +128,7 @@ export const UserTasks: React.FC = () => {
 
 	const tagsToDisplay = (): (Tag | undefined)[] => [
 		undefined,
-		...TagServer.getAllTags(),
+		...tags.value,
 	];
 
 	const getCurrentTag = (): Tag | undefined => {
