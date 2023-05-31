@@ -29,20 +29,18 @@ export const DataProvider: React.FC<PropsWithChildren> = ({ children }) => {
 	useEffect(() => {
 		auth.onAuthStateChanged((user) => {
 			setUser(user);
+			value.user = user;
 			loadTags();
 		});
 	}, []);
 
 	useEffect(() => {
-		value = {
-			tags: {
-				value: tags,
-				create: createTag,
-				read: readTag,
-				update: updateTag,
-				destroy: destroyTag,
-			},
-			user,
+		value.tags = {
+			value: tags,
+			create: createTag,
+			read: readTag,
+			update: updateTag,
+			destroy: destroyTag,
 		};
 		console.log("useEffect", value, tags);
 	}, [tags]);
@@ -100,7 +98,7 @@ export const DataProvider: React.FC<PropsWithChildren> = ({ children }) => {
 		TagServer.saveLocal(newTags);
 	};
 
-	let value: Data = {
+	const value: Data = {
 		tags: {
 			value: tags,
 			create: createTag,
