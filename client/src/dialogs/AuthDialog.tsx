@@ -70,6 +70,11 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({ isVisible, hide }) => {
 			<DialogTitle>Autenticação</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
 				{loading && <DialogContentText>Carregando...</DialogContentText>}
+				{error && (
+					<DialogContentText color="error">
+						Um erro ocorreu na Autenticação com o Firebase!
+					</DialogContentText>
+				)}
 				{isLoggedIn && (
 					<DialogContentText>
 						Usuário: {auth.currentUser?.email}
@@ -98,7 +103,7 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({ isVisible, hide }) => {
 				{isLoggedIn && (
 					<>
 						<Button onClick={userDelete} color="error">
-							Deletar conta
+							Deletar
 						</Button>
 						<Button onClick={userLogout}>Sair da conta</Button>
 					</>

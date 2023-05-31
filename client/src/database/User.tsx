@@ -1,6 +1,4 @@
 import { User } from "firebase/auth";
-import { TagServer } from "./Tag";
-import { TaskServer } from "./Task";
 
 export class UserServer {
 	protected currentUser: User | null = null;
@@ -9,10 +7,6 @@ export class UserServer {
 
 	public static setCurrentUser = async (user: User | null) => {
 		UserServer.instance.currentUser = user;
-
-		// if (!user) return;
-		// await TagServer.loadFromServer();
-		// await TaskServer.loadFromServer();
 	};
 
 	public static getId = (): string => {

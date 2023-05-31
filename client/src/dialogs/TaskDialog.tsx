@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useContext, useEffect, useState } from "react";
-import { Tag, TagServer } from "../database/Tag";
+import { Tag } from "../database/Tag";
 import { TagStack } from "../components/tag/TagStack";
 import { Task, TaskServer } from "../database/Task";
 import { DialogRemote, DialogApp } from "./DialogHandler";

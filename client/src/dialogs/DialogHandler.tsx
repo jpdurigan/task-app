@@ -1,6 +1,6 @@
 import { Add, ManageAccounts, Settings } from "@mui/icons-material";
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Task, TaskServer } from "../database/Task";
 import { TagDialog } from "./TagDialog";
 import { TaskDialog } from "./TaskDialog";
@@ -16,35 +16,35 @@ export const DialogHandler: React.FC = () => {
 	const [dialogs, setDialogs] = useState<DialogApp[]>([DialogApp.AUTH]);
 	const [editingTask, setEditingTask] = useState<Task | undefined>();
 
-	useEffect(() => {
-		DialogRemote.init(setEditingTask, showDialog, hideDialog);
-	}, []);
-	useEffect(() => {
-		if (editingTask) showDialog(DialogApp.TASK);
-	}, [editingTask]);
+	const isVisible = useCallback((dialog: DialogApp): boolean => {
+		return dialogs && dialogs[0] === dialog;
+	}, [dialogs]);
 
-	const showDialog = (dialog: DialogApp) => {
+	const showDialog = useCallback((dialog: DialogApp) => {
 		if (isVisible(dialog)) return;
 		const newDialogs = [dialog, ...dialogs];
 		setDialogs(newDialogs);
-	};
+	}, [dialogs, isVisible]);
 
-	const hideDialog = (dialog: DialogApp) => {
+	const hideDialog = useCallback((dialog: DialogApp) => {
 		// console.log( TagServer.getAllTags())
 		const newDialogs = dialogs.filter((p_dialog) => p_dialog !== dialog);
 		setDialogs(newDialogs);
-	};
+	}, [dialogs]);
 
-	const isVisible = (dialog: DialogApp): boolean => {
-		return dialogs && dialogs[0] === dialog;
-	};
-
-	const showNewTaskDialog = (): void => {
+	const showNewTaskDialog = useCallback((): void => {
 		const newTask = TaskServer.getNewTask();
 		console.log("Created new task", newTask);
 		setEditingTask(newTask);
 		// showDialog(DialogApp.TASK);
-	};
+	}, []);
+
+	useEffect(() => {
+		DialogRemote.init(setEditingTask, showDialog, hideDialog);
+	}, [showDialog, hideDialog]);
+	useEffect(() => {
+		if (editingTask) showDialog(DialogApp.TASK);
+	}, [editingTask, showDialog]);
 
 	return (
 		<>
