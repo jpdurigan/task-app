@@ -4,18 +4,20 @@ import { UserTasks } from "./components/UserTasks";
 import { ThemeApp } from "./database/Theme";
 import { DialogHandler } from "./dialogs/DialogHandler";
 import { DataProvider } from "./database/DataProvider";
+import { AuthDialog } from "./dialogs/AuthDialog";
 
 const App: React.FC = () => {
 	return (
-		<DataProvider>
-			<ThemeApp>
-				<Box className="App">
-					<HeaderApp />
-					<UserTasks />
-					<DialogHandler />
-				</Box>
-			</ThemeApp>
-		</DataProvider>
+		<AuthDialog isVisible={true} hide={() => {}} />
+		// <DataProvider>
+		// 	<ThemeApp>
+		// 		<Box className="App">
+		// 			<HeaderApp />
+		// 			<UserTasks />
+		// 			<DialogHandler />
+		// 		</Box>
+		// 	</ThemeApp>
+		// </DataProvider>
 	);
 };
 

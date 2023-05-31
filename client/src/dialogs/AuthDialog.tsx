@@ -2,16 +2,16 @@ import {
 	Box,
 	Button,
 	Dialog,
+	DialogActions,
 	DialogContent,
+	DialogContentText,
 	DialogTitle,
 	Stack,
 	Tab,
 	Tabs,
 	TextField,
-	Typography,
 } from "@mui/material";
 import {
-	User,
 	createUserWithEmailAndPassword,
 	deleteUser,
 	signInWithEmailAndPassword,
@@ -23,6 +23,7 @@ import { auth, googleProvider } from "../database/Firebase";
 import { FirebaseError } from "firebase/app";
 import { Google } from "@mui/icons-material";
 import { UserServer } from "../database/User";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 interface AuthDialogProps {
 	isVisible: boolean;
@@ -30,12 +31,12 @@ interface AuthDialogProps {
 }
 
 export const AuthDialog: React.FC<AuthDialogProps> = ({ isVisible, hide }) => {
+	const [user, loading, error] = useAuthState(auth);
 	const [tabValue, setTabValue] = useState<number>(0);
-	const [user, setUser] = useState<User | null>(auth.currentUser);
+	// const [user, setUser] = useState<User | null>(auth.currentUser);
 
 	useEffect(() => {
 		auth.onAuthStateChanged((user) => {
-			setUser(user);
 			UserServer.setCurrentUser(user);
 		});
 	}, []);
@@ -68,6 +69,12 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({ isVisible, hide }) => {
 		<Dialog open={isVisible} onClose={hide}>
 			<DialogTitle>Autenticação</DialogTitle>
 			<DialogContent sx={{ minWidth: 300 }}>
+				{loading && <DialogContentText>Carregando...</DialogContentText>}
+				{isLoggedIn && (
+					<DialogContentText>
+						Usuário: {auth.currentUser?.email}
+					</DialogContentText>
+				)}
 				{!isLoggedIn && (
 					<>
 						<Tabs
@@ -84,28 +91,24 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({ isVisible, hide }) => {
 						<TabPanel value={tabValue} index={1}>
 							<AuthSignup />
 						</TabPanel>
-						<Button
-							onClick={continueAsGuest}
-							sx={{ marginTop: 2, marginBottom: 2 }}
-						>
-							Continuar sem login
-						</Button>
-					</>
-				)}
-				{isLoggedIn && (
-					<>
-						<Stack direction="column" spacing={1}>
-							<Typography>{auth.currentUser?.email}</Typography>
-							<Button onClick={userLogout} variant="contained">
-								Sair
-							</Button>
-							<Button onClick={userDelete} variant="contained" color="error">
-								Deletar conta
-							</Button>
-						</Stack>
 					</>
 				)}
 			</DialogContent>
+			<DialogActions>
+				{isLoggedIn && (
+					<>
+						<Button onClick={userDelete} color="error">
+							Deletar conta
+						</Button>
+						<Button onClick={userLogout}>Sair da conta</Button>
+					</>
+				)}
+				{!isLoggedIn && (
+					<>
+						<Button onClick={continueAsGuest}>Continuar sem login</Button>
+					</>
+				)}
+			</DialogActions>
 		</Dialog>
 	);
 };
@@ -116,11 +119,7 @@ const AuthLogin: React.FC = () => {
 
 	const submitLogin = async () => {
 		try {
-			await signInWithEmailAndPassword(
-				auth,
-				email,
-				password
-			);
+			await signInWithEmailAndPassword(auth, email, password);
 		} catch (err) {
 			const ferr = err as FirebaseError;
 			console.log(ferr.message, ferr.cause, ferr.customData, ferr.code);
@@ -180,11 +179,7 @@ const AuthSignup: React.FC = () => {
 
 	const submitSignup = async () => {
 		try {
-			await createUserWithEmailAndPassword(
-				auth,
-				email,
-				password
-			);
+			await createUserWithEmailAndPassword(auth, email, password);
 		} catch (err) {
 			const ferr = err as FirebaseError;
 			console.log(ferr.message, ferr.cause, ferr.customData, ferr.code);
