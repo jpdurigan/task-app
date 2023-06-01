@@ -21,6 +21,7 @@ import {
 	Icon,
 } from "@mui/material";
 import { useRef, useState } from "react";
+import { AppDialogs } from "../AppDialogs";
 
 enum FilterDone {
 	ALL = "ALL",
@@ -28,7 +29,11 @@ enum FilterDone {
 	DONE = "DONE",
 }
 
-export const AppToolbar: React.FC = () => {
+interface AppToolbarProps {
+	showDialog: (dialog: AppDialogs) => void;
+}
+
+export const AppToolbar: React.FC<AppToolbarProps> = ({ showDialog }) => {
 	const [showFilters, setShowFilters] = useState<boolean>(false);
 	const [filterDone, setFilterDone] = useState<FilterDone>(FilterDone.ALL);
 	const filterButton = useRef<HTMLElement>();
@@ -49,19 +54,27 @@ export const AppToolbar: React.FC = () => {
 			<Stack direction="row" justifyContent="space-between">
 				<Stack direction="row">
 					<Tooltip title="Conta">
-						<IconButton>
+						<IconButton
+							onClick={() => {
+								showDialog(AppDialogs.AUTH);
+							}}
+						>
 							<AccountCircle />
 						</IconButton>
 					</Tooltip>
 					<Tooltip title="Compartilhar">
-						<IconButton>
+						<IconButton onClick={() => {
+								showDialog(AppDialogs.SHARE);
+							}}>
 							<Share />
 						</IconButton>
 					</Tooltip>
 				</Stack>
 				<Stack direction="row-reverse">
 					<Tooltip title="Nova tarefa">
-						<IconButton>
+						<IconButton onClick={() => {
+								showDialog(AppDialogs.TASK);
+							}}>
 							<AddBox />
 						</IconButton>
 					</Tooltip>
@@ -99,7 +112,9 @@ export const AppToolbar: React.FC = () => {
 						</Card>
 					</Popper>
 					<Tooltip title="Editar tags">
-						<IconButton>
+						<IconButton onClick={() => {
+								showDialog(AppDialogs.TAGS);
+							}}>
 							<Palette />
 						</IconButton>
 					</Tooltip>

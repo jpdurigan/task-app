@@ -14,12 +14,13 @@ import { exampleTags } from "../database/Tag";
 import { ArrowDownward, ArrowUpward, Circle, Delete, Edit } from "@mui/icons-material";
 import { TagColors } from "../Theme";
 import { useState } from "react";
+import { AppDialogProps } from "../AppDialogs";
 
-export const TagDialog: React.FC = () => {
+export const TagDialog: React.FC<AppDialogProps> = ({isVisible, hide}) => {
 	const tags = exampleTags;
 
 	return (
-		<Dialog open={true} maxWidth="xs">
+		<Dialog open={isVisible} onClose={hide} maxWidth="xs">
 			<DialogTitle>Editar tags</DialogTitle>
 			<DialogContent>
 				{/* <DialogContentText textAlign="center" mb={2}>

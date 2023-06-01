@@ -10,8 +10,7 @@ import {
 } from "firebase/firestore";
 import { TagColors, getRandomTagColor } from "../Theme";
 import { v4 as uuid } from "uuid";
-import { db } from "./Firebase";
-import { UserServer } from "../../../old/src/database/User";
+import { db, getFirebaseUserId, hasFirebaseUser } from "./Firebase";
 
 export class Tag {
 	id: string;
@@ -92,7 +91,7 @@ export class TagServer {
 	//////////////////////////////
 
 	public static loadRemote = async (): Promise<Tag[] | undefined> => {
-		if (!UserServer.isLoggedIn()) {
+		if (!hasFirebaseUser()) {
 			console.warn("User not logged in!");
 			return;
 		}
@@ -112,7 +111,7 @@ export class TagServer {
 	};
 
 	public static saveAllRemote = async (tags: Tag[]) => {
-		if (!UserServer.isLoggedIn()) return;
+		if (!hasFirebaseUser()) return;
 
 		const batch = writeBatch(db);
 		tags.forEach((tag) => {
@@ -131,7 +130,7 @@ export class TagServer {
 	};
 
 	public static saveOneRemote = async (tag: Tag) => {
-		if (!UserServer.isLoggedIn()) return;
+		if (!hasFirebaseUser()) return;
 
 		const document = TagServer.getDocument(tag);
 		try {
@@ -145,7 +144,7 @@ export class TagServer {
 	};
 
 	public static deleteAllRemote = async (tags: Tag[]) => {
-		if (!UserServer.isLoggedIn()) return;
+		if (!hasFirebaseUser()) return;
 
 		const batch = writeBatch(db);
 		tags.forEach((tag) => {
@@ -164,7 +163,7 @@ export class TagServer {
 	};
 
 	public static deleteOneRemote = async (tag: Tag) => {
-		if (!UserServer.isLoggedIn()) return;
+		if (!hasFirebaseUser()) return;
 
 		const document = TagServer.getDocument(tag);
 		try {
@@ -178,12 +177,12 @@ export class TagServer {
 	};
 
 	private static getDocument = (tag: Tag) =>
-		doc(db, "app", UserServer.getId(), "tags", tag.id).withConverter(
+		doc(db, "app", getFirebaseUserId(), "tags", tag.id).withConverter(
 			TagFirestoreConverter
 		);
 
 	private static getCollection = () =>
-		collection(db, "app", UserServer.getId(), "tags").withConverter(
+		collection(db, "app", getFirebaseUserId(), "tags").withConverter(
 			TagFirestoreConverter
 		);
 

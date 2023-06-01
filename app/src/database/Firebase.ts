@@ -24,3 +24,11 @@ export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 auth.useDeviceLanguage();
 export const googleProvider = new GoogleAuthProvider();
+
+export const hasFirebaseUser = (): boolean => {
+	return auth.currentUser !== null;
+}
+
+export const getFirebaseUserId = (): string => {
+	return auth.currentUser!.uid;
+}
