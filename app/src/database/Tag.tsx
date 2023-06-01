@@ -8,18 +8,18 @@ import {
 	setDoc,
 	writeBatch,
 } from "firebase/firestore";
-import { PaletteGrid, ValidColor } from "./Theme";
+import { TagColors, getRandomTagColor } from "../Theme";
 import { v4 as uuid } from "uuid";
 import { db } from "./Firebase";
-import { UserServer } from "./User";
+import { UserServer } from "../../../old/src/database/User";
 
 export class Tag {
 	id: string;
 	label: string;
-	color: ValidColor;
+	color: TagColors;
 	ordering: number;
 
-	constructor(id: string, label: string, color: ValidColor, ordering: number) {
+	constructor(id: string, label: string, color: TagColors, ordering: number) {
 		this.id = id;
 		this.label = label;
 		this.color = color;
@@ -32,20 +32,20 @@ export class Tag {
 export const exampleTags: Tag[] = [
 	{
 		id: "0",
-		label: "Universidade",
-		color: "indigo",
+		label: "Estudos",
+		color: TagColors.BLUE,
 		ordering: 0,
 	},
 	{
 		id: "1",
-		label: "Estágio",
-		color: "orange",
+		label: "Trabalho",
+		color: TagColors.YELLOW,
 		ordering: 1,
 	},
 	{
 		id: "2",
 		label: "Casa",
-		color: "green",
+		color: TagColors.PINK,
 		ordering: 2,
 	},
 ];
@@ -61,7 +61,7 @@ export class TagServer {
 
 	public static getNewTag = (): Tag => {
 		const id = uuid();
-		const color = PaletteGrid[Math.floor(Math.random() * PaletteGrid.length)];
+		const color = getRandomTagColor();
 		const newTag: Tag = {
 			id: id,
 			label: "",

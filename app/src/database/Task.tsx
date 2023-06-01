@@ -8,7 +8,7 @@ import {
 	setDoc,
 	writeBatch,
 } from "firebase/firestore";
-import { UserServer } from "./User";
+import { UserServer } from "../../../old/src/database/User";
 import { v4 as uuid } from "uuid";
 import { db } from "./Firebase";
 
