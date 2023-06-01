@@ -1,5 +1,6 @@
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { ThemeOptions } from "@mui/material/styles";
+import { PropsWithChildren } from "react";
 
 export enum TagColors {
 	BLUE = "blue",
@@ -78,11 +79,7 @@ const themeOptions: ThemeOptions = {
 
 const AppTheme = createTheme(themeOptions);
 
-interface ThemeAppProps {
-	children: JSX.Element;
-}
-
-export const AppThemeProvider: React.FC<ThemeAppProps> = ({ children }) => {
+export const AppThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
 	return (
 		<ThemeProvider theme={AppTheme}>
 			<CssBaseline />
@@ -120,6 +117,30 @@ declare module "@mui/material/styles" {
 // @babel-ignore-comment-in-output Update the Button's color prop options
 declare module "@mui/material/Chip" {
 	interface ChipPropsColorOverrides {
+		blue: true;
+		teal: true;
+		green: true;
+		yellow: true;
+		red: true;
+		pink: true;
+		purple: true;
+	}
+}
+
+declare module "@mui/material/TextField" {
+	interface TextFieldPropsColorOverrides {
+		blue: true;
+		teal: true;
+		green: true;
+		yellow: true;
+		red: true;
+		pink: true;
+		purple: true;
+	}
+}
+
+declare module "@mui/material/SvgIcon" {
+	interface SvgIconPropsColorOverrides {
 		blue: true;
 		teal: true;
 		green: true;

@@ -2,14 +2,15 @@ import {
 	Card,
 	CardActionArea,
 	CardContent,
-	Chip,
 	Container,
-	Stack,
 	Typography,
 } from "@mui/material";
 import { AppHeader } from "./components/AppHeader";
 import { AppToolbar } from "./components/AppToolbar";
 import { AppThemeProvider } from "./Theme";
+import { TagStack } from "./tag/TagStack";
+import { exampleTags } from "./database/Tag";
+import { TagDialog } from "./tag/TagDialog";
 
 export const App: React.FC = () => {
 	return (
@@ -20,20 +21,13 @@ export const App: React.FC = () => {
 				<Card>
 					<CardActionArea>
 						<CardContent>
-							<Stack direction="row" justifyContent="flex-end" gap={1}>
-								<Chip label="Tag 1" size="small" color="blue" />
-								<Chip label="Tag 2" size="small" color="teal" />
-								<Chip label="Tag 3" size="small" color="green" />
-								<Chip label="Tag 4" size="small" color="yellow" />
-								<Chip label="Tag 5" size="small" color="red" />
-								<Chip label="Tag 6" size="small" color="pink" />
-								<Chip label="Tag 7" size="small" color="purple" />
-							</Stack>
+							<TagStack tags={exampleTags} />
 							<Typography variant="h6">Descrição da tarefa</Typography>
 						</CardContent>
 					</CardActionArea>
 				</Card>
 			</Container>
+			<TagDialog />
     </AppThemeProvider>
 	);
 };
