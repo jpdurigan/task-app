@@ -80,7 +80,7 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({ showDialog }) => {
 					</Tooltip>
 					<Tooltip title="Filtrar tarefas" ref={filterButton}>
 						<IconButton onClick={onFilterClick}>
-							<FilterAlt />
+							<FilterAlt color={showFilters ? "primary" : "action"} />
 						</IconButton>
 					</Tooltip>
 					<Popper

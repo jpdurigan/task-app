@@ -3,29 +3,35 @@ import {
 	CardActionArea,
 	CardContent,
 	Container,
+	Stack,
 	Typography,
 } from "@mui/material";
 import { AppHeader } from "./components/AppHeader";
 import { AppToolbar } from "./components/AppToolbar";
 import { AppThemeProvider } from "./Theme";
 import { TagStack } from "./tag/TagStack";
-import { Tag, TagServer } from "./database/Tag";
+import { Tag, TagServer, exampleTags } from "./database/Tag";
 import { TagDialog } from "./tag/TagDialog";
 import { AuthDialog } from "./auth/AuthDialog";
 import { useEffect, useState } from "react";
 import { auth } from "./database/Firebase";
 import { AppDialogs } from "./AppDialogs";
+import { Task, exampleTasks } from "./database/Task";
+import { TaskBox } from "./task/TaskBox";
 
 export const App: React.FC = () => {
-	const [tags, setTags] = useState<Tag[]>();
+	const [tags, setTags] = useState<Tag[]>([]);
+	const [tasks, setTasks] = useState<Task[]>([]);
 	const [dialog, setDialog] = useState<AppDialogs>(AppDialogs.NONE);
 
 	useEffect(() => {
 		auth.onAuthStateChanged(async (user) => {
 			if (user) {
 				try {
-					const newTags = await TagServer.loadRemote();
-					setTags(newTags);
+					// const newTags = await TagServer.loadRemote();
+					// setTags(newTags ? newTags : []);
+					setTags(exampleTags);
+					setTasks(exampleTasks);
 				} catch (err) {
 					console.log(err);
 				}
@@ -40,20 +46,23 @@ export const App: React.FC = () => {
 			<Container maxWidth="xs">
 				<AppHeader />
 				<AppToolbar showDialog={setDialog} />
-				<Card>
-					<CardActionArea>
-						<CardContent>
-							<TagStack tags={tags ? tags : []} />
-							<Typography variant="h6">Descrição da tarefa</Typography>
-						</CardContent>
-					</CardActionArea>
-				</Card>
+				<Stack spacing={2} mb={4}>
+					{tasks.map((task) => (
+						<TaskBox
+							text={task.text}
+							tagIds={task.tags}
+							done={task.done}
+							key={task.id}
+						/>
+					))}
+				</Stack>
 			</Container>
 			<TagDialog
 				isVisible={dialog === AppDialogs.TAGS}
 				hide={() => {
 					setDialog(AppDialogs.NONE);
 				}}
+				tags={tags}
 			/>
 			<AuthDialog
 				isVisible={dialog === AppDialogs.AUTH}

@@ -59,9 +59,11 @@ export const AuthDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 					</DialogContentText>
 				)}
 				{user !== null ? (
-					<DialogContentText>
-						Usuário: {auth.currentUser?.email}
-					</DialogContentText>
+					<>
+						<DialogContentText>
+							Usuário: {auth.currentUser?.email}
+						</DialogContentText>
+					</>
 				) : (
 					<>
 						<Tabs

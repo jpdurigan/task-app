@@ -10,26 +10,40 @@ import {
 	Stack,
 	TextField,
 } from "@mui/material";
-import { exampleTags } from "../database/Tag";
-import { ArrowDownward, ArrowUpward, Circle, Delete, Edit } from "@mui/icons-material";
+import { Tag, exampleTags } from "../database/Tag";
+import {
+	ArrowDownward,
+	ArrowUpward,
+	Circle,
+	Delete,
+	Edit,
+	Save,
+} from "@mui/icons-material";
 import { TagColors } from "../Theme";
 import { useState } from "react";
 import { AppDialogProps } from "../AppDialogs";
 
-export const TagDialog: React.FC<AppDialogProps> = ({isVisible, hide}) => {
-	const tags = exampleTags;
+interface TagDialogProps extends AppDialogProps {
+	tags?: Tag[];
+}
 
+export const TagDialog: React.FC<TagDialogProps> = ({
+	isVisible,
+	hide,
+	tags,
+}) => {
 	return (
-		<Dialog open={isVisible} onClose={hide} maxWidth="xs">
+		<Dialog open={isVisible} onClose={hide} maxWidth="xs" fullWidth>
 			<DialogTitle>Editar tags</DialogTitle>
 			<DialogContent>
 				{/* <DialogContentText textAlign="center" mb={2}>
 					Atualizando...
 				</DialogContentText> */}
 				<Stack gap={1}>
-					{tags.map((tag) => (
-						<TagDialogEdit label={tag.label} color={tag.color} key={tag.id} />
-					))}
+					{tags &&
+						tags.map((tag) => (
+							<TagDialogEdit label={tag.label} color={tag.color} key={tag.id} />
+						))}
 				</Stack>
 			</DialogContent>
 			<DialogActions>
@@ -50,12 +64,12 @@ const TagDialogEdit: React.FC<TagDialogEditProps> = ({ label, color }) => {
 	return (
 		<Stack direction="row" gap={1}>
 			<IconButton onClick={() => setIsEditing(!isEditing)}>
-				<Edit color={isEditing ? color : "action"} />
+				{isEditing ? <Save color={color} /> : <Edit />}
 			</IconButton>
-            <IconButton disabled={!isEditing}>
+			<IconButton disabled={!isEditing}>
 				<ArrowUpward color={isEditing ? color : "disabled"} />
 			</IconButton>
-            <IconButton disabled={!isEditing}>
+			<IconButton disabled={!isEditing}>
 				<ArrowDownward color={isEditing ? color : "disabled"} />
 			</IconButton>
 			<TextField
