@@ -1,7 +1,9 @@
 import {
+	Alert,
 	Card,
 	CardActionArea,
 	CardContent,
+	Collapse,
 	Container,
 	Stack,
 	Typography,
@@ -20,15 +22,13 @@ import { Task, TaskServer, exampleTasks } from "./database/Task";
 import { TaskCard } from "./task/TaskCard";
 import { TaskDialog } from "./task/TaskDialog";
 
+const initialTags = () => TagServer.loadLocal();
+const initialTasks = () => TaskServer.loadLocal();
+const initialFilterTags = () => initialTags().map((tag) => tag.id);
+
 export const App: React.FC = () => {
-	const initialTags = TagServer.loadLocal();
-	console.log("tags", initialTags);
-	const initialTasks = TaskServer.loadLocal();
-	console.log("tasks", initialTasks);
-	const initialFilterTags = initialTags.map((tag) => tag.id);
 	const [tags, setTags] = useState<Tag[]>(initialTags);
 	const [tasks, setTasks] = useState<Task[]>(initialTasks);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const [dialog, setDialog] = useState<AppDialogs>(AppDialogs.NONE);
 	const [filterDone, setFilterDone] = useState<AppFilterDone>(
@@ -36,6 +36,23 @@ export const App: React.FC = () => {
 	);
 	const [filterTags, setFilterTags] = useState<string[]>(initialFilterTags);
 	const [editingTask, setEditingTask] = useState<Task>();
+
+	const [warning, setWarning] = useState<string | undefined>();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+
+	useEffect(() => {
+		const hasTaskWithNoTag = tasks.some((task) => {
+			return task.tags.length == 0;
+		});
+		if (hasTaskWithNoTag) {
+			setWarning(
+				"Você tem tarefas sem etiquetas. Para acessá-las, desmarque todas as opções no filtro de tags."
+			);
+			return;
+		}
+
+		setWarning(undefined);
+	}, [tags]);
 
 	const createTag = useCallback(
 		(tag: Tag) => {
@@ -110,7 +127,9 @@ export const App: React.FC = () => {
 			TaskServer.saveLocal(newTasks);
 
 			const validTags: string[] = newTags.map((tag) => tag.id);
-			const newFilterTags = filterTags.filter((tagId) => validTags.includes(tagId));
+			const newFilterTags = filterTags.filter((tagId) =>
+				validTags.includes(tagId)
+			);
 			setFilterTags(newFilterTags);
 		},
 		[tags]
@@ -178,6 +197,11 @@ export const App: React.FC = () => {
 					filterTags={filterTags}
 					setFilterTags={setFilterTags}
 				/>
+				<Collapse in={warning !== undefined}>
+					<Alert severity="warning" variant="outlined" sx={{ mb: 2 }}>
+						{warning}
+					</Alert>
+				</Collapse>
 				{isLoading && <Typography mb={2}>Carregando...</Typography>}
 				<Stack spacing={2} mb={4}>
 					{filteredTasks.map((task) => (

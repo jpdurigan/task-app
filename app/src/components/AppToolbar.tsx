@@ -6,6 +6,7 @@ import {
 	Palette,
 	Check,
 	CheckBox,
+	Warning,
 } from "@mui/icons-material";
 import {
 	Box,
@@ -25,6 +26,8 @@ import {
 	Checkbox,
 	Slide,
 	Collapse,
+	Grow,
+	Alert,
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { AppDialogs, AppFilterDone } from "../AppGlobals";
@@ -51,7 +54,9 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 	const [showFilters, setShowFilters] = useState<boolean>(false);
 	const [filterButton, setFilterButton] = useState<null | HTMLElement>(null);
 
-	const onFilterClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const onFilterClick = (
+		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) => {
 		setFilterButton(event.currentTarget);
 		setShowFilters((current) => !current);
 	};
