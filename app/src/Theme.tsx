@@ -60,7 +60,7 @@ const themeOptions: ThemeOptions = {
 		},
 		yellow: {
 			main: "#F3C93F",
-			contrastText: "#fff",
+			contrastText: "#000",
 		},
 		red: {
 			main: "#F05D5E",

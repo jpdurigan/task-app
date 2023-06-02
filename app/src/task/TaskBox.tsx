@@ -18,7 +18,7 @@ export const TaskBox: React.FC<TaskBoxProps> = ({ tagIds, text, done }) => {
 		<Card>
 			<CardActionArea>
 				<CardContent>
-					<TagStack tags={tags} />
+					<TagStack tags={tags} justifyContent="flex-end" mb={2} />
 					<Typography variant="h6">{text}</Typography>
 				</CardContent>
 			</CardActionArea>

@@ -18,6 +18,7 @@ import { auth } from "./database/Firebase";
 import { AppDialogs } from "./AppDialogs";
 import { Task, exampleTasks } from "./database/Task";
 import { TaskBox } from "./task/TaskBox";
+import { TaskDialog } from "./task/TaskDialog";
 
 export const App: React.FC = () => {
 	const [tags, setTags] = useState<Tag[]>([]);
@@ -57,6 +58,12 @@ export const App: React.FC = () => {
 					))}
 				</Stack>
 			</Container>
+			<AuthDialog
+				isVisible={dialog === AppDialogs.AUTH}
+				hide={() => {
+					setDialog(AppDialogs.NONE);
+				}}
+			/>
 			<TagDialog
 				isVisible={dialog === AppDialogs.TAGS}
 				hide={() => {
@@ -64,11 +71,12 @@ export const App: React.FC = () => {
 				}}
 				tags={tags}
 			/>
-			<AuthDialog
-				isVisible={dialog === AppDialogs.AUTH}
+			<TaskDialog
+				isVisible={true}
 				hide={() => {
 					setDialog(AppDialogs.NONE);
 				}}
+				tags={tags}
 			/>
 		</AppThemeProvider>
 	);

@@ -1,14 +1,15 @@
-import { Stack, Chip } from "@mui/material";
+import { Stack, Chip, StackProps } from "@mui/material";
 import { Tag } from "../database/Tag";
 import { TagColors } from "../Theme";
 
-interface TagStackProps {
+interface TagStackProps extends StackProps {
 	tags: Tag[];
 }
 
-export const TagStack: React.FC<TagStackProps> = ({ tags }) => {
+export const TagStack: React.FC<TagStackProps> = (props) => {
+	const { tags } = props;
 	return (
-		<Stack direction="row" justifyContent="flex-end" gap={1} mb={2}>
+		<Stack direction="row" gap={1} {...props}>
 			{tags.map((tag) => (
 				<TagChip label={tag.label} color={tag.color} key={tag.id} />
 			))}
