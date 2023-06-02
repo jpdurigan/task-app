@@ -46,6 +46,11 @@ export const TagDialog: React.FC<TagDialogProps> = ({
 	updateTag,
 	deleteTag,
 }) => {
+	const onNewTagClick = () => {
+		const newTag = TagServer.getNewTag();
+		createTag(newTag);
+	}
+	
 	return (
 		<Dialog open={isVisible} onClose={hide} maxWidth="xs" fullWidth>
 			<DialogTitle>Editar tags</DialogTitle>
@@ -66,7 +71,7 @@ export const TagDialog: React.FC<TagDialogProps> = ({
 				</Stack>
 			</DialogContent>
 			<DialogActions>
-				<Button>Adicionar nova tag</Button>
+				<Button onClick={onNewTagClick}>Adicionar nova tag</Button>
 			</DialogActions>
 		</Dialog>
 	);

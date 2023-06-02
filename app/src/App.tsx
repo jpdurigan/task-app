@@ -43,6 +43,9 @@ export const App: React.FC = () => {
 			setTags(newTags);
 			TagServer.saveOneRemote(tag);
 			TagServer.saveLocal(newTags);
+
+			const newFilterTags = [...filterTags, tag.id];
+			setFilterTags(newFilterTags);
 		},
 		[tags]
 	);
@@ -147,7 +150,7 @@ export const App: React.FC = () => {
 		setDialog(AppDialogs.NONE);
 	};
 
-	const filteredTasks = TaskServer.filterByTags(tasks, filterTags, filterDone);
+	const filteredTasks = TaskServer.filterByTags(tasks, filterTags, filterDone, tags);
 
 	return (
 		<AppThemeProvider>

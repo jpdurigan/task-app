@@ -11,6 +11,7 @@ import {
 import { v4 as uuid } from "uuid";
 import { db, getFirebaseUserId, hasFirebaseUser } from "./Firebase";
 import { AppFilterDone } from "../AppGlobals";
+import { Tag } from "./Tag";
 
 export class Task {
 	id: string;
@@ -80,17 +81,41 @@ export class TaskServer {
 		return new Task(uuid(), Date.now());
 	};
 
-	public static sortTasks = (tasks: Task[]): Task[] => {
+	// this actually returns the tag ordering
+	// used for sorting tasks
+	public static getHighestTag = (task: Task, allTags: Tag[]): number => {
+		const getTag = (tagId: string): Tag =>
+			allTags.find((tag) => tag.id === tagId) as Tag;
+		const highestTag = task.tags.reduce(
+			(carry, current) => Math.min(getTag(current).ordering, carry),
+			Number.MAX_VALUE
+		);
+		return highestTag;
+	};
+
+	public static sortTasks = (tasks: Task[], allTags: Tag[]): Task[] => {
 		return tasks.sort((a, b) => {
-			if (a.done !== b.done) return a.done ? 1 : -1;
-			else return a.date - b.date;
+			if (a.done !== b.done) {
+				return a.done ? 1 : -1;
+			} else if (
+				TaskServer.getHighestTag(a, allTags) !=
+				TaskServer.getHighestTag(b, allTags)
+			) {
+				return (
+					TaskServer.getHighestTag(a, allTags) -
+					TaskServer.getHighestTag(b, allTags)
+				);
+			} else {
+				return a.date - b.date;
+			}
 		});
 	};
 
 	public static filterByTags = (
 		tasks: Task[],
 		tags: string[],
-		done: AppFilterDone
+		done: AppFilterDone,
+		allTags: Tag[]
 	): Task[] => {
 		const possibleDones = [
 			done === AppFilterDone.ALL || done == AppFilterDone.DONE ? true : null,
@@ -103,14 +128,14 @@ export class TaskServer {
 				possibleDones.includes(task.done) &&
 				task.tags.some((tagId) => tags.includes(tagId))
 		);
-		return TaskServer.sortTasks(filteredTasks);
+		return TaskServer.sortTasks(filteredTasks, allTags);
 	};
 
 	//////////////////////////////
 	//       PERSISTENCE        //
 	//////////////////////////////
 
-	public static loadRemote = async ():Promise<Task[] | undefined> => {
+	public static loadRemote = async (): Promise<Task[] | undefined> => {
 		if (!hasFirebaseUser()) {
 			console.warn("User not logged in!");
 			return;
@@ -120,7 +145,6 @@ export class TaskServer {
 			const collection = TaskServer.getCollection();
 			const data = await getDocs<Task>(collection);
 			let tasks: Task[] = data.docs.map((task) => task.data());
-			tasks = TaskServer.sortTasks(tasks);
 			console.log(`Documentos carregados: ${tasks}`);
 			return tasks;
 		} catch (err) {

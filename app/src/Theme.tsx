@@ -56,7 +56,7 @@ const themeOptions: ThemeOptions = {
 		},
 		green: {
 			main: "#73B62B",
-			contrastText: "#fff",
+			contrastText: "#000",
 		},
 		yellow: {
 			main: "#F3C93F",
