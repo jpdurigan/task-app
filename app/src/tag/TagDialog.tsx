@@ -24,13 +24,13 @@ import { useState } from "react";
 import { AppDialogProps } from "../AppGlobals";
 
 interface TagDialogProps extends AppDialogProps {
-	tags?: Tag[];
+	allTags?: Tag[];
 }
 
 export const TagDialog: React.FC<TagDialogProps> = ({
 	isVisible,
 	hide,
-	tags,
+	allTags,
 }) => {
 	return (
 		<Dialog open={isVisible} onClose={hide} maxWidth="xs" fullWidth>
@@ -40,8 +40,8 @@ export const TagDialog: React.FC<TagDialogProps> = ({
 					Atualizando...
 				</DialogContentText> */}
 				<Stack gap={1}>
-					{tags &&
-						tags.map((tag) => (
+					{allTags &&
+						allTags.map((tag) => (
 							<TagDialogEdit label={tag.label} color={tag.color} key={tag.id} />
 						))}
 				</Stack>

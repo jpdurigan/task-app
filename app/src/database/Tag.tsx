@@ -198,7 +198,7 @@ export class TagServer {
 
 	public static saveLocal = (tags: Tag[]): void => {
 		const data = JSON.stringify(tags);
-		window.localStorage.setItem(TagServer.STORAGE_KEY, JSON.stringify(data));
+		window.localStorage.setItem(TagServer.STORAGE_KEY, data);
 	};
 }
 

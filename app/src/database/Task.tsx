@@ -130,7 +130,7 @@ export class TaskServer {
 		}
 	};
 
-	public static saveAllOnServer = async (tasks: Task[]) => {
+	public static saveAllRemote = async (tasks: Task[]) => {
 		if (!hasFirebaseUser()) return;
 
 		const batch = writeBatch(db);
@@ -181,7 +181,7 @@ export class TaskServer {
 		}
 	};
 
-	public static deleteTaskOnServer = async (task: Task) => {
+	public static deleteOneRemote = async (task: Task) => {
 		if (!hasFirebaseUser()) return;
 
 		const document = TaskServer.getDocument(task);
@@ -219,7 +219,7 @@ export class TaskServer {
 
 	public static saveLocal = (tags: Task[]): void => {
 		const data = JSON.stringify(tags);
-		window.localStorage.setItem(TaskServer.STORAGE_KEY, JSON.stringify(data));
+		window.localStorage.setItem(TaskServer.STORAGE_KEY, data);
 	};
 }
 
