@@ -1,3 +1,9 @@
+export enum AppFilterDone {
+	ALL = "ALL",
+	NOT_DONE = "NOT_DONE",
+	DONE = "DONE",
+}
+
 export enum AppDialogs {
 	NONE,
 	AUTH,
@@ -9,10 +15,4 @@ export enum AppDialogs {
 export interface AppDialogProps {
 	isVisible: boolean;
 	hide: () => void;
-}
-
-export enum AppFilterDone {
-	ALL = "ALL",
-	NOT_DONE = "NOT_DONE",
-	DONE = "DONE",
 }

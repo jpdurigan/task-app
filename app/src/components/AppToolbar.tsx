@@ -23,6 +23,8 @@ import {
 	FormGroup,
 	CheckboxProps,
 	Checkbox,
+	Slide,
+	Collapse,
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { AppDialogs, AppFilterDone } from "../AppGlobals";
@@ -47,9 +49,10 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 	setFilterTags,
 }) => {
 	const [showFilters, setShowFilters] = useState<boolean>(false);
-	const filterButton = useRef<HTMLElement>();
+	const [filterButton, setFilterButton] = useState<null | HTMLElement>(null);
 
-	const onFilterClick = () => {
+	const onFilterClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		setFilterButton(event.currentTarget);
 		setShowFilters((current) => !current);
 	};
 
@@ -104,16 +107,31 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 							<AddBox />
 						</IconButton>
 					</Tooltip>
-					<Tooltip title="Filtrar tarefas" ref={filterButton}>
+					<Tooltip title="Filtrar tarefas">
 						<IconButton onClick={onFilterClick}>
 							<FilterAlt color={showFilters ? "primary" : "action"} />
 						</IconButton>
 					</Tooltip>
-					<Popper
-						open={showFilters}
-						anchorEl={filterButton.current}
-						placement="bottom-end"
-					>
+					<Tooltip title="Editar tags">
+						<IconButton
+							onClick={() => {
+								showDialog(AppDialogs.TAGS);
+							}}
+						>
+							<Palette />
+						</IconButton>
+					</Tooltip>
+				</Stack>
+			</Stack>
+			<Popper
+				open={showFilters}
+				anchorEl={filterButton}
+				placement="bottom-end"
+				transition
+				keepMounted
+			>
+				{({ TransitionProps }) => (
+					<Collapse {...TransitionProps}>
 						<Card sx={{ p: 2 }}>
 							<RadioGroup value={filterDone} onChange={onFilterDoneChange}>
 								<FormControlLabel
@@ -154,18 +172,9 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 								))}
 							</FormGroup>
 						</Card>
-					</Popper>
-					<Tooltip title="Editar tags">
-						<IconButton
-							onClick={() => {
-								showDialog(AppDialogs.TAGS);
-							}}
-						>
-							<Palette />
-						</IconButton>
-					</Tooltip>
-				</Stack>
-			</Stack>
+					</Collapse>
+				)}
+			</Popper>
 			<Divider />
 		</Box>
 	);

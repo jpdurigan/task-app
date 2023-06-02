@@ -8,9 +8,8 @@ import {
 	setDoc,
 	writeBatch,
 } from "firebase/firestore";
-import { UserServer } from "../../../old/src/database/User";
 import { v4 as uuid } from "uuid";
-import { db } from "./Firebase";
+import { db, getFirebaseUserId, hasFirebaseUser } from "./Firebase";
 import { AppFilterDone } from "../AppGlobals";
 
 export class Task {
@@ -73,94 +72,16 @@ export const exampleTasks: Task[] = [
 ];
 
 export class TaskServer {
-	private tasks: Task[];
-	private setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
-
-	public static instance: TaskServer;
-
-	constructor(
-		tasks: Task[],
-		setTasks: React.Dispatch<React.SetStateAction<Task[]>>
-	) {
-		this.tasks = tasks;
-		this.setTasks = setTasks;
-	}
-
-	public static init = (
-		tasks: Task[],
-		setTasks: React.Dispatch<React.SetStateAction<Task[]>>
-	) => {
-		console.log("--- INIT TASK SERVER");
-		if (TaskServer.instance) return;
-		TaskServer.instance = new TaskServer(tasks, setTasks);
-		console.log("--- EXIT TASK SERVER");
-	};
-
-	//////////////////////////////
-	//          TASKS           //
-	//////////////////////////////
-
-	public static getTask = (id: string): Task | undefined => {
-		if (!TaskServer.instance) return undefined;
-		return TaskServer.getAllTasks().find((task) => task.id === id) as Task;
-	};
-
-	public static getAllTasks = (): Task[] => {
-		if (!TaskServer.instance) return [];
-		return TaskServer.instance ? TaskServer.instance.tasks : [];
-	};
-
-	public static getCloneTask = (id: string): Task => {
-		return { ...TaskServer.getTask(id) } as Task;
+	public static getClone = (task: Task): Task => {
+		return { ...task } as Task;
 	};
 
 	public static getNewTask = (): Task => {
 		return new Task(uuid(), Date.now());
 	};
 
-	public static updateTasks = (tasks: Task[]): void => {
-		console.log("--- ENTER UPDATE TASKS");
-		TaskServer.instance.tasks = tasks;
-		TaskServer.saveToStorage(tasks);
-		console.log("--- EXIT UPDATE TASKS");
-	};
-
-	public static updateTask = (task: Task): void => {
-		const taskExists =
-			TaskServer.getAllTasks().findIndex((p_task) => p_task.id === task.id) !=
-			-1;
-
-		let newTasks: Task[] = [];
-		if (taskExists) {
-			newTasks = TaskServer.getAllTasks().map((p_task) =>
-				task.id === p_task.id ? task : p_task
-			);
-		} else {
-			newTasks = [...TaskServer.getAllTasks(), task];
-		}
-		TaskServer.instance.setTasks(newTasks);
-		TaskServer.saveTaskOnServer(task);
-	};
-
-	public static updateTaskDone = (id: string, done: boolean): void => {
-		let newTask = TaskServer.getCloneTask(id);
-		newTask.done = done;
-
-		let newTasks = TaskServer.getAllTasks().map((task) =>
-			task.id === id ? newTask : task
-		);
-		TaskServer.instance.setTasks(newTasks);
-	};
-
-	public static deleteTask = (id: string): void => {
-		let newTasks = TaskServer.getAllTasks().filter((task) => task.id !== id);
-		TaskServer.instance.setTasks(newTasks);
-	};
-
-	public static sortTasks = (
-		taskArray: Task[] = TaskServer.getAllTasks()
-	): Task[] => {
-		return taskArray.sort((a, b) => {
+	public static sortTasks = (tasks: Task[]): Task[] => {
+		return tasks.sort((a, b) => {
 			if (a.done !== b.done) return a.done ? 1 : -1;
 			else return a.date - b.date;
 		});
@@ -189,114 +110,116 @@ export class TaskServer {
 	//       PERSISTENCE        //
 	//////////////////////////////
 
-	private static MAX_TRIES = 3;
-	private static WAIT_FOR_NEXT_TRY = 100;
-	private static tries = 0;
-
-	public static loadFromServer = async () => {
-		console.log("--- ENTER loadFromServer");
-		if (!UserServer.isLoggedIn()) {
+	public static loadRemote = async ():Promise<Task[] | undefined> => {
+		if (!hasFirebaseUser()) {
 			console.warn("User not logged in!");
 			return;
 		}
 
-		TaskServer.tries += 1;
 		try {
 			const collection = TaskServer.getCollection();
 			const data = await getDocs<Task>(collection);
-			let tags: Task[] = data.docs.map((tag) => tag.data());
-			tags = TaskServer.sortTasks(tags);
-			TaskServer.instance.setTasks(tags);
-			console.log("Loaded tags from server!");
-			TaskServer.tries = 0;
+			let tasks: Task[] = data.docs.map((task) => task.data());
+			tasks = TaskServer.sortTasks(tasks);
+			console.log(`Documentos carregados: ${tasks}`);
+			return tasks;
 		} catch (err) {
-			if (TaskServer.tries < TaskServer.MAX_TRIES) {
-				console.log("--- TaskServer.tries < TaskServer.MAX_TRIES");
-				setTimeout(TaskServer.loadFromServer, TaskServer.WAIT_FOR_NEXT_TRY);
-			} else {
-				console.error(err);
-				TaskServer.loadFromStorage();
-			}
+			console.warn("Error loading from server");
+			console.log(err);
+			return;
 		}
 	};
 
-	public static saveAllOnServer = async () => {
-		console.log("--- ENTER saveAllOnServer");
-		if (!UserServer.isLoggedIn()) return;
+	public static saveAllOnServer = async (tasks: Task[]) => {
+		if (!hasFirebaseUser()) return;
 
 		const batch = writeBatch(db);
-		TaskServer.getAllTasks().forEach((task) => {
+		tasks.forEach((task) => {
 			const document = TaskServer.getDocument(task);
 			batch.set(document, task);
+			console.log(`Documento adicionado ao batch: ${task.toString()}`);
 		});
+
 		try {
 			await batch.commit();
-			console.log(`Tasks atualizadas`);
+			console.log("Documentos atualizados");
 		} catch (err) {
+			console.warn("Error saving remote");
 			console.log(err);
 		}
-		console.log("--- EXIT saveAllOnServer");
 	};
 
-	public static saveTaskOnServer = async (task: Task) => {
-		console.log("--- ENTER saveTaskOnServer");
-		if (!UserServer.isLoggedIn()) return;
+	public static saveOneRemote = async (task: Task) => {
+		if (!hasFirebaseUser()) return;
 
 		const document = TaskServer.getDocument(task);
 		try {
 			await setDoc(document, task);
-			console.log(`${task.toString()} adicionada`);
+			console.log(`Documento atualizado: ${task.toString()}`);
 		} catch (err) {
+			console.warn("Error saving one on remote");
 			console.log(err);
 		}
-		console.log("--- EXIT saveTaskOnServer");
 	};
 
-	public static deleteTaskOnServer = async (tag: Task) => {
-		if (!UserServer.isLoggedIn()) return;
+	public static deleteAllRemote = async (tasks: Task[]) => {
+		if (!hasFirebaseUser()) return;
 
-		const document = TaskServer.getDocument(tag);
+		const batch = writeBatch(db);
+		tasks.forEach((task) => {
+			const document = TaskServer.getDocument(task);
+			batch.delete(document);
+			console.log(`Documento adicionado para deleção: ${task.toString()}`);
+		});
+		try {
+			await batch.commit();
+			console.log("Documentos deletados");
+		} catch (err) {
+			console.warn("Error saving remote");
+			console.log(err);
+			return;
+		}
+	};
+
+	public static deleteTaskOnServer = async (task: Task) => {
+		if (!hasFirebaseUser()) return;
+
+		const document = TaskServer.getDocument(task);
 		try {
 			await deleteDoc(document);
-			console.log(`${tag.toString()} deletada`);
+			console.log(`Documento deletado: ${task.toString()}`);
 		} catch (err) {
+			console.warn("Error deleting one on remote");
 			console.log(err);
+			return;
 		}
 	};
 
 	private static getDocument = (task: Task) =>
-		doc(db, "app", UserServer.getId(), "tasks", task.id).withConverter(
+		doc(db, "app", getFirebaseUserId(), "tasks", task.id).withConverter(
 			TaskFirestoreConverter
 		);
 
 	private static getCollection = () =>
-		collection(db, "app", UserServer.getId(), "tasks").withConverter(
+		collection(db, "app", getFirebaseUserId(), "tasks").withConverter(
 			TaskFirestoreConverter
 		);
 
 	static STORAGE_KEY = "JP_TASK_APP_TASKS";
 
-	public static loadFromStorage = (): void => {
+	public static loadLocal = (): Task[] => {
 		const rawData = window.localStorage.getItem(TaskServer.STORAGE_KEY);
 		if (rawData === null) {
-			return;
+			return [];
 		}
 
-		const data = JSON.parse(rawData);
-		if (data) TaskServer.instance.setTasks(data);
+		const data = JSON.parse(rawData) as Task[];
+		return Array.isArray(data) ? data : [];
 	};
 
-	public static saveToStorage = (
-		tasks: Task[] = TaskServer.getAllTasks()
-	): void => {
-		const data = JSON.stringify(tasks);
+	public static saveLocal = (tags: Task[]): void => {
+		const data = JSON.stringify(tags);
 		window.localStorage.setItem(TaskServer.STORAGE_KEY, JSON.stringify(data));
-		console.log(TaskServer.instance);
-	};
-
-	public static populateWithExamples = (): void => {
-		TaskServer.instance.setTasks(exampleTasks);
-		TaskServer.saveAllOnServer();
 	};
 }
 

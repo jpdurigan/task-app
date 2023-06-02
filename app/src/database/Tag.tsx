@@ -125,7 +125,6 @@ export class TagServer {
 		} catch (err) {
 			console.warn("Error saving remote");
 			console.log(err);
-			return;
 		}
 	};
 
@@ -139,7 +138,6 @@ export class TagServer {
 		} catch (err) {
 			console.warn("Error saving one on remote");
 			console.log(err);
-			return;
 		}
 	};
 

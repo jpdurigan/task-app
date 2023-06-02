@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { auth } from "./database/Firebase";
 import { AppDialogs, AppFilterDone } from "./AppGlobals";
 import { Task, TaskServer, exampleTasks } from "./database/Task";
-import { TaskBox } from "./task/TaskBox";
+import { TaskCard } from "./task/TaskCard";
 import { TaskDialog } from "./task/TaskDialog";
 
 export const App: React.FC = () => {
@@ -29,6 +29,7 @@ export const App: React.FC = () => {
 		AppFilterDone.ALL
 	);
 	const [filterTags, setFilterTags] = useState<string[]>([]);
+	const [editingTask, setEditingTask] = useState<Task>();
 
 	useEffect(() => {
 		auth.onAuthStateChanged(async (user) => {
@@ -48,6 +49,10 @@ export const App: React.FC = () => {
 		});
 	}, []);
 
+	const hideDialog = () => {
+		setDialog(AppDialogs.NONE);
+	};
+
 	const filteredTasks = TaskServer.filterByTags(tasks, filterTags, filterDone);
 
 	return (
@@ -64,35 +69,32 @@ export const App: React.FC = () => {
 				/>
 				<Stack spacing={2} mb={4}>
 					{filteredTasks.map((task) => (
-						<TaskBox
+						<TaskCard
 							text={task.text}
 							tagIds={task.tags}
 							done={task.done}
 							key={task.id}
 							tags={tags}
+							onClick={() => {
+								setEditingTask(task);
+								setDialog(AppDialogs.TASK);
+							}}
 						/>
 					))}
 				</Stack>
 			</Container>
-			<AuthDialog
-				isVisible={dialog === AppDialogs.AUTH}
-				hide={() => {
-					setDialog(AppDialogs.NONE);
-				}}
-			/>
+			<AuthDialog isVisible={dialog === AppDialogs.AUTH} hide={hideDialog} />
 			<TagDialog
 				isVisible={dialog === AppDialogs.TAGS}
-				hide={() => {
-					setDialog(AppDialogs.NONE);
-				}}
+				hide={hideDialog}
 				tags={tags}
 			/>
 			<TaskDialog
 				isVisible={dialog === AppDialogs.TASK}
-				hide={() => {
-					setDialog(AppDialogs.NONE);
-				}}
+				hide={hideDialog}
 				tags={tags}
+				editingTask={editingTask}
+				setEditingTask={setEditingTask}
 			/>
 		</AppThemeProvider>
 	);

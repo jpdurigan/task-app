@@ -1,31 +1,47 @@
-import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
+import {
+	BoxProps,
+	Card,
+	CardActionArea,
+	CardContent,
+	CardProps,
+	Typography,
+} from "@mui/material";
 import { TagStack } from "../tag/TagStack";
 import { Tag } from "../database/Tag";
 import { TagColors } from "../Theme";
 
-interface TaskBoxProps {
+interface TaskCardProps extends CardProps {
 	tagIds: string[];
 	text: string;
 	done: boolean;
 	tags: Tag[];
 }
 
-export const TaskBox: React.FC<TaskBoxProps> = ({
+export const TaskCard: React.FC<TaskCardProps> = ({
 	tagIds,
 	text,
 	done,
 	tags,
+	...cardProps
 }) => {
 	const taskTags = tagIds.map((tagId) =>
 		tags.find((tag) => tag.id === tagId)
 	) as Tag[];
 
 	return (
-		<Card sx={{ backgroundColor: done ? "background.default" : "background.paper" }}>
+		<Card
+			sx={{ backgroundColor: done ? "background.default" : "background.paper" }}
+			{...cardProps}
+		>
 			<CardActionArea>
 				<CardContent>
 					<TagStack tags={taskTags} justifyContent="flex-end" mb={2} />
-					<Typography variant="h6" sx={{textDecoration: done ? "line-through" : "none"}}>{text}</Typography>
+					<Typography
+						variant="h6"
+						sx={{ textDecoration: done ? "line-through" : "none" }}
+					>
+						{text}
+					</Typography>
 				</CardContent>
 			</CardActionArea>
 		</Card>
