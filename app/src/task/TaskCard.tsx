@@ -26,7 +26,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 }) => {
 	const taskTags = tagIds.map((tagId) =>
 		tags.find((tag) => tag.id === tagId)
-	) as Tag[];
+	).filter(value => value !== undefined) as Tag[];
 
 	return (
 		<Card

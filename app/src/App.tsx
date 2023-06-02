@@ -103,6 +103,15 @@ export const App: React.FC = () => {
 			setTags(newTags);
 			TagServer.deleteOneRemote(tagToDestroy);
 			TagServer.saveLocal(newTags);
+
+			const newTasks = TaskServer.normalizeTags(tasks, newTags);
+			setTasks(newTasks);
+			TaskServer.saveLocal(newTasks);
+			TaskServer.saveLocal(newTasks);
+
+			const validTags: string[] = newTags.map((tag) => tag.id);
+			const newFilterTags = filterTags.filter((tagId) => validTags.includes(tagId));
+			setFilterTags(newFilterTags);
 		},
 		[tags]
 	);
@@ -150,7 +159,12 @@ export const App: React.FC = () => {
 		setDialog(AppDialogs.NONE);
 	};
 
-	const filteredTasks = TaskServer.filterByTags(tasks, filterTags, filterDone, tags);
+	const filteredTasks = TaskServer.filterByTags(
+		tasks,
+		filterTags,
+		filterDone,
+		tags
+	);
 
 	return (
 		<AppThemeProvider>

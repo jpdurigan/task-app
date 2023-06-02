@@ -84,10 +84,10 @@ export class TaskServer {
 	// this actually returns the tag ordering
 	// used for sorting tasks
 	public static getHighestTag = (task: Task, allTags: Tag[]): number => {
-		const getTag = (tagId: string): Tag =>
-			allTags.find((tag) => tag.id === tagId) as Tag;
+		const getTag = (tagId: string) => allTags.find((tag) => tag.id === tagId);
 		const highestTag = task.tags.reduce(
-			(carry, current) => Math.min(getTag(current).ordering, carry),
+			(carry, current) =>
+				Math.min(getTag(current)?.ordering || Number.MAX_VALUE, carry),
 			Number.MAX_VALUE
 		);
 		return highestTag;
@@ -123,12 +123,29 @@ export class TaskServer {
 				? false
 				: null,
 		];
-		const filteredTasks = tasks.filter(
-			(task) =>
-				possibleDones.includes(task.done) &&
-				task.tags.some((tagId) => tags.includes(tagId))
-		);
+
+		const doneCondition = (task: Task): boolean =>
+			possibleDones.includes(task.done);
+		const tagCondition = (task: Task): boolean =>
+			tags.length > 0
+				? task.tags.some((tagId) => tags.includes(tagId))
+				: task.tags.length == tags.length;
+
+		const filteredTasks = tasks.filter((task: Task) => {
+			return doneCondition(task) && tagCondition(task);
+		});
+
 		return TaskServer.sortTasks(filteredTasks, allTags);
+	};
+
+	public static normalizeTags = (tasks: Task[], tags: Tag[]): Task[] => {
+		const validTags: string[] = tags.map((tag) => tag.id);
+		const newTasks = tasks.map((task: Task): Task => {
+			const newTask = TaskServer.getClone(task);
+			newTask.tags = task.tags.filter((tagId) => validTags.includes(tagId));
+			return newTask;
+		});
+		return newTasks;
 	};
 
 	//////////////////////////////
