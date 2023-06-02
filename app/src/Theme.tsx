@@ -114,7 +114,18 @@ declare module "@mui/material/styles" {
 	}
 }
 
-// @babel-ignore-comment-in-output Update the Button's color prop options
+declare module "@mui/material/Button" {
+	interface ButtonPropsColorOverrides {
+		blue: true;
+		teal: true;
+		green: true;
+		yellow: true;
+		red: true;
+		pink: true;
+		purple: true;
+	}
+}
+
 declare module "@mui/material/Chip" {
 	interface ChipPropsColorOverrides {
 		blue: true;

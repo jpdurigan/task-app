@@ -1,16 +1,24 @@
 import {
 	Button,
+	ButtonGroup,
+	Card,
+	Collapse,
 	Dialog,
 	DialogActions,
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
+	Divider,
+	FormControlLabel,
+	FormGroup,
 	IconButton,
 	InputLabel,
+	Popper,
+	RadioGroup,
 	Stack,
 	TextField,
 } from "@mui/material";
-import { Tag, exampleTags } from "../database/Tag";
+import { Tag, TagServer, exampleTags } from "../database/Tag";
 import {
 	ArrowDownward,
 	ArrowUpward,
@@ -21,16 +29,22 @@ import {
 } from "@mui/icons-material";
 import { TagColors } from "../Theme";
 import { useState } from "react";
-import { AppDialogProps } from "../AppGlobals";
+import { AppDialogProps, AppFilterDone } from "../AppGlobals";
 
 interface TagDialogProps extends AppDialogProps {
 	allTags?: Tag[];
+	createTag: (tag: Tag) => void;
+	updateTag: (tag: Tag, updateAll?: boolean) => void;
+	deleteTag: (tag: Tag) => void;
 }
 
 export const TagDialog: React.FC<TagDialogProps> = ({
 	isVisible,
 	hide,
 	allTags,
+	createTag,
+	updateTag,
+	deleteTag,
 }) => {
 	return (
 		<Dialog open={isVisible} onClose={hide} maxWidth="xs" fullWidth>
@@ -42,7 +56,12 @@ export const TagDialog: React.FC<TagDialogProps> = ({
 				<Stack gap={1}>
 					{allTags &&
 						allTags.map((tag) => (
-							<TagDialogEdit label={tag.label} color={tag.color} key={tag.id} />
+							<TagDialogEdit
+								tag={tag}
+								updateTag={updateTag}
+								deleteTag={deleteTag}
+								key={tag.id}
+							/>
 						))}
 				</Stack>
 			</DialogContent>
@@ -54,37 +73,125 @@ export const TagDialog: React.FC<TagDialogProps> = ({
 };
 
 interface TagDialogEditProps {
-	label: string;
-	color: TagColors;
+	tag: Tag;
+	updateTag: (tag: Tag, updateAll?: boolean) => void;
+	deleteTag: (tag: Tag) => void;
 }
 
-const TagDialogEdit: React.FC<TagDialogEditProps> = ({ label, color }) => {
+const TagDialogEdit: React.FC<TagDialogEditProps> = ({
+	tag,
+	updateTag,
+	deleteTag,
+}) => {
 	const [isEditing, setIsEditing] = useState<boolean>(false);
+	const [isColorPopperOpen, setIsColorPopperOpen] = useState<boolean>(false);
+	const [colorPopperAnchor, setColorPopperAnchor] =
+		useState<HTMLElement | null>(null);
+
+	const [tagLabel, setTagLabel] = useState<string>(tag.label);
+	const [tagColor, setTagColor] = useState<TagColors>(tag.color);
+
+	const AllColors = Object.values(TagColors);
+
+	const onEditClick = () => {
+		if (isEditing) {
+			const newTag = TagServer.getClone(tag);
+			newTag.label = tagLabel;
+			updateTag(newTag);
+		}
+		setIsEditing((current) => !current);
+	};
+
+	const onUpwardClick = () => {
+		const newTag = TagServer.getClone(tag);
+		newTag.ordering -= 3;
+		updateTag(newTag, true);
+	};
+
+	const onDownwardClick = () => {
+		const newTag = TagServer.getClone(tag);
+		newTag.ordering += 3;
+		updateTag(newTag, true);
+	};
+
+	const onColorClick = (
+		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) => {
+		setColorPopperAnchor(event.currentTarget);
+		setIsColorPopperOpen((current) => !current);
+	};
+
+	const onColorChange = (color: TagColors) => {
+		setTagColor(color);
+		setIsColorPopperOpen(false);
+
+		const newTag = TagServer.getClone(tag);
+		newTag.color = color;
+		updateTag(newTag);
+	};
+
+	const onDeleteClick = () => {
+		deleteTag(tag);
+	};
+
+	const onLabelChange = (
+		event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
+		setTagLabel(event.target.value);
+	};
 
 	return (
 		<Stack direction="row" gap={1}>
-			<IconButton onClick={() => setIsEditing(!isEditing)}>
-				{isEditing ? <Save color={color} /> : <Edit />}
+			<IconButton onClick={onEditClick}>
+				{isEditing ? <Save color={tagColor} /> : <Edit />}
 			</IconButton>
-			<IconButton disabled={!isEditing}>
-				<ArrowUpward color={isEditing ? color : "disabled"} />
+			<IconButton onClick={onUpwardClick}>
+				<ArrowUpward color={isEditing ? tagColor : "disabled"} />
 			</IconButton>
-			<IconButton disabled={!isEditing}>
-				<ArrowDownward color={isEditing ? color : "disabled"} />
+			<IconButton onClick={onDownwardClick}>
+				<ArrowDownward color={isEditing ? tagColor : "disabled"} />
 			</IconButton>
 			<TextField
 				size="small"
-				color={color}
+				color={tagColor}
 				fullWidth
-				value={label}
+				value={tagLabel}
 				disabled={!isEditing}
+				onChange={onLabelChange}
 			/>
-			<IconButton disabled={!isEditing}>
-				<Circle color={color} />
+			<IconButton onClick={onColorClick}>
+				<Circle color={tagColor} />
 			</IconButton>
-			<IconButton disabled={!isEditing}>
-				<Delete color={isEditing ? color : "disabled"} />
+			<IconButton onClick={onDeleteClick} disabled={!isEditing}>
+				<Delete color={isEditing ? tagColor : "disabled"} />
 			</IconButton>
+			<Popper
+				open={isColorPopperOpen}
+				anchorEl={colorPopperAnchor}
+				placement="bottom-end"
+				transition
+				keepMounted
+				sx={{ zIndex: 1301 }}
+			>
+				{({ TransitionProps }) => (
+					<Collapse {...TransitionProps}>
+						<Card>
+							<ButtonGroup orientation="vertical">
+								{AllColors.map((color) => (
+									<Button
+										disabled={color === tagColor}
+										color={color}
+										key={color}
+										variant="contained"
+										sx={{ minHeight: 36 }}
+										onClick={() => onColorChange(color)}
+									/>
+								))}
+							</ButtonGroup>
+						</Card>
+					</Collapse>
+				)}
+			</Popper>
 		</Stack>
 	);
 };

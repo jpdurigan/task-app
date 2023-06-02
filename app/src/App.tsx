@@ -58,13 +58,24 @@ export const App: React.FC = () => {
 	);
 
 	const updateTag = useCallback(
-		(tagUpdated: Tag) => {
-			const newTags = tags.map(
-				(tag: Tag): Tag => (tag.id === tagUpdated.id ? tagUpdated : tag)
-			);
-			setTags(newTags);
-			TagServer.saveOneRemote(tagUpdated);
-			TagServer.saveLocal(newTags);
+		(tagUpdated: Tag, updateAll: boolean = false) => {
+			if (updateAll) {
+				const newTags = TagServer.normalizeOrdering(
+					tags.map(
+						(tag: Tag): Tag => (tag.id === tagUpdated.id ? tagUpdated : tag)
+					)
+				);
+				setTags(newTags);
+				TagServer.saveAllRemote(newTags);
+				TagServer.saveLocal(newTags);
+			} else {
+				const newTags = tags.map(
+					(tag: Tag): Tag => (tag.id === tagUpdated.id ? tagUpdated : tag)
+				);
+				setTags(newTags);
+				TagServer.saveOneRemote(tagUpdated);
+				TagServer.saveLocal(newTags);
+			}
 		},
 		[tags]
 	);
@@ -172,6 +183,9 @@ export const App: React.FC = () => {
 				isVisible={dialog === AppDialogs.TAGS}
 				hide={hideDialog}
 				allTags={tags}
+				createTag={createTag}
+				updateTag={updateTag}
+				deleteTag={deleteTag}
 			/>
 			<TaskDialog
 				isVisible={dialog === AppDialogs.TASK}

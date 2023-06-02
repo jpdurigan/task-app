@@ -75,7 +75,7 @@ export class TagServer {
 	};
 
 	// I'm saving ordering as multiple of 2 (0, 2, 4, 6, 8...)
-	// so that moving them up or down is simpler (just add ou take 1)
+	// so that moving them up or down is simpler (just add ou take 3)
 	public static normalizeOrdering = (tags: Tag[]): Tag[] => {
 		tags = TagServer.sortTags(tags);
 		tags = tags.map((tag, index) => {
