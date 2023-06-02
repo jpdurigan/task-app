@@ -11,6 +11,7 @@ import {
 import { UserServer } from "../../../old/src/database/User";
 import { v4 as uuid } from "uuid";
 import { db } from "./Firebase";
+import { AppFilterDone } from "../AppGlobals";
 
 export class Task {
 	id: string;
@@ -135,10 +136,10 @@ export class TaskServer {
 				task.id === p_task.id ? task : p_task
 			);
 		} else {
-			newTasks = [...TaskServer.getAllTasks(), task]
+			newTasks = [...TaskServer.getAllTasks(), task];
 		}
 		TaskServer.instance.setTasks(newTasks);
-		TaskServer.saveTaskOnServer(task)
+		TaskServer.saveTaskOnServer(task);
 	};
 
 	public static updateTaskDone = (id: string, done: boolean): void => {
@@ -165,13 +166,23 @@ export class TaskServer {
 		});
 	};
 
-	public static getTasksByTag = (
-		tagId: string,
-		taskArray: Task[] = TaskServer.getAllTasks()
+	public static filterByTags = (
+		tasks: Task[],
+		tags: string[],
+		done: AppFilterDone
 	): Task[] => {
-		return TaskServer.sortTasks(
-			taskArray.filter((task) => task.tags.includes(tagId))
+		const possibleDones = [
+			done === AppFilterDone.ALL || done == AppFilterDone.DONE ? true : null,
+			done === AppFilterDone.ALL || done == AppFilterDone.NOT_DONE
+				? false
+				: null,
+		];
+		const filteredTasks = tasks.filter(
+			(task) =>
+				possibleDones.includes(task.done) &&
+				task.tags.some((tagId) => tags.includes(tagId))
 		);
+		return TaskServer.sortTasks(filteredTasks);
 	};
 
 	//////////////////////////////

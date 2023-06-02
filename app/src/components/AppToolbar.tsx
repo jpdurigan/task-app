@@ -25,27 +25,28 @@ import {
 	Checkbox,
 } from "@mui/material";
 import { useRef, useState } from "react";
-import { AppDialogs } from "../AppDialogs";
+import { AppDialogs, AppFilterDone } from "../AppGlobals";
 import { Tag } from "../database/Tag";
-
-enum FilterDone {
-	ALL = "ALL",
-	NOT_DONE = "NOT_DONE",
-	DONE = "DONE",
-}
 
 interface AppToolbarProps {
 	showDialog: (dialog: AppDialogs) => void;
 	allTags: Tag[];
+
+	filterDone: AppFilterDone;
+	setFilterDone: (value: AppFilterDone) => void;
+	filterTags: string[];
+	setFilterTags: (value: string[]) => void;
 }
 
 export const AppToolbar: React.FC<AppToolbarProps> = ({
 	showDialog,
 	allTags,
+	filterDone,
+	setFilterDone,
+	filterTags,
+	setFilterTags,
 }) => {
 	const [showFilters, setShowFilters] = useState<boolean>(false);
-	const [filterDone, setFilterDone] = useState<FilterDone>(FilterDone.ALL);
-	const [filterTags, setFilterTags] = useState<string[]>([]);
 	const filterButton = useRef<HTMLElement>();
 
 	const onFilterClick = () => {
@@ -56,7 +57,7 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 		_event: React.ChangeEvent<HTMLInputElement>,
 		value: string
 	) => {
-		setFilterDone(value as FilterDone);
+		setFilterDone(value as AppFilterDone);
 	};
 
 	const onFilterTagsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,19 +117,19 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 						<Card sx={{ p: 2 }}>
 							<RadioGroup value={filterDone} onChange={onFilterDoneChange}>
 								<FormControlLabel
-									value={FilterDone.ALL}
+									value={AppFilterDone.ALL}
 									control={<FilterRadio />}
 									label="Todas"
 									labelPlacement="start"
 								/>
 								<FormControlLabel
-									value={FilterDone.NOT_DONE}
+									value={AppFilterDone.NOT_DONE}
 									control={<FilterRadio />}
 									label="Não-concluídas"
 									labelPlacement="start"
 								/>
 								<FormControlLabel
-									value={FilterDone.DONE}
+									value={AppFilterDone.DONE}
 									control={<FilterRadio />}
 									label="Concluídas"
 									labelPlacement="start"

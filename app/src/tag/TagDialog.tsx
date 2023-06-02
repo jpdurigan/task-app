@@ -21,7 +21,7 @@ import {
 } from "@mui/icons-material";
 import { TagColors } from "../Theme";
 import { useState } from "react";
-import { AppDialogProps } from "../AppDialogs";
+import { AppDialogProps } from "../AppGlobals";
 
 interface TagDialogProps extends AppDialogProps {
 	tags?: Tag[];

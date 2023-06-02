@@ -22,7 +22,7 @@ import React, { useState } from "react";
 import { auth, googleProvider } from "../database/Firebase";
 import { Google } from "@mui/icons-material";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { AppDialogProps } from "../AppDialogs";
+import { AppDialogProps } from "../AppGlobals";
 
 export const AuthDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 	const [user, loading, error] = useAuthState(auth);
