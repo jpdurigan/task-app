@@ -5,6 +5,7 @@ import {
 	FilterAlt,
 	Palette,
 	Check,
+	CheckBox,
 } from "@mui/icons-material";
 import {
 	Box,
@@ -19,9 +20,13 @@ import {
 	Card,
 	RadioProps,
 	Icon,
+	FormGroup,
+	CheckboxProps,
+	Checkbox,
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { AppDialogs } from "../AppDialogs";
+import { Tag } from "../database/Tag";
 
 enum FilterDone {
 	ALL = "ALL",
@@ -31,11 +36,16 @@ enum FilterDone {
 
 interface AppToolbarProps {
 	showDialog: (dialog: AppDialogs) => void;
+	allTags: Tag[];
 }
 
-export const AppToolbar: React.FC<AppToolbarProps> = ({ showDialog }) => {
+export const AppToolbar: React.FC<AppToolbarProps> = ({
+	showDialog,
+	allTags,
+}) => {
 	const [showFilters, setShowFilters] = useState<boolean>(false);
 	const [filterDone, setFilterDone] = useState<FilterDone>(FilterDone.ALL);
+	const [filterTags, setFilterTags] = useState<string[]>([]);
 	const filterButton = useRef<HTMLElement>();
 
 	const onFilterClick = () => {
@@ -47,6 +57,17 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({ showDialog }) => {
 		value: string
 	) => {
 		setFilterDone(value as FilterDone);
+	};
+
+	const onFilterTagsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const isChecked = event.target.checked;
+		const targetTagId = event.target.name;
+		const isTargetInFilter = filterTags.includes(targetTagId);
+		if (isChecked && !isTargetInFilter) {
+			setFilterTags([...filterTags, targetTagId]);
+		} else if (!isChecked && isTargetInFilter) {
+			setFilterTags(filterTags.filter((tag) => tag !== targetTagId));
+		}
 	};
 
 	return (
@@ -63,18 +84,22 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({ showDialog }) => {
 						</IconButton>
 					</Tooltip>
 					<Tooltip title="Compartilhar">
-						<IconButton onClick={() => {
+						<IconButton
+							onClick={() => {
 								showDialog(AppDialogs.SHARE);
-							}}>
+							}}
+						>
 							<Share />
 						</IconButton>
 					</Tooltip>
 				</Stack>
 				<Stack direction="row-reverse">
 					<Tooltip title="Nova tarefa">
-						<IconButton onClick={() => {
+						<IconButton
+							onClick={() => {
 								showDialog(AppDialogs.TASK);
-							}}>
+							}}
+						>
 							<AddBox />
 						</IconButton>
 					</Tooltip>
@@ -109,12 +134,32 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({ showDialog }) => {
 									labelPlacement="start"
 								/>
 							</RadioGroup>
+							<Divider sx={{ my: 1 }} />
+							<FormGroup>
+								{allTags.map((tag) => (
+									<FormControlLabel
+										value={tag.id}
+										control={
+											<FilterCheckbox
+												checked={filterTags.includes(tag.id)}
+												name={tag.id}
+												onChange={onFilterTagsChange}
+											/>
+										}
+										label={tag.label}
+										labelPlacement="start"
+										key={tag.id}
+									/>
+								))}
+							</FormGroup>
 						</Card>
 					</Popper>
 					<Tooltip title="Editar tags">
-						<IconButton onClick={() => {
+						<IconButton
+							onClick={() => {
 								showDialog(AppDialogs.TAGS);
-							}}>
+							}}
+						>
 							<Palette />
 						</IconButton>
 					</Tooltip>
@@ -128,5 +173,11 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({ showDialog }) => {
 const FilterRadio: React.FC<RadioProps> = (props) => {
 	return (
 		<Radio icon={<Icon />} checkedIcon={<Check />} size="small" {...props} />
+	);
+};
+
+const FilterCheckbox: React.FC<CheckboxProps> = (props) => {
+	return (
+		<Checkbox icon={<Icon />} checkedIcon={<Check />} size="small" {...props} />
 	);
 };

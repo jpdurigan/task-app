@@ -46,7 +46,7 @@ export const App: React.FC = () => {
 		<AppThemeProvider>
 			<Container maxWidth="xs">
 				<AppHeader />
-				<AppToolbar showDialog={setDialog} />
+				<AppToolbar showDialog={setDialog} allTags={tags} />
 				<Stack spacing={2} mb={4}>
 					{tasks.map((task) => (
 						<TaskBox
@@ -54,6 +54,7 @@ export const App: React.FC = () => {
 							tagIds={task.tags}
 							done={task.done}
 							key={task.id}
+							tags={tags}
 						/>
 					))}
 				</Stack>
@@ -72,7 +73,7 @@ export const App: React.FC = () => {
 				tags={tags}
 			/>
 			<TaskDialog
-				isVisible={true}
+				isVisible={dialog === AppDialogs.TASK}
 				hide={() => {
 					setDialog(AppDialogs.NONE);
 				}}

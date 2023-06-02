@@ -7,19 +7,25 @@ interface TaskBoxProps {
 	tagIds: string[];
 	text: string;
 	done: boolean;
+	tags: Tag[];
 }
 
-export const TaskBox: React.FC<TaskBoxProps> = ({ tagIds, text, done }) => {
-	const tags: Tag[] = tagIds.map(
-		(tagId) => new Tag(tagId, "tag", TagColors.BLUE, 1)
-	);
+export const TaskBox: React.FC<TaskBoxProps> = ({
+	tagIds,
+	text,
+	done,
+	tags,
+}) => {
+	const taskTags = tagIds.map((tagId) =>
+		tags.find((tag) => tag.id === tagId)
+	) as Tag[];
 
 	return (
-		<Card>
+		<Card sx={{ backgroundColor: done ? "background.default" : "background.paper" }}>
 			<CardActionArea>
 				<CardContent>
-					<TagStack tags={tags} justifyContent="flex-end" mb={2} />
-					<Typography variant="h6">{text}</Typography>
+					<TagStack tags={taskTags} justifyContent="flex-end" mb={2} />
+					<Typography variant="h6" sx={{textDecoration: done ? "line-through" : "none"}}>{text}</Typography>
 				</CardContent>
 			</CardActionArea>
 		</Card>
