@@ -25,6 +25,7 @@ import { TaskCard } from "./task/TaskCard";
 import { TaskDialog } from "./task/TaskDialog";
 import { FirestoreError } from "firebase/firestore";
 import { AddCircleOutline } from "@mui/icons-material";
+import { ShareDialog } from "./share/ShareDialog";
 
 const initialTags = () => TagServer.loadLocal();
 const initialTasks = () => TaskServer.loadLocal();
@@ -135,7 +136,7 @@ export const App: React.FC = () => {
 
 			const newTasks = TaskServer.normalizeTags(tasks, newTags);
 			setTasks(newTasks);
-			TaskServer.saveLocal(newTasks);
+			TaskServer.saveAllRemote(newTasks);
 			TaskServer.saveLocal(newTasks);
 
 			const validTags: string[] = newTags.map((tag) => tag.id);
@@ -166,7 +167,13 @@ export const App: React.FC = () => {
 
 	const onPopulateWithExamples = () => {
 		setTags(exampleTags);
+		TagServer.saveAllRemote(exampleTags);
+		TagServer.saveLocal(exampleTags);
+
 		setTasks(exampleTasks);
+		TaskServer.saveAllRemote(exampleTasks);
+		TaskServer.saveLocal(exampleTasks);
+
 		setFilterTags(exampleTags.map((tag) => tag.id));
 	};
 
@@ -264,6 +271,7 @@ export const App: React.FC = () => {
 				hide={hideDialog}
 				deleteAll={deleteAll}
 			/>
+			<ShareDialog isVisible={dialog === AppDialogs.SHARE} hide={hideDialog} />
 			<TagDialog
 				isVisible={dialog === AppDialogs.TAGS}
 				hide={hideDialog}
