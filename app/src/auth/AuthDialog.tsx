@@ -98,7 +98,7 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
 				) : (
 					<>
 						<Tabs
-							onChange={(e, v) => setTabValue(v)}
+							onChange={(_e, v) => setTabValue(v)}
 							value={tabValue}
 							sx={{ mb: 2 }}
 						>
