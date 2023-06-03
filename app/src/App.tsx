@@ -67,6 +67,12 @@ export const App: React.FC = () => {
 		}
 	}, [tags, tasks]);
 
+	useEffect(() => {
+		if (hasFirebaseUser()) {
+			loadAllFromDatabase();
+		}
+	}, []);
+
 	const createTag = useCallback(
 		(tag: Tag) => {
 			const newTags = [...tags, tag];
@@ -180,26 +186,7 @@ export const App: React.FC = () => {
 	useEffect(() => {
 		auth.onAuthStateChanged(async (user) => {
 			if (user) {
-				setIsLoading(true);
-				try {
-					const newTags = await TagServer.loadRemote();
-					const newTasks = await TaskServer.loadRemote();
-
-					if (newTags && newTasks) {
-						setTags(newTags);
-						TagServer.saveLocal(newTags);
-						setTasks(newTasks);
-						TaskServer.saveLocal(newTasks);
-						setFilterTags(newTags.map((tag) => tag.id));
-					} else {
-						setTags([]);
-						setTasks([]);
-						setFilterTags([]);
-					}
-				} catch (err) {
-					console.log(err);
-				}
-				setIsLoading(false);
+				await loadAllFromDatabase();
 			} else {
 				setTags([]);
 				TagServer.saveLocal([]);
@@ -209,6 +196,29 @@ export const App: React.FC = () => {
 			}
 		});
 	}, []);
+
+	const loadAllFromDatabase = async () => {
+		setIsLoading(true);
+		try {
+			const newTags = await TagServer.loadRemote();
+			const newTasks = await TaskServer.loadRemote();
+
+			if (newTags && newTasks) {
+				setTags(newTags);
+				TagServer.saveLocal(newTags);
+				setTasks(newTasks);
+				TaskServer.saveLocal(newTasks);
+				setFilterTags(newTags.map((tag) => tag.id));
+			} else {
+				setTags([]);
+				setTasks([]);
+				setFilterTags([]);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+		setIsLoading(false);
+	};
 
 	const hideDialog = () => {
 		setDialog(AppDialogs.NONE);
