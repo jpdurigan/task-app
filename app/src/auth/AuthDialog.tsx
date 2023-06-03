@@ -24,7 +24,6 @@ import { auth, googleProvider } from "../database/Firebase";
 import { Google } from "@mui/icons-material";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { AppDialogProps } from "../AppGlobals";
-import { TaskServer } from "../database/Task";
 import { FirebaseError } from "firebase/app";
 
 interface AuthDialogProps extends AppDialogProps {
@@ -171,15 +170,15 @@ const AuthLogin: React.FC = () => {
 				sx={{ mb: 1 }}
 			/>
 			<Stack direction="row" alignItems="center" spacing={1}>
+				<Button onClick={submitLogin} variant="contained">
+					Entrar
+				</Button>
 				<Button
 					onClick={submitLoginWithGoogle}
 					variant="contained"
 					startIcon={<Google />}
 				>
 					Entrar com Google
-				</Button>
-				<Button onClick={submitLogin} variant="contained">
-					Entrar
 				</Button>
 			</Stack>
 		</Box>

@@ -6,19 +6,13 @@ import {
 	Dialog,
 	DialogActions,
 	DialogContent,
-	DialogContentText,
 	DialogTitle,
-	Divider,
-	FormControlLabel,
-	FormGroup,
 	IconButton,
-	InputLabel,
 	Popper,
-	RadioGroup,
 	Stack,
 	TextField,
 } from "@mui/material";
-import { Tag, TagServer, exampleTags } from "../database/Tag";
+import { Tag, TagServer } from "../database/Tag";
 import {
 	ArrowDownward,
 	ArrowUpward,
@@ -29,7 +23,7 @@ import {
 } from "@mui/icons-material";
 import { TagColors } from "../Theme";
 import { useState } from "react";
-import { AppDialogProps, AppFilterDone } from "../AppGlobals";
+import { AppDialogProps } from "../AppGlobals";
 
 interface TagDialogProps extends AppDialogProps {
 	allTags?: Tag[];
@@ -55,9 +49,6 @@ export const TagDialog: React.FC<TagDialogProps> = ({
 		<Dialog open={isVisible} onClose={hide} maxWidth="xs" fullWidth>
 			<DialogTitle>Editar tags</DialogTitle>
 			<DialogContent>
-				{/* <DialogContentText textAlign="center" mb={2}>
-					Atualizando...
-				</DialogContentText> */}
 				<Stack gap={1}>
 					{allTags &&
 						allTags.map((tag) => (

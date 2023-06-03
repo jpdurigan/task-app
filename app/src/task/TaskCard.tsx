@@ -1,5 +1,4 @@
 import {
-	BoxProps,
 	Card,
 	CardActionArea,
 	CardContent,
@@ -8,7 +7,6 @@ import {
 } from "@mui/material";
 import { TagStack } from "../tag/TagStack";
 import { Tag } from "../database/Tag";
-import { TagColors } from "../Theme";
 
 interface TaskCardProps extends CardProps {
 	tagIds: string[];

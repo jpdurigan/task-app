@@ -1,6 +1,5 @@
 import {
 	Card,
-	CardActionArea,
 	CardContent,
 	Collapse,
 	Dialog,
@@ -10,8 +9,6 @@ import {
 	FormControlLabel,
 	Grow,
 	IconButton,
-	Popover,
-	Popper,
 	Stack,
 	Switch,
 	Typography,
@@ -19,21 +16,19 @@ import {
 import { AppDialogProps } from "../AppGlobals";
 import { useEffect, useState } from "react";
 import { ContentCopy } from "@mui/icons-material";
-import { DocumentData, doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import {
 	auth,
 	db,
 	getFirebaseUserId,
 	isUserAuthorized,
 } from "../database/Firebase";
-import { TagServer } from "../database/Tag";
 
 export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 	const [isShared, setIsShared] = useState<boolean>(false);
 	const [isMouseHovering, setIsMouseHovering] = useState<boolean>(false);
 	const [sharedLink, setSharedLink] = useState<string | undefined>();
 	const [feedbackLabel, setFeedbackLabel] = useState<string | undefined>();
-	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
 	useEffect(() => {
 		auth.onAuthStateChanged(async (user) => {
@@ -73,14 +68,13 @@ export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 	};
 
 	const onMouseEnter = (
-		event: React.MouseEvent<HTMLDivElement, MouseEvent>
+		_event: React.MouseEvent<HTMLDivElement, MouseEvent>
 	) => {
 		setIsMouseHovering(true);
-		setAnchorEl(event.currentTarget);
 	};
 
 	const onMouseLeave = (
-		event: React.MouseEvent<HTMLDivElement, MouseEvent>
+		_event: React.MouseEvent<HTMLDivElement, MouseEvent>
 	) => {
 		setIsMouseHovering(false);
 	};

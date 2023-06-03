@@ -16,7 +16,6 @@ import {
 	TextField,
 } from "@mui/material";
 import { AppDialogProps } from "../AppGlobals";
-import { Settings } from "@mui/icons-material";
 import { Tag } from "../database/Tag";
 import { TagStack } from "../tag/TagStack";
 import { useEffect, useState } from "react";

@@ -1,29 +1,28 @@
 import {
 	Alert,
 	Button,
-	Card,
-	CardActionArea,
-	CardContent,
 	Collapse,
 	Container,
-	Link,
 	Stack,
 	Typography,
 } from "@mui/material";
 import { AppHeader } from "./components/AppHeader";
 import { AppToolbar } from "./components/AppToolbar";
 import { AppThemeProvider } from "./Theme";
-import { TagStack } from "./tag/TagStack";
 import { Tag, TagServer, exampleTags } from "./database/Tag";
 import { TagDialog } from "./tag/TagDialog";
 import { AuthDialog } from "./auth/AuthDialog";
 import { useCallback, useEffect, useState } from "react";
-import { auth, getUserFromURL, isReadOnly, isUserAuthorized } from "./database/Firebase";
+import {
+	auth,
+	getUserFromURL,
+	isReadOnly,
+	isUserAuthorized,
+} from "./database/Firebase";
 import { AppDialogs, AppFilterDone } from "./AppGlobals";
 import { Task, TaskServer, exampleTasks } from "./database/Task";
 import { TaskCard } from "./task/TaskCard";
 import { TaskDialog } from "./task/TaskDialog";
-import { FirestoreError } from "firebase/firestore";
 import { AddCircleOutline } from "@mui/icons-material";
 import { ShareDialog } from "./share/ShareDialog";
 
@@ -60,7 +59,11 @@ export const App: React.FC = () => {
 	}, [tasks]);
 
 	useEffect(() => {
-		if (!isUserAuthorized() && (tags.length > 0 || tasks.length > 0)) {
+		if (
+			!isUserAuthorized() &&
+			!isReadOnly() &&
+			(tags.length > 0 || tasks.length > 0)
+		) {
 			setWarning(
 				"Você está usando o aplicativo em modo local. Para acessar suas tarefas em outro dispositivo, crie uma conta."
 			);

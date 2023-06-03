@@ -5,8 +5,6 @@ import {
 	FilterAlt,
 	Palette,
 	Check,
-	CheckBox,
-	Warning,
 } from "@mui/icons-material";
 import {
 	Box,
@@ -24,12 +22,9 @@ import {
 	FormGroup,
 	CheckboxProps,
 	Checkbox,
-	Slide,
 	Collapse,
-	Grow,
-	Alert,
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { AppDialogs, AppFilterDone } from "../AppGlobals";
 import { Tag } from "../database/Tag";
 import { isReadOnly } from "../database/Firebase";
@@ -93,43 +88,40 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 							<AccountCircle />
 						</IconButton>
 					</Tooltip>
-					<Tooltip title="Compartilhar">
+					{!isReadOnly() && (<Tooltip title="Compartilhar">
 						<IconButton
-							disabled={isReadOnly()}
 							onClick={() => {
 								showDialog(AppDialogs.SHARE);
 							}}
 						>
 							<Share />
 						</IconButton>
-					</Tooltip>
+					</Tooltip>)}
 				</Stack>
 				<Stack direction="row-reverse">
-					<Tooltip title="Nova tarefa">
+					{!isReadOnly() && (<Tooltip title="Nova tarefa">
 						<IconButton
-							disabled={isReadOnly()}
 							onClick={() => {
 								showDialog(AppDialogs.TASK);
 							}}
 						>
 							<AddBox />
 						</IconButton>
-					</Tooltip>
+					</Tooltip>)}
 					<Tooltip title="Filtrar tarefas">
 						<IconButton onClick={onFilterClick}>
 							<FilterAlt color={showFilters ? "primary" : "action"} />
 						</IconButton>
 					</Tooltip>
-					<Tooltip title="Editar tags">
+					{!isReadOnly() && (<Tooltip title="Editar tags">
 						<IconButton
-							disabled={isReadOnly()}
 							onClick={() => {
 								showDialog(AppDialogs.TAGS);
 							}}
 						>
 							<Palette />
 						</IconButton>
-					</Tooltip>
+					</Tooltip>)}
 				</Stack>
 			</Stack>
 			<Popper
