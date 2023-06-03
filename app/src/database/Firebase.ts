@@ -38,7 +38,7 @@ export const getUserFromURL = (): string | null => {
 };
 
 export const isReadOnly = (): boolean => {
-	return !isUserAuthorized() && getUserFromURL !== null;
+	return !isUserAuthorized() && getUserFromURL() !== null;
 };
 
 export const getFirebaseUserId = (): string => {
