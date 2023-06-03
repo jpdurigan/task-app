@@ -17,10 +17,15 @@ import {
 	Typography,
 } from "@mui/material";
 import { AppDialogProps } from "../AppGlobals";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ContentCopy } from "@mui/icons-material";
-import { doc, setDoc } from "firebase/firestore";
-import { db, getFirebaseUserId, hasFirebaseUser } from "../database/Firebase";
+import { DocumentData, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+	auth,
+	db,
+	getFirebaseUserId,
+	isUserAuthorized,
+} from "../database/Firebase";
 import { TagServer } from "../database/Tag";
 
 export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
@@ -30,6 +35,27 @@ export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 	const [feedbackLabel, setFeedbackLabel] = useState<string | undefined>();
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
+	useEffect(() => {
+		auth.onAuthStateChanged(async (user) => {
+			if (user !== null) {
+				const isVisible = await getDocumentsVisibility();
+				setIsShared(isVisible);
+			}
+		});
+	}, []);
+
+	useEffect(
+		() => {
+			if (isShared) {
+				setSharedLink(getSharedLink())
+			} else {
+				setSharedLink(undefined)
+			}
+		}, [isShared]
+	)
+
+	const getSharedLink = () => `https://tasks.durigan.jp/?u=${getFirebaseUserId()}`
+
 	const onSharedChanged = async (
 		_event: React.ChangeEvent<HTMLInputElement>,
 		checked: boolean
@@ -38,14 +64,10 @@ export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 		if (checked) {
 			setFeedbackLabel("Habilitando...");
 			await updateDocumentsVisibility(true);
-			setSharedLink(
-				`https://tasks.durigan.jp/?u=${getFirebaseUserId()}`
-			);
 			setFeedbackLabel(undefined);
 		} else {
 			setFeedbackLabel("Desabilitando...");
 			await updateDocumentsVisibility(false);
-			setSharedLink(undefined);
 			setFeedbackLabel(undefined);
 		}
 	};
@@ -85,6 +107,9 @@ export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 					<DialogContentText mb={2}>{feedbackLabel}</DialogContentText>
 				</Collapse>
 				<Collapse in={sharedLink !== undefined}>
+					<DialogContentText mb={1}>
+						Qualquer pessoa com esse link poderá visualizar suas tarefas.
+					</DialogContentText>
 					<Card
 						variant="outlined"
 						sx={{ mb: 2, borderColor: "blue" }}
@@ -94,7 +119,9 @@ export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 					>
 						<CardContent>
 							<Stack direction="row" alignItems="center">
-								<Typography sx={{wordBreak: "break-all"}}>{sharedLink}</Typography>
+								<Typography sx={{ wordBreak: "break-all" }}>
+									{sharedLink}
+								</Typography>
 								<Grow in={isMouseHovering}>
 									<IconButton onClick={copyToClipboard}>
 										<ContentCopy />
@@ -109,11 +136,27 @@ export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 	);
 };
 
-const updateDocumentsVisibility = async (visible: boolean) => {
-	if (!hasFirebaseUser()) return;
+const getDocument = () => doc(db, "app", getFirebaseUserId());
 
-	const document = doc(db, "app", getFirebaseUserId());
-	const data = {visible}
+const getDocumentsVisibility = async (): Promise<boolean> => {
+	const document = getDocument();
+	try {
+		const doc = await getDoc(document);
+		if (doc.data() !== undefined) {
+			const visible = doc.data()?.visible;
+			return visible;
+		}
+	} catch (err) {
+		console.log(err);
+	}
+	return false;
+};
+
+const updateDocumentsVisibility = async (visible: boolean) => {
+	if (!isUserAuthorized()) return;
+
+	const document = getDocument();
+	const data = { visible };
 	try {
 		await setDoc(document, data);
 		console.log(`Documento atualizado: ${data.toString()}`);

@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { TagColors, getRandomTagColor } from "../Theme";
 import { v4 as uuid } from "uuid";
-import { db, getFirebaseUserId, hasFirebaseUser } from "./Firebase";
+import { db, getFirebaseUserId, isUserAuthorized } from "./Firebase";
 
 export class Tag {
 	id: string;
@@ -91,11 +91,6 @@ export class TagServer {
 	//////////////////////////////
 
 	public static loadRemote = async (): Promise<Tag[] | undefined> => {
-		if (!hasFirebaseUser()) {
-			console.warn("User not logged in!");
-			return;
-		}
-
 		try {
 			const collection = TagServer.getCollection();
 			const data = await getDocs<Tag>(collection);
@@ -111,7 +106,7 @@ export class TagServer {
 	};
 
 	public static saveAllRemote = async (tags: Tag[]) => {
-		if (!hasFirebaseUser()) return;
+		if (!isUserAuthorized()) return;
 
 		const batch = writeBatch(db);
 		tags.forEach((tag) => {
@@ -129,7 +124,7 @@ export class TagServer {
 	};
 
 	public static saveOneRemote = async (tag: Tag) => {
-		if (!hasFirebaseUser()) return;
+		if (!isUserAuthorized()) return;
 
 		const document = TagServer.getDocument(tag);
 		try {
@@ -142,7 +137,7 @@ export class TagServer {
 	};
 
 	public static deleteAllRemote = async (tags: Tag[]) => {
-		if (!hasFirebaseUser()) return;
+		if (!isUserAuthorized()) return;
 
 		const batch = writeBatch(db);
 		tags.forEach((tag) => {
@@ -161,7 +156,7 @@ export class TagServer {
 	};
 
 	public static deleteOneRemote = async (tag: Tag) => {
-		if (!hasFirebaseUser()) return;
+		if (!isUserAuthorized()) return;
 
 		const document = TagServer.getDocument(tag);
 		try {

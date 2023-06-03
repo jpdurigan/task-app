@@ -9,7 +9,7 @@ import {
 	writeBatch,
 } from "firebase/firestore";
 import { v4 as uuid } from "uuid";
-import { db, getFirebaseUserId, hasFirebaseUser } from "./Firebase";
+import { db, getFirebaseUserId, isUserAuthorized } from "./Firebase";
 import { AppFilterDone } from "../AppGlobals";
 import { Tag } from "./Tag";
 
@@ -153,11 +153,6 @@ export class TaskServer {
 	//////////////////////////////
 
 	public static loadRemote = async (): Promise<Task[] | undefined> => {
-		if (!hasFirebaseUser()) {
-			console.warn("User not logged in!");
-			return;
-		}
-
 		try {
 			const collection = TaskServer.getCollection();
 			const data = await getDocs<Task>(collection);
@@ -172,7 +167,7 @@ export class TaskServer {
 	};
 
 	public static saveAllRemote = async (tasks: Task[]) => {
-		if (!hasFirebaseUser()) return;
+		if (!isUserAuthorized()) return;
 
 		const batch = writeBatch(db);
 		tasks.forEach((task) => {
@@ -191,7 +186,7 @@ export class TaskServer {
 	};
 
 	public static saveOneRemote = async (task: Task) => {
-		if (!hasFirebaseUser()) return;
+		if (!isUserAuthorized()) return;
 
 		const document = TaskServer.getDocument(task);
 		try {
@@ -204,7 +199,7 @@ export class TaskServer {
 	};
 
 	public static deleteAllRemote = async (tasks: Task[]) => {
-		if (!hasFirebaseUser()) return;
+		if (!isUserAuthorized()) return;
 
 		const batch = writeBatch(db);
 		tasks.forEach((task) => {
@@ -223,7 +218,7 @@ export class TaskServer {
 	};
 
 	public static deleteOneRemote = async (task: Task) => {
-		if (!hasFirebaseUser()) return;
+		if (!isUserAuthorized()) return;
 
 		const document = TaskServer.getDocument(task);
 		try {

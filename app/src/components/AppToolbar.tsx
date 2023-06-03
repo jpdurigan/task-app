@@ -32,6 +32,7 @@ import {
 import { useRef, useState } from "react";
 import { AppDialogs, AppFilterDone } from "../AppGlobals";
 import { Tag } from "../database/Tag";
+import { isReadOnly } from "../database/Firebase";
 
 interface AppToolbarProps {
 	showDialog: (dialog: AppDialogs) => void;
@@ -94,6 +95,7 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 					</Tooltip>
 					<Tooltip title="Compartilhar">
 						<IconButton
+							disabled={isReadOnly()}
 							onClick={() => {
 								showDialog(AppDialogs.SHARE);
 							}}
@@ -105,6 +107,7 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 				<Stack direction="row-reverse">
 					<Tooltip title="Nova tarefa">
 						<IconButton
+							disabled={isReadOnly()}
 							onClick={() => {
 								showDialog(AppDialogs.TASK);
 							}}
@@ -119,6 +122,7 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 					</Tooltip>
 					<Tooltip title="Editar tags">
 						<IconButton
+							disabled={isReadOnly()}
 							onClick={() => {
 								showDialog(AppDialogs.TAGS);
 							}}

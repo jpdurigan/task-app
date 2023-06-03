@@ -19,16 +19,30 @@ export const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-export const db = initializeFirestore(app, {localCache: persistentLocalCache()})
+export const db = initializeFirestore(app, {
+	localCache: persistentLocalCache(),
+});
 export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 auth.useDeviceLanguage();
 export const googleProvider = new GoogleAuthProvider();
 
-export const hasFirebaseUser = (): boolean => {
-	return true// auth.currentUser !== null;
-}
+export const isUserAuthorized = (): boolean => {
+	return auth.currentUser !== null;
+};
+
+export const getUserFromURL = (): string | null => {
+	const searchParams = new URLSearchParams(document.location.search);
+	console.log(searchParams, searchParams.get("u"));
+	return searchParams.get("u");
+};
+
+export const isReadOnly = (): boolean => {
+	return !isUserAuthorized() && getUserFromURL !== null;
+};
 
 export const getFirebaseUserId = (): string => {
-	return "6mrlmuyRoPYws3Rj4b7wH4hsHpQ2";// auth.currentUser!.uid;
-}
+	if (isUserAuthorized()) return auth.currentUser!.uid;
+	if (getUserFromURL()) return getUserFromURL()!;
+	return "";
+};

@@ -18,7 +18,7 @@ import { Tag, TagServer, exampleTags } from "./database/Tag";
 import { TagDialog } from "./tag/TagDialog";
 import { AuthDialog } from "./auth/AuthDialog";
 import { useCallback, useEffect, useState } from "react";
-import { auth, hasFirebaseUser } from "./database/Firebase";
+import { auth, getUserFromURL, isReadOnly, isUserAuthorized } from "./database/Firebase";
 import { AppDialogs, AppFilterDone } from "./AppGlobals";
 import { Task, TaskServer, exampleTasks } from "./database/Task";
 import { TaskCard } from "./task/TaskCard";
@@ -60,7 +60,7 @@ export const App: React.FC = () => {
 	}, [tasks]);
 
 	useEffect(() => {
-		if (!hasFirebaseUser() && (tags.length > 0 || tasks.length > 0)) {
+		if (!isUserAuthorized() && (tags.length > 0 || tasks.length > 0)) {
 			setWarning(
 				"Você está usando o aplicativo em modo local. Para acessar suas tarefas em outro dispositivo, crie uma conta."
 			);
@@ -68,7 +68,7 @@ export const App: React.FC = () => {
 	}, [tags, tasks]);
 
 	useEffect(() => {
-		if (hasFirebaseUser()) {
+		if (getUserFromURL() !== null) {
 			loadAllFromDatabase();
 		}
 	}, []);
@@ -269,6 +269,7 @@ export const App: React.FC = () => {
 							key={task.id}
 							tags={tags}
 							onClick={() => {
+								if (isReadOnly()) return;
 								setEditingTask(task);
 								setDialog(AppDialogs.TASK);
 							}}
