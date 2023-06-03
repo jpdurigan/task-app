@@ -1,6 +1,6 @@
 # Task App
 
 Basic task app made in React, using Typescript and Material UI.
-It supports custom tags and keep them persistent with localStorage.
-
-Hosted in App Engine: https://note-app-377316.rj.r.appspot.com
+It allows for custom tags, local and cloud persistence with Firebase.
+You can also share your tasks with a public link.
+Hosted at: https://tasks.durigan.jp/
