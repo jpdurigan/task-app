@@ -218,7 +218,7 @@ export class TaskServer {
 		} catch (err) {
 			console.warn("Error saving remote");
 			console.log(err);
-			return;
+			return err;
 		}
 	};
 
@@ -232,7 +232,7 @@ export class TaskServer {
 		} catch (err) {
 			console.warn("Error deleting one on remote");
 			console.log(err);
-			return;
+			return err;
 		}
 	};
 

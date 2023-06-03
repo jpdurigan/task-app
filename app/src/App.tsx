@@ -1,10 +1,12 @@
 import {
 	Alert,
+	Button,
 	Card,
 	CardActionArea,
 	CardContent,
 	Collapse,
 	Container,
+	Link,
 	Stack,
 	Typography,
 } from "@mui/material";
@@ -21,6 +23,8 @@ import { AppDialogs, AppFilterDone } from "./AppGlobals";
 import { Task, TaskServer, exampleTasks } from "./database/Task";
 import { TaskCard } from "./task/TaskCard";
 import { TaskDialog } from "./task/TaskDialog";
+import { FirestoreError } from "firebase/firestore";
+import { AddCircleOutline } from "@mui/icons-material";
 
 const initialTags = () => TagServer.loadLocal();
 const initialTasks = () => TaskServer.loadLocal();
@@ -52,7 +56,15 @@ export const App: React.FC = () => {
 		}
 
 		setWarning(undefined);
-	}, [tags]);
+	}, [tasks]);
+
+	useEffect(() => {
+		if (!hasFirebaseUser() && (tags.length > 0 || tasks.length > 0)) {
+			setWarning(
+				"Você está usando o aplicativo em modo local. Para acessar suas tarefas em outro dispositivo, crie uma conta."
+			);
+		}
+	}, [tags, tasks]);
 
 	const createTag = useCallback(
 		(tag: Tag) => {
@@ -145,6 +157,19 @@ export const App: React.FC = () => {
 		[tasks]
 	);
 
+	const deleteAll = useCallback(async () => {
+		await TaskServer.deleteAllRemote(tasks);
+		TaskServer.saveLocal([]);
+		await TagServer.deleteAllRemote(tags);
+		TagServer.saveLocal([]);
+	}, [tags, tasks]);
+
+	const onPopulateWithExamples = () => {
+		setTags(exampleTags);
+		setTasks(exampleTasks);
+		setFilterTags(exampleTags.map((tag) => tag.id));
+	};
+
 	useEffect(() => {
 		auth.onAuthStateChanged(async (user) => {
 			if (user) {
@@ -170,6 +195,10 @@ export const App: React.FC = () => {
 				setIsLoading(false);
 			} else {
 				setTags([]);
+				TagServer.saveLocal([]);
+				setTasks([]);
+				TaskServer.saveLocal([]);
+				setFilterTags([]);
 			}
 		});
 	}, []);
@@ -203,6 +232,17 @@ export const App: React.FC = () => {
 					</Alert>
 				</Collapse>
 				{isLoading && <Typography mb={2}>Carregando...</Typography>}
+				{!isLoading && tags.length == 0 && tasks.length == 0 && (
+					<Button
+						variant="contained"
+						color="secondary"
+						startIcon={<AddCircleOutline />}
+						onClick={onPopulateWithExamples}
+						fullWidth
+					>
+						Adicionar exemplos
+					</Button>
+				)}
 				<Stack spacing={2} mb={4}>
 					{filteredTasks.map((task) => (
 						<TaskCard
@@ -219,7 +259,11 @@ export const App: React.FC = () => {
 					))}
 				</Stack>
 			</Container>
-			<AuthDialog isVisible={dialog === AppDialogs.AUTH} hide={hideDialog} />
+			<AuthDialog
+				isVisible={dialog === AppDialogs.AUTH}
+				hide={hideDialog}
+				deleteAll={deleteAll}
+			/>
 			<TagDialog
 				isVisible={dialog === AppDialogs.TAGS}
 				hide={hideDialog}

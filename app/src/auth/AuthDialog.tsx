@@ -12,6 +12,7 @@ import {
 	TextField,
 } from "@mui/material";
 import {
+	User,
 	createUserWithEmailAndPassword,
 	deleteUser,
 	signInWithEmailAndPassword,
@@ -23,10 +24,25 @@ import { auth, googleProvider } from "../database/Firebase";
 import { Google } from "@mui/icons-material";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { AppDialogProps } from "../AppGlobals";
+import { TaskServer } from "../database/Task";
+import { FirebaseError } from "firebase/app";
 
-export const AuthDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
-	const [user, loading, error] = useAuthState(auth);
+interface AuthDialogProps extends AppDialogProps {
+	deleteAll: () => Promise<unknown>;
+}
+
+export const AuthDialog: React.FC<AuthDialogProps> = ({
+	isVisible,
+	hide,
+	deleteAll,
+}) => {
+	const [user, loading, error] = useAuthState(auth, {
+		onUserChanged: async (_user: User | null) => {
+			setFeedbackLabel("");
+		},
+	});
 	const [tabValue, setTabValue] = useState<number>(0);
+	const [feedbackLabel, setFeedbackLabel] = useState<string | undefined>();
 
 	const userLogout = async () => {
 		try {
@@ -37,10 +53,23 @@ export const AuthDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 	};
 
 	const userDelete = async () => {
+		if (!user) return;
+
 		try {
-			await deleteUser(user!);
+			setFeedbackLabel("Deletando documentos...");
+			await deleteAll();
+			setFeedbackLabel("Deletando usuário...");
+			await deleteUser(user);
 		} catch (err) {
 			console.log(err);
+			const errFirebase = err as FirebaseError;
+			if (errFirebase.code === "auth/requires-recent-login") {
+				setFeedbackLabel(
+					"Para deletar sua conta, seu último login deve ser mais recente. Entre com a conta novamente e tente de novo."
+				);
+			} else {
+				setFeedbackLabel(`Erro ao deletar sua conta: ${errFirebase.code}`);
+			}
 		}
 	};
 
@@ -52,9 +81,12 @@ export const AuthDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 		<Dialog open={isVisible} onClose={hide} maxWidth="xs" fullWidth>
 			<DialogTitle>Autenticação</DialogTitle>
 			<DialogContent>
-				{loading && <DialogContentText>Carregando...</DialogContentText>}
+				{feedbackLabel && (
+					<DialogContentText mb={2}>{feedbackLabel}</DialogContentText>
+				)}
+				{loading && <DialogContentText mb={2}>Carregando...</DialogContentText>}
 				{error && (
-					<DialogContentText color="error">
+					<DialogContentText color="error" mb={2}>
 						Um erro ocorreu na Autenticação com o Firebase!
 					</DialogContentText>
 				)}
