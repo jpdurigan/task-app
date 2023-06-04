@@ -23,12 +23,15 @@ import {
 	getFirebaseUserId,
 	isUserAuthorized,
 } from "../database/Firebase";
+import { useTranslation } from "react-i18next";
 
 export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 	const [isShared, setIsShared] = useState<boolean>(false);
 	const [isMouseHovering, setIsMouseHovering] = useState<boolean>(false);
 	const [sharedLink, setSharedLink] = useState<string | undefined>();
 	const [feedbackLabel, setFeedbackLabel] = useState<string | undefined>();
+
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		auth.onAuthStateChanged(async (user) => {
@@ -39,17 +42,16 @@ export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 		});
 	}, []);
 
-	useEffect(
-		() => {
-			if (isShared) {
-				setSharedLink(getSharedLink())
-			} else {
-				setSharedLink(undefined)
-			}
-		}, [isShared]
-	)
+	useEffect(() => {
+		if (isShared) {
+			setSharedLink(getSharedLink());
+		} else {
+			setSharedLink(undefined);
+		}
+	}, [isShared]);
 
-	const getSharedLink = () => `https://tasks.durigan.jp/?u=${getFirebaseUserId()}`
+	const getSharedLink = () =>
+		`https://tasks.durigan.jp/?u=${getFirebaseUserId()}`;
 
 	const onSharedChanged = async (
 		_event: React.ChangeEvent<HTMLInputElement>,
@@ -57,11 +59,11 @@ export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 	) => {
 		setIsShared(checked);
 		if (checked) {
-			setFeedbackLabel("Habilitando...");
+			setFeedbackLabel("APP_SHARE_FEEDBACK_ENABLE");
 			await updateDocumentsVisibility(true);
 			setFeedbackLabel(undefined);
 		} else {
-			setFeedbackLabel("Desabilitando...");
+			setFeedbackLabel("APP_SHARE_FEEDBACK_UNABLE");
 			await updateDocumentsVisibility(false);
 			setFeedbackLabel(undefined);
 		}
@@ -82,7 +84,7 @@ export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 	const copyToClipboard = () => {
 		if (!sharedLink) return;
 		navigator.clipboard.writeText(sharedLink);
-		setFeedbackLabel("Link copiado para área de transferência!");
+		setFeedbackLabel("APP_SHARE_FEEDBACK_COPIED");
 		setTimeout(hideFeedback, 3000);
 	};
 
@@ -90,19 +92,19 @@ export const ShareDialog: React.FC<AppDialogProps> = ({ isVisible, hide }) => {
 
 	return (
 		<Dialog open={isVisible} onClose={hide} maxWidth="xs" fullWidth>
-			<DialogTitle>Compartilhar</DialogTitle>
+			<DialogTitle>{t("APP_SHARE_TITLE")}</DialogTitle>
 			<DialogContent>
 				<FormControlLabel
 					control={<Switch checked={isShared} onChange={onSharedChanged} />}
-					label="Compartilhar tarefas?"
+					label={t("APP_SHARE_LABEL_SWITCH")}
 					sx={{ mb: 2 }}
 				/>
 				<Collapse in={feedbackLabel !== undefined}>
-					<DialogContentText mb={2}>{feedbackLabel}</DialogContentText>
+					<DialogContentText mb={2}>{t(feedbackLabel!)}</DialogContentText>
 				</Collapse>
 				<Collapse in={sharedLink !== undefined}>
 					<DialogContentText mb={1}>
-						Qualquer pessoa com esse link poderá visualizar suas tarefas.
+						{t("APP_SHARE_LABEL_SHARED_LINK")}
 					</DialogContentText>
 					<Card
 						variant="outlined"

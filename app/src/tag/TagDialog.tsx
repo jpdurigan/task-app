@@ -24,6 +24,7 @@ import {
 import { TagColors } from "../Theme";
 import { useState } from "react";
 import { AppDialogProps } from "../AppGlobals";
+import { useTranslation } from "react-i18next";
 
 interface TagDialogProps extends AppDialogProps {
 	allTags?: Tag[];
@@ -40,6 +41,8 @@ export const TagDialog: React.FC<TagDialogProps> = ({
 	updateTag,
 	deleteTag,
 }) => {
+	const { t } = useTranslation();
+
 	const onNewTagClick = () => {
 		const newTag = TagServer.getNewTag();
 		createTag(newTag);
@@ -47,7 +50,7 @@ export const TagDialog: React.FC<TagDialogProps> = ({
 	
 	return (
 		<Dialog open={isVisible} onClose={hide} maxWidth="xs" fullWidth>
-			<DialogTitle>Editar tags</DialogTitle>
+			<DialogTitle>{t("APP_TAG_TITLE")}</DialogTitle>
 			<DialogContent>
 				<Stack gap={1}>
 					{allTags &&
@@ -62,7 +65,7 @@ export const TagDialog: React.FC<TagDialogProps> = ({
 				</Stack>
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={onNewTagClick}>Adicionar nova tag</Button>
+				<Button onClick={onNewTagClick}>{t("APP_TAG_ACTIONS_NEW_TAG")}</Button>
 			</DialogActions>
 		</Dialog>
 	);

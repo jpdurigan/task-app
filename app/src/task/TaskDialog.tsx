@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { Task, TaskServer } from "../database/Task";
 import { TransitionProps } from "@mui/material/transitions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const AppTransitionSlideUp = React.forwardRef(function Transition(
 	props: TransitionProps & {
@@ -54,6 +55,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
 	const [taskText, setTaskText] = useState<string>("");
 	const [taskTags, setTaskTags] = useState<string[]>([]);
 	const [taskDone, setTaskDone] = useState<boolean>(false);
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		setTaskText(editingTask ? editingTask.text : "");
@@ -131,7 +133,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
 			TransitionComponent={AppTransitionSlideUp}
 			fullWidth
 		>
-			<DialogTitle>Editar tarefa</DialogTitle>
+			<DialogTitle>{t("APP_TASK_TITLE")}</DialogTitle>
 			<DialogContent>
 				<TextField
 					variant="filled"
@@ -144,7 +146,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
 					sx={{ mb: 2 }}
 				/>
 				<Box sx={{ mb: 2 }}>
-					<DialogContentText>Etiquetas</DialogContentText>
+					<DialogContentText>{t("APP_TASK_LABEL_TAGS")}</DialogContentText>
 					<Select
 						fullWidth
 						multiple
@@ -162,16 +164,16 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
 				</Box>
 				<FormControlLabel
 					control={<Checkbox checked={taskDone} onChange={onDoneChange} />}
-					label="Concluída"
+					label={t("APP_TASK_LABEL_DONE")}
 				/>
 			</DialogContent>
 			<DialogActions>
 				{editingTask !== undefined && (
 					<Button color="error" onClick={onDeleteClicked}>
-						Apagar
+						{t("APP_TASK_ACTIONS_DELETE")}
 					</Button>
 				)}
-				<Button onClick={onSaveClicked}>Salvar</Button>
+				<Button onClick={onSaveClicked}>{t("APP_TASK_ACTIONS_SAVE")}</Button>
 			</DialogActions>
 		</Dialog>
 	);

@@ -28,6 +28,7 @@ import { useState } from "react";
 import { AppDialogs, AppFilterDone } from "../AppGlobals";
 import { Tag } from "../database/Tag";
 import { isReadOnly } from "../database/Firebase";
+import { useTranslation } from "react-i18next";
 
 interface AppToolbarProps {
 	showDialog: (dialog: AppDialogs) => void;
@@ -49,6 +50,7 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 }) => {
 	const [showFilters, setShowFilters] = useState<boolean>(false);
 	const [filterButton, setFilterButton] = useState<null | HTMLElement>(null);
+	const { t } = useTranslation();
 
 	const onFilterClick = (
 		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -79,7 +81,7 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 		<Box mb={2}>
 			<Stack direction="row" justifyContent="space-between">
 				<Stack direction="row">
-					<Tooltip title="Conta">
+					<Tooltip title={t("APP_AUTH_TITLE")}>
 						<IconButton
 							onClick={() => {
 								showDialog(AppDialogs.AUTH);
@@ -88,7 +90,7 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 							<AccountCircle />
 						</IconButton>
 					</Tooltip>
-					{!isReadOnly() && (<Tooltip title="Compartilhar">
+					{!isReadOnly() && (<Tooltip title={t("APP_SHARE_TITLE")}>
 						<IconButton
 							onClick={() => {
 								showDialog(AppDialogs.SHARE);
@@ -99,7 +101,7 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 					</Tooltip>)}
 				</Stack>
 				<Stack direction="row-reverse">
-					{!isReadOnly() && (<Tooltip title="Nova tarefa">
+					{!isReadOnly() && (<Tooltip title={t("APP_TASK_TITLE")}>
 						<IconButton
 							onClick={() => {
 								showDialog(AppDialogs.TASK);
@@ -108,12 +110,12 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 							<AddBox />
 						</IconButton>
 					</Tooltip>)}
-					<Tooltip title="Filtrar tarefas">
+					<Tooltip title={t("APP_FILTER_TITLE")}>
 						<IconButton onClick={onFilterClick}>
 							<FilterAlt color={showFilters ? "primary" : "action"} />
 						</IconButton>
 					</Tooltip>
-					{!isReadOnly() && (<Tooltip title="Editar tags">
+					{!isReadOnly() && (<Tooltip title={t("APP_TAG_TITLE")}>
 						<IconButton
 							onClick={() => {
 								showDialog(AppDialogs.TAGS);
@@ -138,19 +140,19 @@ export const AppToolbar: React.FC<AppToolbarProps> = ({
 								<FormControlLabel
 									value={AppFilterDone.ALL}
 									control={<FilterRadio />}
-									label="Todas"
+									label={t("APP_FILTER_LABEL_ALL")}
 									labelPlacement="start"
 								/>
 								<FormControlLabel
 									value={AppFilterDone.NOT_DONE}
 									control={<FilterRadio />}
-									label="Não-concluídas"
+									label={t("APP_FILTER_LABEL_NOT_DONE")}
 									labelPlacement="start"
 								/>
 								<FormControlLabel
 									value={AppFilterDone.DONE}
 									control={<FilterRadio />}
-									label="Concluídas"
+									label={t("APP_FILTER_LABEL_DONE")}
 									labelPlacement="start"
 								/>
 							</RadioGroup>

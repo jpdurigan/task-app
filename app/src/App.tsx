@@ -25,6 +25,7 @@ import { TaskCard } from "./task/TaskCard";
 import { TaskDialog } from "./task/TaskDialog";
 import { AddCircleOutline } from "@mui/icons-material";
 import { ShareDialog } from "./share/ShareDialog";
+import { useTranslation } from "react-i18next";
 
 const initialTags = () => TagServer.loadLocal();
 const initialTasks = () => TaskServer.loadLocal();
@@ -44,14 +45,14 @@ export const App: React.FC = () => {
 	const [warning, setWarning] = useState<string | undefined>();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
+	const { t } = useTranslation();
+
 	useEffect(() => {
 		const hasTaskWithNoTag = tasks.some((task) => {
 			return task.tags.length == 0;
 		});
 		if (hasTaskWithNoTag) {
-			setWarning(
-				"Você tem tarefas sem etiquetas. Para acessá-las, desmarque todas as opções no filtro de tags."
-			);
+			setWarning("APP_WARNING_TASK_NO_TAG");
 			return;
 		}
 
@@ -64,9 +65,7 @@ export const App: React.FC = () => {
 			!isReadOnly() &&
 			(tags.length > 0 || tasks.length > 0)
 		) {
-			setWarning(
-				"Você está usando o aplicativo em modo local. Para acessar suas tarefas em outro dispositivo, crie uma conta."
-			);
+			setWarning("APP_WARNING_LOCAL_MODE");
 		}
 	}, [tags, tasks]);
 
@@ -248,10 +247,10 @@ export const App: React.FC = () => {
 				/>
 				<Collapse in={warning !== undefined}>
 					<Alert severity="warning" variant="outlined" sx={{ mb: 2 }}>
-						{warning}
+						{t(warning!)}
 					</Alert>
 				</Collapse>
-				{isLoading && <Typography mb={2}>Carregando...</Typography>}
+				{isLoading && <Typography mb={2}>{t("APP_LABEL_LOADING")}</Typography>}
 				{!isLoading && tags.length == 0 && tasks.length == 0 && (
 					<Button
 						variant="contained"
@@ -260,7 +259,7 @@ export const App: React.FC = () => {
 						onClick={onPopulateWithExamples}
 						fullWidth
 					>
-						Adicionar exemplos
+						{t("APP_LABEL_ADD_EXAMPLES")}
 					</Button>
 				)}
 				<Stack spacing={2} mb={4}>

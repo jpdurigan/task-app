@@ -33,7 +33,6 @@ export const isUserAuthorized = (): boolean => {
 
 export const getUserFromURL = (): string | null => {
 	const searchParams = new URLSearchParams(document.location.search);
-	console.log(searchParams, searchParams.get("u"));
 	return searchParams.get("u");
 };
 
