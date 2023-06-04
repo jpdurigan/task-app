@@ -34,7 +34,7 @@ export const AuthSignup: React.FC = () => {
 				fullWidth
 				sx={{ mb: 1 }}
 			/>
-			<Button onClick={submitSignup} variant="contained" sx={{ mb: 1 }}>
+			<Button onClick={submitSignup} variant="contained">
 				{t("APP_AUTH_SIGNUP_ACTIONS_SIGNUP")}
 			</Button>
 		</Box>

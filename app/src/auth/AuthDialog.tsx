@@ -1,18 +1,19 @@
 import {
+	Box,
 	Button,
 	Dialog,
 	DialogActions,
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
+	FormControlLabel,
+	Radio,
+	RadioGroup,
+	Stack,
 	Tab,
 	Tabs,
 } from "@mui/material";
-import {
-	User,
-	deleteUser,
-	signOut,
-} from "firebase/auth";
+import { User, deleteUser, signOut } from "firebase/auth";
 import React, { useState } from "react";
 import { auth } from "../database/Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -21,6 +22,7 @@ import { FirebaseError } from "firebase/app";
 import { useTranslation } from "react-i18next";
 import { AuthSignup } from "./AuthSignup";
 import { AuthLogin } from "./AuthLogin";
+import i18next from "i18next";
 
 interface AuthDialogProps extends AppDialogProps {
 	deleteAll: () => Promise<unknown>;
@@ -71,6 +73,13 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
 		hide();
 	};
 
+	const handleLanguageChange = (
+		_event: React.ChangeEvent<HTMLInputElement>,
+		value: string
+	) => {
+		i18next.changeLanguage(value);
+	};
+
 	return (
 		<Dialog open={isVisible} onClose={hide} maxWidth="xs" fullWidth>
 			<DialogTitle>{t("APP_AUTH_TITLE")}</DialogTitle>
@@ -88,30 +97,54 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
 						{t("APP_AUTH_FEEDBACK_ERROR_AUTH")}
 					</DialogContentText>
 				)}
-				{user !== null ? (
-					<>
-						<DialogContentText>
-							{t("APP_AUTH_USER")}: {auth.currentUser?.email}
+				<Box mb={2}>
+					{user !== null ? (
+						<>
+							<DialogContentText>
+								{t("APP_AUTH_USER")}: {auth.currentUser?.email}
+							</DialogContentText>
+						</>
+					) : (
+						<>
+							<Tabs
+								onChange={(_e, v) => setTabValue(v)}
+								value={tabValue}
+								sx={{ mb: 2 }}
+							>
+								<Tab label={t("APP_AUTH_TABS_LOGIN")} />
+								<Tab label={t("APP_AUTH_TABS_SIGNUP")} />
+							</Tabs>
+							<TabPanel value={tabValue} index={0}>
+								<AuthLogin />
+							</TabPanel>
+							<TabPanel value={tabValue} index={1}>
+								<AuthSignup />
+							</TabPanel>
+						</>
+					)}
+				</Box>
+				<Box mb={2}>
+					<Stack direction="row" gap={2}>
+						<DialogContentText width="50%">
+							{t("APP_AUTH_LABEL_LANGUAGE")}
 						</DialogContentText>
-					</>
-				) : (
-					<>
-						<Tabs
-							onChange={(_e, v) => setTabValue(v)}
-							value={tabValue}
-							sx={{ mb: 2 }}
+						<RadioGroup
+							value={i18next.language}
+							onChange={handleLanguageChange}
 						>
-							<Tab label={t("APP_AUTH_TABS_LOGIN")} />
-							<Tab label={t("APP_AUTH_TABS_SIGNUP")} />
-						</Tabs>
-						<TabPanel value={tabValue} index={0}>
-							<AuthLogin />
-						</TabPanel>
-						<TabPanel value={tabValue} index={1}>
-							<AuthSignup />
-						</TabPanel>
-					</>
-				)}
+							<FormControlLabel
+								value="pt"
+								control={<Radio sx={{ p: 0.5 }} />}
+								label="Português"
+							/>
+							<FormControlLabel
+								value="en"
+								control={<Radio sx={{ p: 0.5 }} />}
+								label="English"
+							/>
+						</RadioGroup>
+					</Stack>
+				</Box>
 			</DialogContent>
 			<DialogActions>
 				{user !== null ? (
@@ -119,9 +152,7 @@ export const AuthDialog: React.FC<AuthDialogProps> = ({
 						<Button onClick={userDelete} color="error">
 							{t("APP_AUTH_ACTIONS_DELETE")}
 						</Button>
-						<Button onClick={userLogout}>
-							{t("APP_AUTH_ACTIONS_LOGOUT")}
-						</Button>
+						<Button onClick={userLogout}>{t("APP_AUTH_ACTIONS_LOGOUT")}</Button>
 					</>
 				) : (
 					<>
