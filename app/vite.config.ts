@@ -3,10 +3,8 @@ import react from "@vitejs/plugin-react";
 
 const manualChunks = (id: string) => {
 	if (id.includes("node_modules")) {
-		if (id.includes("firebase/firestore")) {
-			return "firebase-firestore";
-		} else if (id.includes("firebase/auth")) {
-			return "firebase-auth";
+		if (id.includes("firebase")) {
+			return "firebase";
 		} else if (id.includes("mui")) {
 			return "material";
 		}
