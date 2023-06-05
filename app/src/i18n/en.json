@@ -1,0 +1,54 @@
+{
+	"translation": {
+		"APP_NAME": "Tasks",
+		"APP_DESCRIPTION": "Basic task app made with React, Material UI and Firebase.",
+
+		"APP_LABEL_LOADING": "Loading...",
+		"APP_LABEL_ADD_EXAMPLES": "Add examples",
+
+		"APP_AUTH_TITLE": "Your account",
+		"APP_AUTH_ACTIONS_DELETE": "Delete",
+		"APP_AUTH_ACTIONS_LOGOUT": "Logout",
+		"APP_AUTH_ACTIONS_GUEST": "Continue as guest",
+		"APP_AUTH_TABS_LOGIN": "Login",
+		"APP_AUTH_TABS_SIGNUP": "Sign up",
+		"APP_AUTH_USER": "User",
+		"APP_AUTH_LABEL_LANGUAGE": "Choose your language",
+		"APP_AUTH_FEEDBACK_LOADING": "Loading...",
+		"APP_AUTH_FEEDBACK_DELETING_DOCS": "Deleting documents...",
+		"APP_AUTH_FEEDBACK_DELETING_USER": "Deleting user...",
+		"APP_AUTH_FEEDBACK_ERROR_AUTH": "An error occurred Authenticating with Firebase!",
+		"APP_AUTH_FEEDBACK_ERROR_RECENT_LOGIN": "To delete your account, your last login should be recent. Login with your account and try again.",
+		"APP_AUTH_FEEDBACK_ERROR_GENERIC": "An unknown error occurred!",
+
+		"APP_AUTH_EMAIL_PLACEHOLDER": "Email",
+		"APP_AUTH_PASSWORD_PLACEHOLDER": "Password",
+		"APP_AUTH_LOGIN_ACTIONS_LOGIN": "Login",
+		"APP_AUTH_LOGIN_ACTIONS_LOGIN_GOOGLE": "Login with Google",
+		"APP_AUTH_SIGNUP_ACTIONS_SIGNUP": "Create account",
+
+		"APP_SHARE_TITLE": "Share",
+		"APP_SHARE_LABEL_SWITCH": "Share tasks?",
+		"APP_SHARE_LABEL_SHARED_LINK": "Anyone with this link can see your tasks.",
+		"APP_SHARE_FEEDBACK_ENABLE": "Enabling...",
+		"APP_SHARE_FEEDBACK_UNABLE": "Disabling...",
+		"APP_SHARE_FEEDBACK_COPIED": "Link copied to your clipboard!",
+
+		"APP_TAG_TITLE": "Edit tags",
+		"APP_TAG_ACTIONS_NEW_TAG": "Add new tag",
+
+		"APP_TASK_TITLE": "Edit tasks",
+		"APP_TASK_LABEL_TAGS": "Tags",
+		"APP_TASK_LABEL_DONE": "Done",
+		"APP_TASK_ACTIONS_DELETE": "Delete",
+		"APP_TASK_ACTIONS_SAVE": "Save",
+
+		"APP_FILTER_TITLE": "Filter tasks",
+		"APP_FILTER_LABEL_ALL": "All",
+		"APP_FILTER_LABEL_NOT_DONE": "Not done",
+		"APP_FILTER_LABEL_DONE": "Done",
+
+		"APP_WARNING_TASK_NO_TAG": "You have tasks without tags. To see them, uncheck all options in the tags filter.",
+		"APP_WARNING_LOCAL_MODE": "You're using the app in local mode. To access your tasks in another device, create an account."
+	}
+}

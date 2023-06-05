@@ -1,0 +1,54 @@
+{
+	"translation": {
+		"APP_NAME": "Tarefas",
+		"APP_DESCRIPTION": "App de tarefas feito com React, Material UI e Firebase.",
+
+		"APP_LABEL_LOADING": "Carregando...",
+		"APP_LABEL_ADD_EXAMPLES": "Adicionar exemplos",
+
+		"APP_AUTH_TITLE": "Sua conta",
+		"APP_AUTH_ACTIONS_DELETE": "Deletar",
+		"APP_AUTH_ACTIONS_LOGOUT": "Sair da conta",
+		"APP_AUTH_ACTIONS_GUEST": "Continuar sem login",
+		"APP_AUTH_TABS_LOGIN": "Entrar",
+		"APP_AUTH_TABS_SIGNUP": "Criar conta",
+		"APP_AUTH_USER": "Usuário",
+		"APP_AUTH_LABEL_LANGUAGE": "Escolha seu idioma",
+		"APP_AUTH_FEEDBACK_LOADING": "Carregando...",
+		"APP_AUTH_FEEDBACK_DELETING_DOCS": "Deletando documentos...",
+		"APP_AUTH_FEEDBACK_DELETING_USER": "Deletando usuário...",
+		"APP_AUTH_FEEDBACK_ERROR_AUTH": "Um erro ocorreu na Autenticação com o Firebase!",
+		"APP_AUTH_FEEDBACK_ERROR_RECENT_LOGIN": "Para deletar sua conta, seu último login deve ser mais recente. Entre com a conta novamente e tente de novo.",
+		"APP_AUTH_FEEDBACK_ERROR_GENERIC": "Um erro desconhecido ocorreu!",
+
+		"APP_AUTH_EMAIL_PLACEHOLDER": "Email",
+		"APP_AUTH_PASSWORD_PLACEHOLDER": "Senha",
+		"APP_AUTH_LOGIN_ACTIONS_LOGIN": "Entrar",
+		"APP_AUTH_LOGIN_ACTIONS_LOGIN_GOOGLE": "Entrar com Google",
+		"APP_AUTH_SIGNUP_ACTIONS_SIGNUP": "Criar conta",
+
+		"APP_SHARE_TITLE": "Compartilhar",
+		"APP_SHARE_LABEL_SWITCH": "Compartilhar tarefas?",
+		"APP_SHARE_LABEL_SHARED_LINK": "Qualquer pessoa com esse link poderá visualizar suas tarefas.",
+		"APP_SHARE_FEEDBACK_ENABLE": "Habilitando...",
+		"APP_SHARE_FEEDBACK_UNABLE": "Desabilitando...",
+		"APP_SHARE_FEEDBACK_COPIED": "Link copiado para área de transferência!",
+
+		"APP_TAG_TITLE": "Editar etiquetas",
+		"APP_TAG_ACTIONS_NEW_TAG": "Adicionar nova etiqueta",
+
+		"APP_TASK_TITLE": "Editar tarefa",
+		"APP_TASK_LABEL_TAGS": "Etiquetas",
+		"APP_TASK_LABEL_DONE": "Concluída",
+		"APP_TASK_ACTIONS_DELETE": "Apagar",
+		"APP_TASK_ACTIONS_SAVE": "Salvar",
+
+		"APP_FILTER_TITLE": "Filtrar tarefas",
+		"APP_FILTER_LABEL_ALL": "Todas",
+		"APP_FILTER_LABEL_NOT_DONE": "Não concluídas",
+		"APP_FILTER_LABEL_DONE": "Concluídas",
+
+		"APP_WARNING_TASK_NO_TAG": "Você tem tarefas sem etiquetas. Para acessá-las, desmarque todas as opções no filtro de tags.",
+		"APP_WARNING_LOCAL_MODE": "Você está usando o aplicativo em modo local. Para acessar suas tarefas em outro dispositivo, crie uma conta."
+	}
+}
