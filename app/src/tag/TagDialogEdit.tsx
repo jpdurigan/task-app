@@ -19,7 +19,7 @@ import {
 	useMediaQuery,
 	Box,
 } from "@mui/material";
-import { MouseEventHandler, useState } from "react";
+import { useState } from "react";
 import { TagColors } from "../Theme";
 import { Tag, TagServer } from "../database/Tag";
 
